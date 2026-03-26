@@ -1,0 +1,193 @@
+[
+    {
+        "type": "project",
+        "title": "Media Search Engine",
+        "startDate": "15/02/2026",
+        "endDate": "Present",
+        "description": "Currently under development.",
+        "points": [
+            "Utilizing Gemini as a Vision-Language Model (VLM) for intelligent information extraction.",
+            "Architecting the data layer with MongoDB for raw information storage and ChromaDB for semantic vector storage and retrieval."
+        ],
+        "tags": [
+            "Gemini",
+            "MongoDB",
+            "ChromaDB"
+        ]
+    },
+    {
+        "type": "work",
+        "entity": "Hummingbird Bioscience (SGInnovate Deep-Tech Programme)",
+        "logo": "./assets/hmbd-logo.png",
+        "startDate": "01/08/2025",
+        "endDate": "31/01/2026",
+        "roles": [
+            {
+                "title": "Graduate AI Engineering Intern",
+                "points": [
+                    "Achieved a 50x runtime reduction in cancer-target discovery by implementing PyTorch-GPU vectorization and re-engineering data augmentation logic.",
+                    "Tripled feature deployment throughput on HPC clusters by architecting a config-driven SLURM orchestration tool for interactive GPU sessions.",
+                    "Orchestrated Generative AI deployment (BoltzGen) on AWS EC2 using DL AMIs for stable protein binder inference.",
+                    "90% reduction in deck-creation time (2 hrs to 10 mins) through a custom interactive visualization system with persistent dashboards."
+                ]
+            }
+        ],
+        "tags": [
+            "PyTorch",
+            "AWS EC2",
+            "SLURM",
+            "Generative AI"
+        ]
+    },
+    {
+        "type": "work",
+        "entity": "Tata Elxsi",
+        "logo": "./assets/tel-logo.png",
+        "startDate": "01/07/2023",
+        "endDate": "30/06/2024",
+        "roles": [
+            {
+                "title": "AI Engineer (Full Time)",
+                "points": [
+                    "Secured a new client by engineering a real-time CV/clustering anomaly detection pipeline for pollution monitoring.",
+                    "Achieved 90% recall and 80% precision in content moderation using a DP-inspired temporal smoothing algorithm; parallelized it with Celery for distributed queuing.",
+                    "Enabled lag-free ad placement at 30+ FPS with stream-agnostic inference logic; boosted object tracking throughput by 20x via batching.",
+                    "Achieved 78.1% mAP on industrial defect segmentation; outperformed task-specific baselines on unseen data using a curated 30k-image dataset."
+                ]
+            }
+        ],
+        "tags": [
+            "Object Detection and Segmentation",
+            "Docker",
+            "Celery",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "type": "work",
+        "entity": "National University of Singapore",
+        "logo": "./assets/nus-logo.png",
+        "startDate": "01/12/2022",
+        "endDate": "31/01/2023",
+        "roles": [
+            {
+                "title": "Student and Intern (Deep Learning and Computer Vision)",
+                "points": [
+                    "Secured an A+ grade in a rigorous Deep Learning boot-camp at the National University of Singapore.",
+                    "Guided a six-person team in developing helmet, vest detection models to ensure construction worker safety and attained an accuracy of 65% despite resource constraints in under a week."
+                ]
+            }
+        ],
+        "tags": [
+            "Deep Learning",
+            "Computer Vision",
+            "Object Detection",
+            "Programming"
+        ]
+    },
+    {
+        "type": "work",
+        "entity": "Samsung R&D",
+        "logo": "./assets/samsung-logo.png",
+        "startDate": "01/11/2021",
+        "endDate": "31/10/2022",
+        "roles": [
+            {
+                "title": "AI Intern (Research & Development)",
+                "points": [
+                    "Led R&D for 5 peers on frame-rate conversion; exceeded speed and quality KPIs by 1.5x.",
+                    "27.9 PSNR achieved on 448x256 video sequences; managed research milestones and senior technical presentations."
+                ]
+            }
+        ],
+        "tags": [
+            "Video Processing",
+            "Deep Learning",
+            "R&D"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "LazyResume: OCR & LLM Document Parsing",
+        "startDate": "01/05/2025",
+        "endDate": "31/05/2025",
+        "points": [
+            "Engineered a pipeline using Vision-based OCR and LLMs; designed to bridge the recruiter-candidate gap by automating unstructured data parsing into structured JSON.",
+            "Improved parseability of complex layouts by 20% via custom evaluation hooks for resume-to-JD alignment."
+        ],
+        "tags": [
+            "OCR",
+            "FastAPI",
+            "Parser Optimization"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "Fuzzy Hybrid Model for Stock Trading",
+        "startDate": "01/09/2024",
+        "endDate": "30/09/2024",
+        "points": [
+            "Applied domain-based optimization to standard stock trading models, tailoring feature extraction to financial market indicators.",
+            "Reduced feature dimensionality by 5x while improving model performance by approximately 20%.",
+            "Optimized data pipelines to improve loading and training speed by 10x."
+        ],
+        "tags": [
+            "Python",
+            "Scikit-Learn",
+            "NumPy"
+        ]
+    },
+    {
+        "type": "education",
+        "entity": "Nanyang Technological University",
+        "logo": "./assets/ntu-logo.png",
+        "startDate": "01/08/2024",
+        "endDate": "31/01/2026",
+        "roles": [
+            {
+                "title": "Master of Science in Artificial Intelligence",
+                "description": "CGPA: 3.89. Specialization in deep learning and AI systems.",
+                "subtitle": "Academic Projects & Coursework",
+                "points": [
+                    "Computer Vision: Image processing (contrast stretching), depth estimation, 3D reconstruction, segmentation, and super-resolution.",
+                    "Deep Learning: Regression, classification, and MLOps for hyperparameter tuning.",
+                    "Natural Language Processing: Sentiment classification and Seq2Seq models for English-French translation.",
+                    "Advanced ML: Time series analysis and prediction, reinforcement learning, and fuzzy hybrid models."
+                ]
+            }
+        ],
+        "tags": [
+            "Machine Learning",
+            "Mathematics"
+        ]
+    },
+    {
+        "type": "education",
+        "entity": "Vellore Institute of Technology",
+        "logo": "./assets/vit-logo.png",
+        "startDate": "10/07/2019",
+        "endDate": "30/06/2023",
+        "roles": [
+            {
+                "title": "B.Tech in Computer Science (Specialization in AI/ML)",
+                "description": "CGPA: 9.06. Focused on AI and ML applications.",
+                "subtitle": "Academic Projects & Coursework",
+                "points": [
+                    "Executed multiple projects spanning app development (React Native), web development (React), networks, and cybersecurity basics.",
+                    "Implemented core AI architectures across Machine Learning, Deep Learning, Computer Vision, NLP, and Reinforcement Learning."
+                ]
+            },
+            {
+                "title": "Thesis: Speech Recognition using Reconstructed Phase Spaces",
+                "description": "Transformed audio signals into 3D phase space representations and applied deep learning for enhanced accuracy."
+            }
+        ],
+        "tags": [
+            "Machine Learning",
+            "Deep Learning",
+            "Computer Vision",
+            "NLP",
+            "React Native"
+        ]
+    }
+]

@@ -1,0 +1,395 @@
+/* --- Global Variables --- */
+:root {
+    --bg-dark: #0a0c10;
+    --bg-card: #1c2128;
+    --text-main: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --border: #30363d;
+    --edu-color: #a371f7;
+    --work-color: #3fb950;
+    --proj-color: #58a6ff;
+}
+
+/* --- Base Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+html {
+    scroll-padding-top: 90px;
+}
+
+/* --- Typography --- */
+h1,
+h2 {
+    color: #ffffff;
+}
+
+h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    /* Auto-scales between mobile and desktop */
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.terminal-text {
+    font-family: 'Fira Code', monospace;
+    color: #58a6ff;
+    /* stable classic terminal accent */
+    font-weight: 600;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 1.5rem;
+}
+
+p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+#hero-summary {
+    max-width: 64ch;
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(0.95rem, 1.1vw, 1rem);
+    line-height: 1.6;
+    color: #d4d9df;
+    letter-spacing: 0.01em;
+    opacity: 0.92;
+}
+
+#hero-summary::first-letter {
+    font-weight: 600;
+}
+
+
+/* --- Navigation --- */
+#navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10, 12, 16, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 5%;
+}
+
+.logo {
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text-main);
+    letter-spacing: -1px;
+}
+
+.nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+/* --- Typing cursor effect --- */
+.cursor {
+    animation: blink 1s step-end infinite;
+    color: var(--accent);
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* --- Scroll Hint Arrow --- */
+.scroll-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    color: var(--accent);
+    cursor: pointer;
+    animation: blink 1s step-end infinite;
+    pointer-events: auto;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-hint.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Layout & Sections --- */
+.section {
+    min-height: 100vh;
+    padding: 120px 10% 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#hero {
+    position: relative;
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+.btn-primary:hover {
+    background: #79b8ff;
+}
+
+.btn-outline {
+    border: 1px solid var(--border);
+    color: var(--text-main);
+}
+
+.btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* --- Tech Tags --- */
+.tech-tag {
+    display: inline-block;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(88, 166, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-right: 8px;
+    margin-top: 8px;
+}
+
+/* --- Filter Buttons --- */
+.filter-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    border-color: var(--text-main);
+    color: var(--text-main);
+}
+
+/* --- Vertical Timeline Layout --- */
+.timeline-container {
+    position: relative;
+    padding-left: 30px;
+    border-left: 2px solid var(--border);
+}
+
+.timeline-node {
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.timeline-node::before {
+    content: '';
+    position: absolute;
+    left: -37px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 3px solid var(--border);
+    transition: border-color 0.3s ease;
+}
+
+.timeline-node[data-type="education"]::before {
+    border-color: var(--edu-color);
+}
+
+.timeline-node[data-type="work"]::before {
+    border-color: var(--work-color);
+}
+
+.timeline-node[data-type="project"]::before {
+    border-color: var(--proj-color);
+}
+
+.node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.node-entity {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.node-period {
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+}
+
+.sub-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.sub-item:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.sub-title {
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+/* --- Bullet Point Lists --- */
+.sub-item ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+.sub-item li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* --- Scroll Animations --- */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .section {
+        padding: 100px 5% 50px;
+    }
+
+    .node-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .timeline-container {
+        padding-left: 20px;
+    }
+
+    .timeline-node::before {
+        left: -27px;
+    }
+
+    .sub-item {
+        padding: 20px;
+    }
+
+
+}
+
+/* --- Timeline Entity Logos --- */
+.node-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    object-fit: contain;
+    background: #ffffff;
+    padding: 4px;
+    border: 1px solid var(--border);
+}
