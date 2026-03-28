@@ -12,17 +12,19 @@
 </head>
 
 <body>
-    <nav id="navbar">
+    <nav id="navbar" aria-label="Primary">
         <div class="nav-content">
             <span id="nav-logo" class="logo">HG</span>
             <div class="nav-links">
-                <a href="#hero">About</a>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
                 <a href="#timeline">Timeline</a>
+                <a href="#certificates">Certificates</a>
             </div>
         </div>
     </nav>
 
-    <header id="hero" class="section">
+    <header id="home" class="section">
         <div class="hero-content fade-in">
             <h1 id="hero-name"></h1>
             <h2 id="hero-title" class="terminal-text">> <span class="cursor">_</span></h2>
@@ -64,18 +66,55 @@
         </div>
     </header>
 
+    <section id="about" class="section section-alt">
+        <div class="section-header fade-in">
+            <p class="section-eyebrow">ABOUT</p>
+            <h2 class="section-title">Signal over noise</h2>
+        </div>
+        <div class="about-minimal fade-in" aria-live="polite">
+            <p id="about-bio" class="about-bio">Loading bio...</p>
+            <ul id="about-highlights" class="about-list"></ul>
+            <div class="about-meta-group">
+                <div class="about-meta-block">
+                    <span class="about-label">Focus</span>
+                    <div id="about-focus" class="chip-row"></div>
+                </div>
+                <div class="about-meta-block">
+                    <span class="about-label">Toolkit</span>
+                    <div id="about-stack" class="chip-row"></div>
+                </div>
+            </div>
+            <div class="about-footer">
+                <p id="about-availability" class="about-availability"></p>
+                <a id="about-contact" class="btn btn-primary" href="#home">Contact</a>
+            </div>
+        </div>
+    </section>
+
     <section id="timeline" class="section">
         <h2 class="section-title fade-in">Timeline</h2>
 
-        <div class="filter-controls fade-in">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="work">Work</button>
-            <button class="filter-btn" data-filter="education">Education</button>
-            <button class="filter-btn" data-filter="project">Projects</button>
+        <div class="filter-controls fade-in" role="tablist" aria-label="Timeline filter">
+            <button class="filter-btn active" data-filter="project" aria-pressed="true">Projects</button>
+            <button class="filter-btn" data-filter="work" aria-pressed="false">Work</button>
+            <button class="filter-btn" data-filter="education" aria-pressed="false">Education</button>
         </div>
 
         <div id="timeline-grid" class="timeline-container">
         </div>
+    </section>
+
+    <section id="certificates" class="section section-alt">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Certificates & Badges</h2>
+            <p class="section-subtitle">A snapshot of curated programmes and credentials that back my build
+                track-record.</p>
+        </div>
+        <div id="certificate-grid" class="cert-grid"></div>
+        <div id="cert-controls" class="cert-controls">
+            <button id="cert-toggle" class="cert-toggle" aria-expanded="false">Show additional certificates</button>
+        </div>
+        <div id="certificate-archive" class="cert-grid cert-archive" hidden></div>
     </section>
 
     <script src="scripts/main.js"></script>

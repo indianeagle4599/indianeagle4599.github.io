@@ -4,6 +4,29 @@
     "location": "Singapore",
     "summary": "Performance-driven AI Engineer and NTU post-graduate with a knack for building high-impact solutions.",
     "resume_url": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Resume.pdf",
+    "email": "hiteshgoyal.business@gmail.com",
+    "contact_cta": "Let's build reliable AI platforms together",
+    "about": {
+        "bio": "Performance-driven AI Engineer and NTU MSc AI candidate translating research-grade vision and generative models into lean, observable production systems.",
+        "highlights": [
+            "Training and fine-tuning vision models",
+            "Optimising AI pipelines for resource efficiency",
+            "Bridging research prototypes to production-ready tools"
+        ],
+        "focus": [
+            "Generative + computer vision systems",
+            "Real-time CV for ads & safety",
+            "AI infra on SLURM/AWS"
+        ],
+        "stack": [
+            "PyTorch",
+            "FastAPI",
+            "Docker",
+            "AWS DL AMIs",
+            "Celery"
+        ],
+        "availability": "Open to AI/ML engineering roles and applied research collaborations in Singapore or remote."
+    },
     "socials": {
         "github": "https://github.com/indianeagle4599",
         "linkedin": "https://www.linkedin.com/in/hitesh-goyal-5732bb208/"

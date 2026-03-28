@@ -21,6 +21,12 @@ function getPeriodString(startStr, endStr) {
     return `${startFmt} — ${endFmt}`;
 }
 
+const TYPE_PRIORITY = {
+    project: 0,
+    work: 1,
+    education: 2
+};
+
 // Helper to generate dynamic content blocks (Description, Subtitle, Points)
 function generateContentHTML(item) {
     let html = '';
@@ -36,7 +42,74 @@ function generateContentHTML(item) {
     return html;
 }
 
+let filtersInitialized = false;
+
+function renderCertificateCard(cert, isCore = false) {
+    const classes = ['cert-card', 'fade-in'];
+    if (isCore) classes.push('cert-card-core');
+    const meta = cert.issuer ? `<div class="cert-meta">${cert.issuer}</div>` : '';
+    const description = cert.description ? `<p>${cert.description}</p>` : '';
+    const link = cert.link ? `<a href="${cert.link}" target="_blank" class="cert-link" rel="noopener">Open file →</a>` : '';
+
+    return `
+        <article class="${classes.join(' ')}">
+            <div>
+                <h3>${cert.title}</h3>
+                ${meta}
+            </div>
+            ${description}
+            ${link}
+        </article>
+    `;
+}
+
 // --- Data Fetching & Rendering ---
+
+function hydrateAboutSection(profile) {
+    const aboutData = profile.about || {};
+
+    const bioEl = document.getElementById('about-bio');
+    if (bioEl) {
+        bioEl.textContent = aboutData.bio || profile.summary || 'Documenting bio soon.';
+    }
+
+    const highlightsEl = document.getElementById('about-highlights');
+    if (highlightsEl) {
+        const highlights = aboutData.highlights || [];
+        highlightsEl.innerHTML = highlights.length
+            ? highlights.map(item => `<li>${item}</li>`).join('')
+            : '<li>Crafting new highlights. Stay tuned.</li>';
+    }
+
+    const focusEl = document.getElementById('about-focus');
+    if (focusEl) {
+        const focusItems = aboutData.focus || [];
+        focusEl.innerHTML = focusItems.length
+            ? focusItems.map(item => `<span class="about-chip">${item}</span>`).join('')
+            : `<span class="about-chip">${profile.location || 'Remote-friendly'}</span>`;
+    }
+
+    const stackEl = document.getElementById('about-stack');
+    if (stackEl) {
+        const stackItems = aboutData.stack || [];
+        stackEl.innerHTML = stackItems.length
+            ? stackItems.map(item => `<span class="about-chip">${item}</span>`).join('')
+            : '';
+    }
+
+    const availabilityEl = document.getElementById('about-availability');
+    if (availabilityEl) {
+        availabilityEl.textContent = aboutData.availability || `Based in ${profile.location || 'Singapore'}`;
+    }
+
+    const contactBtn = document.getElementById('about-contact');
+    if (contactBtn) {
+        contactBtn.textContent = profile.contact_cta || 'Say hello';
+        if (profile.email) {
+            contactBtn.href = `mailto:${profile.email}`;
+        }
+    }
+}
 
 async function loadProfile() {
     try {
@@ -53,6 +126,7 @@ async function loadProfile() {
         document.getElementById('hero-linkedin').href = (profile.socials && profile.socials.linkedin) || '#';
 
         typeWriter(profile.title || 'Your Title', 'hero-title');
+        hydrateAboutSection(profile);
     } catch (error) {
         console.error("Error loading profile:", error);
         document.getElementById('hero-summary').textContent = 'Unable to load summary from profile.json. Check the console for details.';
@@ -65,6 +139,9 @@ async function loadTimeline() {
         let timelineData = await response.json();
 
         timelineData.sort((a, b) => {
+            const typeDiff = (TYPE_PRIORITY[a.type] ?? 3) - (TYPE_PRIORITY[b.type] ?? 3);
+            if (typeDiff !== 0) return typeDiff;
+
             const startA = parseDateObj(a.startDate).getTime();
             const startB = parseDateObj(b.startDate).getTime();
             if (startB !== startA) return startB - startA;
@@ -105,7 +182,7 @@ async function loadTimeline() {
                     </div>
                 `;
             } else {
-                const logoHTML = node.logo ? `<img src="${node.logo}" alt="${node.entity} logo" class="node-logo">` : '';
+                const logoHTML = node.logo ? `<img src="${node.logo}" alt="${node.entity} logo" class="node-logo" loading="lazy">` : '';
 
                 // Pass each role to the content generator
                 const rolesHTML = node.roles.map(role => `
@@ -132,7 +209,7 @@ async function loadTimeline() {
             container.appendChild(nodeDiv);
         });
 
-        setupFilters();
+        setupFilters('project');
         initScrollAnimations();
 
     } catch (error) {
@@ -140,23 +217,93 @@ async function loadTimeline() {
     }
 }
 
+async function loadCertificates() {
+    const primaryGrid = document.getElementById('certificate-grid');
+    const archiveGrid = document.getElementById('certificate-archive');
+    const toggleBtn = document.getElementById('cert-toggle');
+    const controls = document.getElementById('cert-controls');
+    if (!primaryGrid) return;
+    try {
+        const response = await fetch('./data/certificates.json');
+        if (!response.ok) throw new Error(`Certificates fetch failed: ${response.status}`);
+        const certificates = await response.json();
+
+        if (!certificates.length) {
+            primaryGrid.innerHTML = '<p style="color: var(--text-muted);">Certificates coming soon.</p>';
+            return;
+        }
+
+        let featured = certificates.filter(cert => cert.importance === 'core');
+        let archive = certificates.filter(cert => cert.importance !== 'core');
+
+        if (!featured.length) {
+            featured = certificates;
+            archive = [];
+        }
+
+        primaryGrid.innerHTML = featured.map(cert => renderCertificateCard(cert, true)).join('');
+
+        if (archive.length && archiveGrid && toggleBtn) {
+            archiveGrid.innerHTML = archive.map(cert => renderCertificateCard(cert)).join('');
+            toggleBtn.style.display = 'inline-flex';
+            toggleBtn.textContent = 'Show additional certificates';
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            archiveGrid.hidden = true;
+            if (controls) controls.style.display = 'block';
+
+            toggleBtn.addEventListener('click', () => {
+                const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                toggleBtn.setAttribute('aria-expanded', String(!expanded));
+                archiveGrid.hidden = expanded;
+                toggleBtn.textContent = expanded ? 'Show additional certificates' : 'Hide additional certificates';
+            });
+        } else {
+            if (toggleBtn) toggleBtn.style.display = 'none';
+            if (controls) controls.style.display = 'none';
+        }
+
+        initScrollAnimations();
+    } catch (error) {
+        console.error('Error loading certificates:', error);
+        primaryGrid.innerHTML = '<p style="color: var(--text-muted);">Unable to load certificates right now.</p>';
+    }
+}
+
 // --- Interaction Logic ---
 
-function setupFilters() {
+function updateFilterButtons(activeFilter) {
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const nodes = document.querySelectorAll('.timeline-node');
-
     filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        const isActive = btn.getAttribute('data-filter') === activeFilter;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
+    });
+}
 
-            const filterValue = btn.getAttribute('data-filter');
-            nodes.forEach(n => {
-                n.style.display = (filterValue === 'all' || n.getAttribute('data-type') === filterValue) ? 'block' : 'none';
+function applyTimelineFilter(filterValue) {
+    const nodes = document.querySelectorAll('.timeline-node');
+    nodes.forEach(node => {
+        node.style.display = node.getAttribute('data-type') === filterValue ? 'block' : 'none';
+    });
+}
+
+function setupFilters(defaultFilter = 'work') {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    if (!filterBtns.length) return;
+
+    if (!filtersInitialized) {
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filterValue = btn.getAttribute('data-filter');
+                updateFilterButtons(filterValue);
+                applyTimelineFilter(filterValue);
             });
         });
-    });
+        filtersInitialized = true;
+    }
+
+    updateFilterButtons(defaultFilter);
+    applyTimelineFilter(defaultFilter);
 }
 
 function typeWriter(text, elementId, speed = 40) {
@@ -198,15 +345,17 @@ function initScrollAnimations() {
             }
         });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in:not(.visible)').forEach(el => observer.observe(el));
 }
 
 function initAutoScroll() {
-    const timelineSection = document.getElementById('timeline');
+    const sections = Array.from(document.querySelectorAll('header[id], section[id]'));
     const scrollHint = document.querySelector('.scroll-hint');
     let isAutoScrolling = false;
+    const NAV_OFFSET = 90;
 
-    // Fade out the arrow immediately upon gentle scroll
+    if (!sections.length) return;
+
     window.addEventListener('scroll', () => {
         if (scrollHint) {
             if (window.scrollY > 50) {
@@ -219,41 +368,74 @@ function initAutoScroll() {
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            // Trigger native smooth scroll if we scroll into view and aren't locked
             if (entry.isIntersecting && !isAutoScrolling) {
+                const targetTop = entry.target.offsetTop - NAV_OFFSET;
+                const distance = Math.abs(window.scrollY - targetTop);
+                if (distance < 5) return;
                 isAutoScrolling = true;
-
                 window.scrollTo({
-                    top: timelineSection.offsetTop - 90, // Navbar offset
+                    top: targetTop,
                     behavior: 'smooth'
                 });
-
-                // Release the scroll lock after standard smooth scroll duration (~800ms)
                 setTimeout(() => {
                     isAutoScrolling = false;
                 }, 800);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.4 });
 
-    if (timelineSection) observer.observe(timelineSection);
+    sections.forEach(section => observer.observe(section));
 
-    // Make scroll hint clickable to manually trigger
     if (scrollHint) {
+        const timelineSection = document.getElementById('timeline');
         scrollHint.addEventListener('click', () => {
+            if (!timelineSection) return;
             window.scrollTo({
-                top: timelineSection.offsetTop - 90,
+                top: timelineSection.offsetTop - NAV_OFFSET,
                 behavior: 'smooth'
             });
         });
     }
 }
 
+function initNavHighlight() {
+    const sections = ['home', 'about', 'timeline', 'certificates']
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+    const navLinks = Array.from(document.querySelectorAll('.nav-links a'))
+        .reduce((map, link) => {
+            map.set(link.getAttribute('href'), link);
+            return map;
+        }, new Map());
+
+    if (!sections.length || !navLinks.size) return;
+
+    const defaultLink = navLinks.get('#home');
+    if (defaultLink) defaultLink.classList.add('active');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const targetId = `#${entry.target.id}`;
+                navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === targetId));
+            }
+        });
+    }, {
+        rootMargin: '-40% 0px -40% 0px',
+        threshold: 0
+    });
+
+    sections.forEach(section => observer.observe(section));
+}
+
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
     loadProfile();
     loadTimeline();
+    loadCertificates();
     animateLogo();
     initAutoScroll();
+    initNavHighlight();
 });
