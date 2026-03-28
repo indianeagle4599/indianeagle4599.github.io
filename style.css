@@ -93,12 +93,35 @@ p {
     padding: 15px 5%;
 }
 
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
 .logo {
     font-family: 'Fira Code', monospace;
     font-weight: 700;
     font-size: 1.5rem;
     color: var(--text-main);
     letter-spacing: -1px;
+}
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 12px;
+}
+
+.nav-toggle span {
+    width: 22px;
+    height: 2px;
+    background: var(--text-main);
+    display: block;
+    transition: all 0.2s ease;
 }
 
 .nav-links a {
@@ -411,6 +434,35 @@ p {
         padding: 100px 5% 50px;
     }
 
+    .nav-toggle {
+        display: inline-flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        right: 0;
+        width: 80%;
+        max-width: 320px;
+        height: calc(100vh - 60px);
+        background: rgba(10, 12, 16, 0.98);
+        border-left: 1px solid var(--border);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px;
+        gap: 16px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .nav-links.open {
+        transform: translateX(0);
+    }
+
+    .nav-links a {
+        margin-left: 0;
+    }
+
     .about-minimal {
         padding: 24px;
     }
@@ -542,6 +594,18 @@ p {
     font-size: 0.95rem;
 }
 
+.node-credentials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn-tiny {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+}
+
 /* --- Certificates --- */
 .cert-grid {
     display: grid;
@@ -584,11 +648,7 @@ p {
 .cert-link {
     margin-top: auto;
     align-self: flex-start;
-    font-size: 0.8rem;
-    color: var(--accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 0.85rem;
 }
 
 .cert-card-core {
@@ -618,10 +678,38 @@ p {
     color: var(--accent);
 }
 
+[id="certificate-grid"],
+[id="certificate-archive"] {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
 .cert-archive {
     margin-top: 20px;
 }
 
-.cert-archive[hidden] {
-    display: none;
+.cert-category {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+.cert-archive[hidden],
+#certificate-archive[hidden] {
+    display: none !important;
+}
+
+.cert-category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cert-category-title {
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
 }

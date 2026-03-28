@@ -27,6 +27,31 @@ const TYPE_PRIORITY = {
     education: 2
 };
 
+const CERT_CATEGORY_ORDER = [
+    'AI & ML Engineering',
+    'Platform & Infrastructure',
+    'Professional Development',
+    'Supporting Credentials'
+];
+const DEFAULT_CERT_CATEGORY = 'Supporting Credentials';
+
+function renderCredentialButtons(credentials) {
+    if (!credentials || !credentials.length) return '';
+    const urls = credentials
+        .map(cred => typeof cred === 'string' ? cred : cred && cred.url)
+        .filter(Boolean);
+    if (!urls.length) return '';
+    return `
+        <div class="node-credentials">
+            ${urls.map(url => `
+                <a href="${url}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny" title="Opens credential proof in a new tab">
+                    View Credentials
+                </a>
+            `).join('')}
+        </div>
+    `;
+}
+
 // Helper to generate dynamic content blocks (Description, Subtitle, Points)
 function generateContentHTML(item) {
     let html = '';
@@ -43,13 +68,18 @@ function generateContentHTML(item) {
 }
 
 let filtersInitialized = false;
+let certificatesLoaded = false;
 
 function renderCertificateCard(cert, isCore = false) {
     const classes = ['cert-card', 'fade-in'];
     if (isCore) classes.push('cert-card-core');
     const meta = cert.issuer ? `<div class="cert-meta">${cert.issuer}</div>` : '';
     const description = cert.description ? `<p>${cert.description}</p>` : '';
-    const link = cert.link ? `<a href="${cert.link}" target="_blank" class="cert-link" rel="noopener">Open file →</a>` : '';
+    const link = cert.link ? `
+        <a href="${cert.link}" target="_blank" class="cert-link btn btn-outline" rel="noopener" title="Opens credential proof in a new tab">
+            View Credentials
+        </a>
+    ` : '';
 
     return `
         <article class="${classes.join(' ')}">
@@ -61,6 +91,34 @@ function renderCertificateCard(cert, isCore = false) {
             ${link}
         </article>
     `;
+}
+
+function renderCertificateSections(list, container, highlight = false) {
+    if (!container) return;
+    if (!list.length) {
+        container.innerHTML = '';
+        return;
+    }
+    const categoriesInData = Array.from(new Set(list.map(cert => cert.category || DEFAULT_CERT_CATEGORY)));
+    const orderedCategories = [
+        ...CERT_CATEGORY_ORDER.filter(cat => categoriesInData.includes(cat)),
+        ...categoriesInData.filter(cat => !CERT_CATEGORY_ORDER.includes(cat))
+    ];
+
+    container.innerHTML = orderedCategories.map(category => {
+        const items = list.filter(cert => (cert.category || DEFAULT_CERT_CATEGORY) === category);
+        if (!items.length) return '';
+        return `
+            <section class="cert-category">
+                <div class="cert-category-header">
+                    <h3 class="cert-category-title">${category}</h3>
+                </div>
+                <div class="cert-grid">
+                    ${items.map(cert => renderCertificateCard(cert, highlight && cert.importance === 'core')).join('')}
+                </div>
+            </section>
+        `;
+    }).join('');
 }
 
 // --- Data Fetching & Rendering ---
@@ -158,7 +216,9 @@ async function loadTimeline() {
             nodeDiv.setAttribute('data-type', node.type);
 
             const tagsHTML = node.tags ? node.tags.map(tech => `<span class="tech-tag">${tech}</span>`).join('') : '';
+            const tagsBlock = tagsHTML ? `<div style="margin-top: 10px;">${tagsHTML}</div>` : '';
             const periodString = getPeriodString(node.startDate, node.endDate);
+            const credentialHTML = renderCredentialButtons(node.credentials);
 
             if (node.type === 'project') {
                 let mediaLinks = '';
@@ -177,18 +237,20 @@ async function loadTimeline() {
                     </div>
                     <div class="sub-item">
                         ${contentHTML}
-                        <div style="margin-top: 10px;">${tagsHTML}</div>
+                        ${credentialHTML}
                         ${mediaLinks ? `<div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">${mediaLinks}</div>` : ''}
                     </div>
+                    ${tagsBlock}
                 `;
             } else {
                 const logoHTML = node.logo ? `<img src="${node.logo}" alt="${node.entity} logo" class="node-logo" loading="lazy">` : '';
 
                 // Pass each role to the content generator
-                const rolesHTML = node.roles.map(role => `
+                const rolesHTML = node.roles.map((role, index) => `
                     <div class="sub-item">
                         <h4 class="sub-title">${role.title}</h4>
                         ${generateContentHTML(role)}
+                        ${index === 0 ? `${credentialHTML}` : ''}
                     </div>
                 `).join('');
 
@@ -202,8 +264,8 @@ async function loadTimeline() {
                     </div>
                     <div class="node-items-container">
                         ${rolesHTML}
-                        ${tagsHTML ? `<div style="margin-top: 10px;">${tagsHTML}</div>` : ''}
                     </div>
+                    ${tagsBlock}
                 `;
             }
             container.appendChild(nodeDiv);
@@ -218,6 +280,8 @@ async function loadTimeline() {
 }
 
 async function loadCertificates() {
+    if (certificatesLoaded) return;
+    certificatesLoaded = true;
     const primaryGrid = document.getElementById('certificate-grid');
     const archiveGrid = document.getElementById('certificate-archive');
     const toggleBtn = document.getElementById('cert-toggle');
@@ -241,10 +305,10 @@ async function loadCertificates() {
             archive = [];
         }
 
-        primaryGrid.innerHTML = featured.map(cert => renderCertificateCard(cert, true)).join('');
+        renderCertificateSections(featured, primaryGrid, true);
 
         if (archive.length && archiveGrid && toggleBtn) {
-            archiveGrid.innerHTML = archive.map(cert => renderCertificateCard(cert)).join('');
+            renderCertificateSections(archive, archiveGrid, false);
             toggleBtn.style.display = 'inline-flex';
             toggleBtn.textContent = 'Show additional certificates';
             toggleBtn.setAttribute('aria-expanded', 'false');
@@ -267,6 +331,27 @@ async function loadCertificates() {
         console.error('Error loading certificates:', error);
         primaryGrid.innerHTML = '<p style="color: var(--text-muted);">Unable to load certificates right now.</p>';
     }
+}
+
+function initCertificateLoader() {
+    const certificatesSection = document.getElementById('certificates');
+    if (!certificatesSection) return;
+
+    if (!('IntersectionObserver' in window)) {
+        loadCertificates();
+        return;
+    }
+
+    const certObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadCertificates();
+                observer.disconnect();
+            }
+        });
+    }, { rootMargin: '0px 0px -20% 0px' });
+
+    certObserver.observe(certificatesSection);
 }
 
 // --- Interaction Logic ---
@@ -353,6 +438,8 @@ function initAutoScroll() {
     const scrollHint = document.querySelector('.scroll-hint');
     let isAutoScrolling = false;
     const NAV_OFFSET = 90;
+    let lastScrollY = window.scrollY;
+    let scrollDirection = 'down';
 
     if (!sections.length) return;
 
@@ -364,27 +451,38 @@ function initAutoScroll() {
                 scrollHint.classList.remove('hidden');
             }
         }
+        const current = window.scrollY;
+        if (current > lastScrollY + 5) {
+            scrollDirection = 'down';
+        } else if (current < lastScrollY - 5) {
+            scrollDirection = 'up';
+        }
+        lastScrollY = current;
     }, { passive: true });
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !isAutoScrolling) {
-                const targetTop = entry.target.offsetTop - NAV_OFFSET;
-                const distance = Math.abs(window.scrollY - targetTop);
-                if (distance < 5) return;
-                isAutoScrolling = true;
-                window.scrollTo({
-                    top: targetTop,
-                    behavior: 'smooth'
-                });
-                setTimeout(() => {
-                    isAutoScrolling = false;
-                }, 800);
-            }
-        });
-    }, { threshold: 0.4 });
+    if (!window.matchMedia('(max-width: 768px)').matches) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isAutoScrolling) {
+                    const targetTop = entry.target.offsetTop - NAV_OFFSET;
+                    const distance = Math.abs(window.scrollY - targetTop);
+                    if (distance < 5) return;
+                    const desiredDirection = targetTop > window.scrollY ? 'down' : 'up';
+                    if (desiredDirection !== scrollDirection) return;
+                    isAutoScrolling = true;
+                    window.scrollTo({
+                        top: targetTop,
+                        behavior: 'smooth'
+                    });
+                    setTimeout(() => {
+                        isAutoScrolling = false;
+                    }, 800);
+                }
+            });
+        }, { threshold: 0.4 });
 
-    sections.forEach(section => observer.observe(section));
+        sections.forEach(section => observer.observe(section));
+    }
 
     if (scrollHint) {
         const timelineSection = document.getElementById('timeline');
@@ -428,14 +526,36 @@ function initNavHighlight() {
     sections.forEach(section => observer.observe(section));
 }
 
+function initMobileNav() {
+    const toggle = document.getElementById('nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (!toggle || !navLinks) return;
+
+    const closeMenu = () => {
+        navLinks.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    toggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => closeMenu());
+    });
+}
+
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     loadProfile();
     loadTimeline();
-    loadCertificates();
     animateLogo();
     initAutoScroll();
     initNavHighlight();
+    initMobileNav();
+    initCertificateLoader();
 });
