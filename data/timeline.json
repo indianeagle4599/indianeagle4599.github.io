@@ -5,9 +5,13 @@
         "startDate": "15/02/2026",
         "endDate": "Present",
         "description": "Currently under development.",
+        "media": {
+            "github": "https://github.com/indianeagle4599/Media-Search-Engine"
+        },
         "points": [
-            "Utilizing Gemini as a Vision-Language Model (VLM) for intelligent information extraction.",
-            "Architecting the data layer with MongoDB for raw information storage and ChromaDB for semantic vector storage and retrieval."
+            "Building a multimodal media retrieval pipeline that indexes image/video assets, extracts metadata, and generates VLM-based descriptions for downstream search.",
+            "Designed MongoDB + ChromaDB retrieval architecture with weighted multi-collection ranking across narrative content, OCR text, and metadata fields.",
+            "Leveraged structured metadata and LLM-generated descriptions to enhance search relevance and enable complex queries."
         ],
         "tags": [
             "Gemini",
@@ -135,6 +139,9 @@
         "title": "Fuzzy Hybrid Model for Stock Trading",
         "startDate": "01/09/2024",
         "endDate": "30/09/2024",
+        "media": {
+            "github": "https://github.com/tristan-till/ai6124-project/tree/main"
+        },
         "points": [
             "Applied domain-based optimization to standard stock trading models, tailoring feature extraction to financial market indicators.",
             "Reduced feature dimensionality by 5x while improving model performance by approximately 20%.",
@@ -195,7 +202,11 @@
             },
             {
                 "title": "Thesis: Speech Recognition using Reconstructed Phase Spaces",
-                "description": "Transformed audio signals into 3D phase space representations and applied deep learning for enhanced accuracy."
+                "points": [
+                    "Transformed audio signals into 3D phase space representations and applied deep learning for enhanced accuracy.",
+                    "Built a multilingual ASR pipeline for Indic languages using reconstructed phase spaces as image-like speech representations, reducing error rate from 80% to 30%.",
+                    "Further reduced error to 15% by combining RPS and MFCC features in a unified deep learning pipeline despite differing feature dimensions."
+                ]
             }
         ],
         "tags": [
