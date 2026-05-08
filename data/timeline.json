@@ -6,7 +6,8 @@
         "endDate": "Present",
         "description": "Currently under development.",
         "media": {
-            "github": "https://github.com/indianeagle4599/Media-Search-Engine"
+            "github": "https://github.com/indianeagle4599/Media-Search-Engine",
+            "medium": "https://medium.com/@hitesh-goyal/from-caption-search-to-rich-media-retrieval-dbefd81c3823"
         },
         "points": [
             "Building a multimodal media retrieval pipeline that indexes image/video assets, extracts metadata, and generates VLM-based descriptions for downstream search.",
@@ -14,9 +15,66 @@
             "Leveraged structured metadata and LLM-generated descriptions to enhance search relevance and enable complex queries."
         ],
         "tags": [
-            "Gemini",
+            "Python",
+            "Streamlit",
+            "Ollama",
             "MongoDB",
-            "ChromaDB"
+            "ChromaDB",
+            "Gemini",
+            "Hybrid Retrieval",
+            "Vector Embeddings",
+            "VLM",
+            "Image Processing",
+            "OCR"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "Pixtyle",
+        "startDate": "01/09/2024",
+        "endDate": "On and Off",
+        "description": "Pixel Stylizer Toolkit for transforming photos and videos into stylized, flat-color wallpapers using advanced computer vision techniques.",
+        "media": {
+            "github": "https://github.com/indianeagle4599/Pixtyle"
+        },
+        "points": [
+            "Developed multiple stylization transforms including K-means clustering, enhanced clustering, Fourier-based animation, and edge enhancement for creating cartoon-like effects.",
+            "Implemented GPU-accelerated processing with PyTorch and NumPy backends, supporting both image and video inputs with temporal smoothing for stable animations.",
+            "Built a modular architecture with extensible transform classes, configuration-driven pipelines, and optional super-resolution upscaling using TensorFlow.",
+            "Refactored and stabilized the codebase, adding comprehensive image processing utilities and batch processing capabilities for folders and videos."
+        ],
+        "tags": [
+            "Python",
+            "PyTorch",
+            "Computer Vision",
+            "Image Processing",
+            "Video Processing"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "AI Generated Image Classifier",
+        "startDate": "20/02/2025",
+        "endDate": "31/03/2025",
+        "description": "MLOps pipeline for training and monitoring deep learning models to detect AI-generated vs human-generated images, with comprehensive experiment tracking and hyperparameter optimization.",
+        "media": {
+            "github": "https://github.com/indianeagle4599/ai-generated-image-classifier"
+        },
+        "points": [
+            "Developed deep learning models for binary classification of AI-generated vs human-generated images using various architectures and feature engineering techniques.",
+            "Implemented comprehensive model training pipeline with hyperparameter tuning, data augmentation, and evaluation metrics for Kaggle competition performance.",
+            "Explored multiple feature engineering approaches including Fast Fourier Transform based methods and traditional computer vision techniques.",
+            "Built modular codebase with experiment tracking, dataset organization, and model evaluation scripts for systematic development and testing."
+        ],
+        "tags": [
+            "Python",
+            "Deep Learning",
+            "Computer Vision",
+            "Kaggle",
+            "Image Classification",
+            "MLOps",
+            "Hyperparameter Tuning",
+            "Model Monitoring"
         ]
     },
     {

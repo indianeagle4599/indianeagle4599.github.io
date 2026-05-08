@@ -1,24 +1,48 @@
 // --- Core Utilities ---
 
 function parseDateObj(dateStr) {
-    if (!dateStr || dateStr.toLowerCase() === 'present') return new Date();
+    if (!dateStr) return new Date();
+    const status = getTimelineStatus(dateStr);
+    if (status && status.sortAsCurrent) return new Date();
     const parts = dateStr.split('/');
     if (parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
     return new Date(0);
 }
 
+function getTimelineStatus(dateStr) {
+    const normalized = String(dateStr || '').trim().toLowerCase();
+    const statuses = {
+        present: {
+            label: 'Present',
+            className: 'node-period--present',
+            sortAsCurrent: true
+        },
+        'on and off': {
+            label: 'On and off',
+            className: 'node-period--intermittent',
+            sortAsCurrent: true
+        }
+    };
+    return statuses[normalized] || null;
+}
+
 function formatMonthYear(dateStr) {
-    if (!dateStr || dateStr.toLowerCase() === 'present') return 'Present';
+    const status = getTimelineStatus(dateStr);
+    if (status) return status.label;
     const d = parseDateObj(dateStr);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function getPeriodString(startStr, endStr) {
+function getPeriodMeta(startStr, endStr) {
     const startFmt = formatMonthYear(startStr);
     const endFmt = formatMonthYear(endStr);
-    if (startFmt === endFmt && startFmt !== 'Present') return startFmt;
-    return `${startFmt} — ${endFmt}`;
+    const endStatus = getTimelineStatus(endStr);
+    const text = startFmt === endFmt && !endStatus ? startFmt : `${startFmt} — ${endFmt}`;
+    return {
+        text,
+        className: endStatus ? endStatus.className : ''
+    };
 }
 
 const TYPE_PRIORITY = {
@@ -34,6 +58,16 @@ const CERT_CATEGORY_ORDER = [
     'Supporting Credentials'
 ];
 const DEFAULT_CERT_CATEGORY = 'Supporting Credentials';
+const CERT_KIND_LABELS = {
+    course: 'Course',
+    internship: 'Internship',
+    achievement: 'Achievement'
+};
+
+function getCertificateKind(cert) {
+    const kind = String(cert.kind || '').trim().toLowerCase();
+    return CERT_KIND_LABELS[kind] ? kind : 'course';
+}
 
 function renderCredentialButtons(credentials) {
     if (!credentials || !credentials.length) return '';
@@ -73,6 +107,9 @@ let certificatesLoaded = false;
 function renderCertificateCard(cert, isCore = false) {
     const classes = ['cert-card', 'fade-in'];
     if (isCore) classes.push('cert-card-core');
+    const kind = getCertificateKind(cert);
+    classes.push(`cert-card--${kind}`);
+    const kindLabel = CERT_KIND_LABELS[kind];
     const meta = cert.issuer ? `<div class="cert-meta">${cert.issuer}</div>` : '';
     const description = cert.description ? `<p>${cert.description}</p>` : '';
     const link = cert.link ? `
@@ -84,6 +121,7 @@ function renderCertificateCard(cert, isCore = false) {
     return `
         <article class="${classes.join(' ')}">
             <div>
+                <div class="cert-kind">${kindLabel}</div>
                 <h3>${cert.title}</h3>
                 ${meta}
             </div>
@@ -217,7 +255,7 @@ async function loadTimeline() {
 
             const tagsHTML = node.tags ? node.tags.map(tech => `<span class="tech-tag">${tech}</span>`).join('') : '';
             const tagsBlock = tagsHTML ? `<div style="margin-top: 10px;">${tagsHTML}</div>` : '';
-            const periodString = getPeriodString(node.startDate, node.endDate);
+            const period = getPeriodMeta(node.startDate, node.endDate);
             const credentialHTML = renderCredentialButtons(node.credentials);
 
             if (node.type === 'project') {
@@ -225,6 +263,7 @@ async function loadTimeline() {
                 if (node.media) {
                     if (node.media.github) mediaLinks += `<a href="${node.media.github}" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;">GitHub</a>`;
                     if (node.media.demo) mediaLinks += `<a href="${node.media.demo}" target="_blank" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem;">Live Demo</a>`;
+                    if (node.media.medium) mediaLinks += `<a href="${node.media.medium}" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;">Blog</a>`;
                 }
 
                 // Pass the node directly to the content generator
@@ -233,7 +272,7 @@ async function loadTimeline() {
                 nodeDiv.innerHTML = `
                     <div class="node-header">
                         <div class="node-entity" style="color: var(--proj-color);">${node.title}</div>
-                        <div class="node-period">${periodString}</div>
+                        <div class="node-period ${period.className}">${period.text}</div>
                     </div>
                     <div class="sub-item">
                         ${contentHTML}
@@ -260,7 +299,7 @@ async function loadTimeline() {
                             ${logoHTML}
                             <div class="node-entity">${node.entity}</div>
                         </div>
-                        <div class="node-period">${periodString}</div>
+                        <div class="node-period ${period.className}">${period.text}</div>
                     </div>
                     <div class="node-items-container">
                         ${rolesHTML}

@@ -4,6 +4,7 @@
         "issuer": "AWS",
         "description": "AWS-sponsored nanodegree covering model development, deployment, and monitoring.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/15%20AWS%20-%20ML%20Foundations%20Nanodegree.pdf",
+        "kind": "course",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -12,6 +13,7 @@
         "issuer": "Coursera / DeepLearning.AI",
         "description": "Andrew Ng's framework for scoping ML systems, diagnosing error, and iterating fast.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/12%20Coursera%20-%20Structuring%20Machine%20Learning%20Projects.pdf",
+        "kind": "course",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -20,6 +22,7 @@
         "issuer": "Smartknower",
         "description": "Performance certificate for delivering ML features on production datasets.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/6%20Smartknower%20-%20ML%20Internship%20Certificate.jpg",
+        "kind": "internship",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -28,6 +31,7 @@
         "issuer": "Smartknower",
         "description": "Completion certificate for the supervised/unsupervised ML bootcamp.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/6%20Smartknower%20-%20ML%20Course%20Completion.jpg",
+        "kind": "course",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -36,14 +40,16 @@
         "issuer": "Vellore Institute of Technology",
         "description": "Research internship certificate for speech-recognition work using phase spaces.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/9%20VIT%20-%20Research%20Internship%20Certificate.jpeg",
+        "kind": "internship",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
     {
-        "title": "AWS DeepRacer Student Participant",
-        "issuer": "AWS",
-        "description": "Reinforcement-learning competition credential for autonomous racing agents.",
-        "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/AWS%20Deep%20Racer%20Student%20-%20Participation%20Certificate.pdf",
+        "title": "AWS DeepRacer League Pro Division Licence",
+        "issuer": "AWS DeepRacer",
+        "description": "Advanced to the 2022 Virtual Circuit Pro Division with a Top 100 rank among 2,000+ AWS DeepRacer competitors.",
+        "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/AWS%20Deep%20Racer%20-%20Pro%20Division%20Certificate.pdf",
+        "kind": "achievement",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -52,6 +58,7 @@
         "issuer": "MongoDB University",
         "description": "Schema design and aggregation pipelines for document databases.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/7%20MongoDB%20-%20M001%20(MongoDB%20Basics)%20Course%20Completion.jpg",
+        "kind": "course",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -60,6 +67,7 @@
         "issuer": "Coursera / Google",
         "description": "Automation-ready Python foundations powering scripting and ML pipelines.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/13%20Coursera%20-%20Crash%20Course%20on%20Python.pdf",
+        "kind": "course",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -68,6 +76,7 @@
         "issuer": "Coursera / Google",
         "description": "Data lifecycle playbook: collection, cleaning, validation, and stakeholder reporting.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/14%20Coursera%20-%20Foundations%20Data,%20Data,%20Everywhere.pdf",
+        "kind": "course",
         "importance": "core",
         "category": "AI & ML Engineering"
     },
@@ -76,6 +85,7 @@
         "issuer": "Cisco",
         "description": "Network defense fundamentals: threat modeling, segmentation, and secure routing.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/1%20Cisco%20-%20Cybersecurity%20Essentials%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -84,6 +94,7 @@
         "issuer": "Cisco",
         "description": "Hands-on network simulation to prototype resilient infra setups.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/4%20Cisco%20-%20Introduction%20to%20Packet%20Tracer%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -92,6 +103,7 @@
         "issuer": "Cisco",
         "description": "Professional development webinar covering modern cyber threat surfaces.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/Cisco%20-%20Cybersecurity%20Webinar%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -100,6 +112,7 @@
         "issuer": "Coursera / Google",
         "description": "Command-line automation essentials for reproducible ops workflows.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/3%20Coursera%20-%20Practical%20Introduction%20to%20Command%20Line.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -108,6 +121,7 @@
         "issuer": "Scaler",
         "description": "Full-stack fundamentals supporting internal tooling and dashboards.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/Scaler%20-%20Web%20Development%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -116,6 +130,7 @@
         "issuer": "VITOL",
         "description": "Coursework translating biological principles into engineered systems.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/2%20VITOL%20-%20Bio-Inspired%20Design%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -124,6 +139,7 @@
         "issuer": "VITOL",
         "description": "Quantitative methods for ROI modeling and financial planning.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/2%20VITOL%20-%20Business%20Mathematics%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -132,6 +148,7 @@
         "issuer": "VITOL",
         "description": "Regulatory fundamentals for IP, contracts, and compliant data handling.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/2%20VITOL%20-%20Legal%20Aspects%20of%20Business%20Certificate.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Platform & Infrastructure"
     },
@@ -140,6 +157,7 @@
         "issuer": "Coursera / UC San Diego",
         "description": "Meta-learning habits for rapidly mastering new technical domains.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/5%20Coursera%20-%20Learning%20How%20to%20Learn.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Professional Development"
     },
@@ -148,6 +166,7 @@
         "issuer": "Coursera / McMaster",
         "description": "Mindset-driven framework for creative career pivots and innovation.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/8%20Coursera%20-%20Mindshift%20Honors.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Professional Development"
     },
@@ -156,6 +175,7 @@
         "issuer": "Coursera / Yale",
         "description": "Human cognition primer for building empathetic user journeys.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/10%20Coursera%20-%20Introduction%20to%20Psychology.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Professional Development"
     },
@@ -164,6 +184,7 @@
         "issuer": "Coursera / Yale",
         "description": "Positive psychology toolkit for sustainable, high-performing teams.",
         "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/11%20Coursera%20-%20Science%20of%20Well-Being.pdf",
+        "kind": "course",
         "importance": "support",
         "category": "Professional Development"
     }

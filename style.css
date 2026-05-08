@@ -9,6 +9,7 @@
     --edu-color: #a371f7;
     --work-color: #3fb950;
     --proj-color: #58a6ff;
+    --achievement-color: #d29922;
 }
 
 /* --- Base Reset --- */
@@ -379,6 +380,26 @@ p {
     color: var(--text-muted);
     font-family: 'Fira Code', monospace;
     font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+.node-period--present,
+.node-period--intermittent {
+    padding: 4px 8px;
+    border: 1px solid;
+    border-radius: 6px;
+}
+
+.node-period--present {
+    color: var(--work-color);
+    background: rgba(63, 185, 80, 0.1);
+    border-color: rgba(63, 185, 80, 0.35);
+}
+
+.node-period--intermittent {
+    color: var(--achievement-color);
+    background: rgba(210, 153, 34, 0.1);
+    border-color: rgba(210, 153, 34, 0.35);
 }
 
 .sub-item {
@@ -614,7 +635,9 @@ p {
 }
 
 .cert-card {
-    border: 1px solid var(--border);
+    --cert-accent: var(--edu-color);
+    border: 1px solid rgba(163, 113, 247, 0.28);
+    border-top: 3px solid var(--cert-accent);
     border-radius: 14px;
     padding: 20px;
     background: var(--bg-card);
@@ -625,7 +648,31 @@ p {
 }
 
 .cert-card:hover {
-    border-color: var(--accent);
+    border-color: color-mix(in srgb, var(--cert-accent) 62%, var(--border));
+    border-top-color: var(--cert-accent);
+}
+
+.cert-card--internship {
+    --cert-accent: var(--work-color);
+    border-color: rgba(63, 185, 80, 0.28);
+    background: linear-gradient(180deg, rgba(63, 185, 80, 0.08), var(--bg-card) 42%);
+}
+
+.cert-card--course {
+    --cert-accent: var(--edu-color);
+    background: linear-gradient(180deg, rgba(163, 113, 247, 0.08), var(--bg-card) 42%);
+}
+
+.cert-card--achievement {
+    --cert-accent: var(--achievement-color);
+    border-color: rgba(210, 153, 34, 0.3);
+    background: linear-gradient(180deg, rgba(210, 153, 34, 0.1), var(--bg-card) 42%);
+}
+
+.cert-card--internship,
+.cert-card--course,
+.cert-card--achievement {
+    border-top-color: var(--cert-accent);
 }
 
 .cert-card h3 {
@@ -651,9 +698,19 @@ p {
     font-size: 0.85rem;
 }
 
+.cert-kind {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--cert-accent);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 .cert-card-core {
-    border-color: rgba(88, 166, 255, 0.45);
-    background: rgba(88, 166, 255, 0.05);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .cert-controls {
