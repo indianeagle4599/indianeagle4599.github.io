@@ -37,6 +37,17 @@ html {
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 /* --- Typography --- */
 h1,
 h2 {
@@ -686,6 +697,10 @@ p {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 18px;
+}
+
+.cert-status {
+    color: var(--text-muted);
 }
 
 .cert-card {

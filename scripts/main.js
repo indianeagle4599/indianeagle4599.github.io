@@ -221,7 +221,6 @@ async function loadProfile() {
 
         const profile = await response.json();
 
-        document.title = `${profile.name || 'My Portfolio'} | Portfolio`;
         document.getElementById('hero-name').textContent = profile.name || 'Your Name';
         document.getElementById('hero-summary').textContent = profile.summary || 'No summary available yet.';
         document.getElementById('hero-resume').href = profile.resume_url || '#';
@@ -383,7 +382,7 @@ async function loadCertificates() {
         const certificates = await response.json();
 
         if (!certificates.length) {
-            primaryGrid.innerHTML = '<p style="color: var(--text-muted);">Certificates coming soon.</p>';
+            primaryGrid.innerHTML = '<p class="cert-status">Certificates coming soon.</p>';
             return;
         }
 
@@ -418,7 +417,7 @@ async function loadCertificates() {
         initScrollAnimations();
     } catch (error) {
         console.error('Error loading certificates:', error);
-        primaryGrid.innerHTML = '<p style="color: var(--text-muted);">Unable to load certificates right now.</p>';
+        primaryGrid.innerHTML = '<p class="cert-status">Unable to load certificates right now.</p>';
     }
 }
 

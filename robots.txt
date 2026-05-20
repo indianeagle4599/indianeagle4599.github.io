@@ -1,0 +1,17 @@
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: OAI-SearchBot
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: ClaudeBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://hiteshgoyal.me/sitemap.xml
