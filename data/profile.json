@@ -1,31 +1,32 @@
 {
     "name": "Hitesh Goyal",
-    "title": "Full Stack AI Engineer | Vision | Systems",
+    "title": "Applied AI Engineer | Vision · NLP · Systems",
     "location": "Singapore",
-    "summary": "Performance-driven AI Engineer and NTU post-graduate with a knack for building high-impact solutions.",
+    "summary": "Building production-grade AI systems across computer vision, language, and generative models — wherever the problem is hardest.",
     "resume_url": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Resume.pdf",
     "email": "hiteshgoyal.business@gmail.com",
     "contact_cta": "Let's build reliable AI platforms together",
     "about": {
-        "bio": "Performance-driven AI Engineer and NTU MSc AI candidate translating research-grade vision and generative models into lean, observable production systems.",
+        "bio": "AI Engineer with a track record of delivering across domains — computer vision at Tata Elxsi, GPU-accelerated biotech at Hummingbird Bioscience, speech recognition research at VIT, and generative AI pipelines. I deliberately pick up new problem spaces and find where techniques transfer.",
         "highlights": [
-            "Training and fine-tuning vision models",
-            "Optimising AI pipelines for resource efficiency",
-            "Bridging research prototypes to production-ready tools"
+            "Building ML systems across vision, speech, language, and generative AI",
+            "Optimising models and pipelines for real-world performance constraints",
+            "Taking research-grade ideas to working, measurable implementations"
         ],
         "focus": [
-            "Generative + computer vision systems",
-            "Real-time CV for ads & safety",
-            "AI infra on SLURM/AWS"
+            "Computer vision and multimodal systems",
+            "Generative AI pipelines",
+            "Speech and audio ML"
         ],
         "stack": [
+            "Python",
             "PyTorch",
             "FastAPI",
             "Docker",
-            "AWS DL AMIs",
-            "Celery"
+            "MongoDB",
+            "ChromaDB"
         ],
-        "availability": "Open to AI/ML engineering roles and applied research collaborations in Singapore or remote."
+        "availability": "Currently based in Singapore. Open to AI engineering roles across vision, language, and generative systems — anywhere in the world."
     },
     "socials": {
         "github": "https://github.com/indianeagle4599",

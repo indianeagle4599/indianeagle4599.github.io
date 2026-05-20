@@ -3,8 +3,8 @@
         "type": "project",
         "title": "Media Search Engine",
         "startDate": "15/02/2026",
-        "endDate": "Present",
-        "description": "Currently under development.",
+        "endDate": "30/04/2026",
+        "description": "Paused in April 2026. A multimodal media retrieval pipeline indexing image/video assets via VLM-generated descriptions, OCR, and metadata across semantic and lexical retrieval surfaces.",
         "media": {
             "github": "https://github.com/indianeagle4599/Media-Search-Engine",
             "medium": "https://medium.com/@hitesh-goyal/from-caption-search-to-rich-media-retrieval-dbefd81c3823"
@@ -237,6 +237,73 @@
             "Deep Learning",
             "Computer Vision",
             "Mathematics"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "Ask Krishna",
+        "startDate": "01/05/2026",
+        "endDate": "Present",
+        "description": "A quiet Bhagavad Gita reflection tool in the browser — surfaces a mantra, a pause, and five passages in response to whatever is on your mind. Fully static, no server, no tracking.",
+        "media": {
+            "demo": "https://hiteshgoyal.me/ask-krishna/"
+        },
+        "points": [
+            "Built as a personal, local-first static site using vanilla JS and localStorage — no build step, no dependencies.",
+            "Multilingual support with i18n across Gita passages.",
+            "Deployed on GitHub Pages; runs entirely in the browser."
+        ],
+        "tags": [
+            "JavaScript",
+            "Vanilla JS",
+            "Static Site",
+            "i18n",
+            "Local-first"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "Flodoro",
+        "startDate": "01/07/2024",
+        "endDate": "On and Off",
+        "description": "A local-first Pomodoro timer and task manager built as a gift for a family member — configurable sessions, ambient audio playlists, theme controls, and full history tracking. Runs as a static HTML page.",
+        "media": {
+            "demo": "https://hiteshgoyal.me/pomodoro-app/"
+        },
+        "points": [
+            "Serverless and local-first — all data persisted in localStorage, no backend.",
+            "Configurable work/break sessions, notification settings, and ambient audio playlist manager.",
+            "Supports multiple themes and dark mode; originally ran on Windows as a static HTML file, now deployed on GitHub Pages."
+        ],
+        "tags": [
+            "JavaScript",
+            "Vanilla JS",
+            "CSS",
+            "localStorage",
+            "Productivity"
+        ]
+    },
+    {
+        "type": "project",
+        "title": "OS Toolkit",
+        "startDate": "01/01/2024",
+        "endDate": "On and Off",
+        "description": "A Python-first CLI toolkit for filesystem analysis, safe file transfer, migration planning, and developer workflow automation. An ongoing personal utility project.",
+        "media": {
+            "github": "https://github.com/indianeagle4599/os-toolkit"
+        },
+        "points": [
+            "Multithreaded and multiprocessed file reading and transfer for fast filesystem operations across large directories.",
+            "Covers disk analysis, safe migration planning, and developer workflow automation.",
+            "Designed as a forever project — incrementally extended with new OS utilities as needs arise."
+        ],
+        "tags": [
+            "Python",
+            "CLI",
+            "Multithreading",
+            "Multiprocessing",
+            "Automation",
+            "Filesystem"
         ]
     },
     {
