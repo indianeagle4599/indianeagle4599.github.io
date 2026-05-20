@@ -95,11 +95,14 @@
     <section id="timeline" class="section">
         <h2 class="section-title fade-in">Timeline</h2>
 
-        <div class="filter-controls fade-in" role="tablist" aria-label="Timeline filter">
-            <button class="filter-btn active" data-filter="project" aria-pressed="true">Projects</button>
-            <button class="filter-btn" data-filter="work" aria-pressed="false">Work</button>
-            <button class="filter-btn" data-filter="education" aria-pressed="false">Education</button>
-            <button class="filter-btn" data-filter="certificates" aria-pressed="false">Certificates</button>
+        <div class="timeline-toolbar fade-in">
+            <div class="filter-controls" role="tablist" aria-label="Timeline filter">
+                <button class="filter-btn active" data-filter="project" aria-pressed="true">Projects</button>
+                <button class="filter-btn" data-filter="work" aria-pressed="false">Work</button>
+                <button class="filter-btn" data-filter="education" aria-pressed="false">Education</button>
+                <button class="filter-btn" data-filter="certificates" aria-pressed="false">Certificates</button>
+            </div>
+            <button type="button" id="expand-all" class="expand-all-btn">Expand all</button>
         </div>
 
         <div id="timeline-grid" class="timeline-container">

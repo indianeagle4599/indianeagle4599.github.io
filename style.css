@@ -301,11 +301,36 @@ p {
 }
 
 /* --- Filter Buttons --- */
+.timeline-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
 .filter-controls {
     display: flex;
     gap: 10px;
-    margin-bottom: 40px;
     flex-wrap: wrap;
+}
+
+.expand-all-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.expand-all-btn:hover {
+    border-color: var(--text-main);
+    color: var(--text-main);
 }
 
 .filter-btn {
@@ -544,16 +569,6 @@ p {
     gap: 15px;
 }
 
-.node-tags {
-    margin-top: 10px;
-}
-
-.node-media {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
 
 /* --- Timeline Entity Logos --- */
 .node-logo {
@@ -564,6 +579,12 @@ p {
     background: #ffffff;
     padding: 3px;
     border: 1px solid var(--border);
+}
+
+.timeline-node[data-type="project"] .node-logo {
+    background: transparent;
+    border: none;
+    padding: 0;
 }
 
 /* --- About Section --- */
@@ -653,13 +674,6 @@ p {
     margin: 0;
     color: var(--text-muted);
     font-size: 0.95rem;
-}
-
-.node-credentials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 12px;
 }
 
 .btn-tiny {
@@ -809,4 +823,78 @@ p {
     letter-spacing: 0.08em;
     color: var(--text-muted);
     text-transform: uppercase;
+}
+
+/* --- Collapse / Expand --- */
+.node-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.node-toggle:hover {
+    color: #79b8ff;
+}
+
+.node-toggle svg {
+    transition: transform 0.3s ease;
+}
+
+.timeline-node[data-expanded="true"] .node-toggle svg {
+    transform: rotate(180deg);
+}
+
+.node-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.timeline-node[data-expanded="true"] .node-body {
+    max-height: 800px;
+}
+
+.node-links-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.node-tags {
+    margin-top: 12px;
+}
+
+.timeline-role {
+    margin-bottom: 20px;
+}
+
+.timeline-node[data-expanded="false"] .node-tags .tech-tag:nth-child(n+4) {
+    display: none;
+}
+
+.timeline-node[data-expanded="true"] .node-tags .tech-tag:nth-child(n+4) {
+    animation: tagFadeIn 0.35s ease both;
+}
+
+@keyframes tagFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

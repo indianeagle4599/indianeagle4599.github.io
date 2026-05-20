@@ -1,5 +1,11 @@
 // --- Core Utilities ---
 
+// Async-rendered content makes the browser's auto scroll restoration land
+// against an empty layout on reload; restore manually once data is in.
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
 function parseDateObj(dateStr) {
     if (!dateStr) return new Date();
     const status = getTimelineStatus(dateStr);
@@ -58,6 +64,7 @@ const CERT_CATEGORY_ORDER = [
     'Supporting Credentials'
 ];
 const DEFAULT_CERT_CATEGORY = 'Supporting Credentials';
+const TOGGLE_HTML = `<button type="button" class="node-toggle" aria-expanded="false"><span class="node-toggle-label">Details</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>`;
 const CERT_KIND_LABELS = {
     course: 'Course',
     internship: 'Internship',
@@ -75,29 +82,23 @@ function renderCredentialButtons(credentials) {
         .map(cred => typeof cred === 'string' ? cred : cred && cred.url)
         .filter(Boolean);
     if (!urls.length) return '';
-    return `
-        <div class="node-credentials">
-            ${urls.map(url => `
-                <a href="${url}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny" title="Opens credential proof in a new tab">
-                    View Credentials
-                </a>
-            `).join('')}
-        </div>
-    `;
+    return urls.map(url => `<a href="${url}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny" title="Opens credential proof in a new tab">View Credentials</a>`).join('');
 }
 
-function generateContentHTML(item) {
-    let html = '';
-    if (item.description) {
-        html += `<p class="node-desc">${item.description}</p>`;
+
+
+function setNodeExpanded(nodeEl, expanded) {
+    nodeEl.setAttribute('data-expanded', String(expanded));
+    const toggle = nodeEl.querySelector('.node-toggle');
+    if (toggle) {
+        toggle.setAttribute('aria-expanded', String(expanded));
+        const label = toggle.querySelector('.node-toggle-label');
+        if (label) label.textContent = expanded ? 'Collapse' : 'Details';
     }
-    if (item.subtitle) {
-        html += `<h5 class="node-subtitle">${item.subtitle}</h5>`;
-    }
-    if (item.points && item.points.length > 0) {
-        html += `<ul>${item.points.map(p => `<li>${p}</li>`).join('')}</ul>`;
-    }
-    return html;
+}
+
+function toggleNode(nodeEl) {
+    setNodeExpanded(nodeEl, nodeEl.getAttribute('data-expanded') !== 'true');
 }
 
 let filtersInitialized = false;
@@ -258,13 +259,18 @@ async function loadTimeline() {
             const nodeDiv = document.createElement('div');
             nodeDiv.className = 'timeline-node fade-in';
             nodeDiv.setAttribute('data-type', node.type);
+            nodeDiv.setAttribute('data-expanded', 'false');
 
             const tagsHTML = node.tags ? node.tags.map(tech => `<span class="tech-tag">${tech}</span>`).join('') : '';
-            const tagsBlock = tagsHTML ? `<div class="node-tags">${tagsHTML}</div>` : '';
             const period = getPeriodMeta(node.startDate, node.endDate);
             const credentialHTML = renderCredentialButtons(node.credentials);
 
             if (node.type === 'project') {
+                const logoHTML = node.logo ? `<img src="${node.logo}" alt="${node.title} logo" class="node-logo" loading="lazy">` : '';
+                const entityInner = logoHTML
+                    ? `<div class="node-entity-group">${logoHTML}<div class="node-entity">${node.title}</div></div>`
+                    : `<div class="node-entity">${node.title}</div>`;
+
                 let mediaLinks = '';
                 if (node.media) {
                     if (node.media.github) mediaLinks += `<a href="${node.media.github}" target="_blank" class="btn btn-outline btn-tiny">GitHub</a>`;
@@ -272,30 +278,41 @@ async function loadTimeline() {
                     if (node.media.medium) mediaLinks += `<a href="${node.media.medium}" target="_blank" class="btn btn-outline btn-tiny">Blog</a>`;
                 }
 
-                const contentHTML = generateContentHTML(node);
+                const allLinks = credentialHTML + mediaLinks;
+                const descHTML = node.description ? `<p class="node-desc">${node.description}</p>` : '';
+                const bulletsPart = node.points && node.points.length ? `<ul>${node.points.map(p => `<li>${p}</li>`).join('')}</ul>` : '';
+                const bodyHTML = bulletsPart ? `<div class="node-body"><div class="sub-item">${bulletsPart}</div></div>` : '';
+                const linksBarHTML = allLinks ? `<div class="node-links-bar">${allLinks}</div>` : '';
+                const tagsEl = tagsHTML ? `<div class="node-tags">${tagsHTML}</div>` : '';
 
                 nodeDiv.innerHTML = `
                     <div class="node-header">
-                        <div class="node-entity">${node.title}</div>
+                        ${entityInner}
                         <div class="node-period ${period.className}">${period.text}</div>
                     </div>
-                    <div class="sub-item">
-                        ${contentHTML}
-                        ${credentialHTML}
-                        ${mediaLinks ? `<div class="node-media">${mediaLinks}</div>` : ''}
-                    </div>
-                    ${tagsBlock}
+                    ${descHTML}
+                    ${bodyHTML ? TOGGLE_HTML : ''}
+                    ${bodyHTML}
+                    ${linksBarHTML}
+                    ${tagsEl}
                 `;
             } else {
                 const logoHTML = node.logo ? `<img src="${node.logo}" alt="${node.entity} logo" class="node-logo" loading="lazy">` : '';
 
-                const rolesHTML = node.roles.map((role, index) => `
-                    <div class="sub-item">
-                        <h4 class="sub-title">${role.title}</h4>
-                        ${generateContentHTML(role)}
-                        ${index === 0 ? `${credentialHTML}` : ''}
-                    </div>
-                `).join('');
+                let hasBody = false;
+                const rolesHTML = node.roles.map(role => {
+                    const titleHTML = `<h4 class="sub-title">${role.title}</h4>`;
+                    const descP = role.description ? `<p class="node-desc">${role.description}</p>` : '';
+                    const subtitleH = role.subtitle ? `<h5 class="node-subtitle">${role.subtitle}</h5>` : '';
+                    const bulletsU = role.points && role.points.length ? `<ul>${role.points.map(p => `<li>${p}</li>`).join('')}</ul>` : '';
+                    const innerBody = subtitleH + bulletsU;
+                    if (innerBody) hasBody = true;
+                    const bodyHTML = innerBody ? `<div class="node-body"><div class="sub-item">${innerBody}</div></div>` : '';
+                    return `<div class="timeline-role">${titleHTML}${descP}${bodyHTML}</div>`;
+                }).join('');
+
+                const linksBarHTML = credentialHTML ? `<div class="node-links-bar">${credentialHTML}</div>` : '';
+                const tagsEl = tagsHTML ? `<div class="node-tags">${tagsHTML}</div>` : '';
 
                 nodeDiv.innerHTML = `
                     <div class="node-header">
@@ -305,12 +322,16 @@ async function loadTimeline() {
                         </div>
                         <div class="node-period ${period.className}">${period.text}</div>
                     </div>
-                    <div class="node-items-container">
-                        ${rolesHTML}
-                    </div>
-                    ${tagsBlock}
+                    ${rolesHTML}
+                    ${hasBody ? TOGGLE_HTML : ''}
+                    ${linksBarHTML}
+                    ${tagsEl}
                 `;
             }
+
+            const toggleBtn = nodeDiv.querySelector('.node-toggle');
+            if (toggleBtn) toggleBtn.addEventListener('click', () => toggleNode(nodeDiv));
+
             container.appendChild(nodeDiv);
         });
 
@@ -429,16 +450,20 @@ function setupFilters(defaultFilter = 'work') {
                 const filterValue = btn.getAttribute('data-filter');
                 const grid = document.getElementById('timeline-grid');
                 const panel = document.getElementById('cert-panel');
+                const expandAll = document.getElementById('expand-all');
                 updateFilterButtons(filterValue);
                 if (filterValue === 'certificates') {
                     applyTimelineFilter(null);
                     if (grid) grid.classList.add('showing-certs');
-                    loadCertificates();
                     if (panel) panel.hidden = false;
+                    if (expandAll) expandAll.hidden = true;
+                    loadCertificates().then(scrollTimelineIntoView);
                 } else {
                     if (panel) panel.hidden = true;
                     if (grid) grid.classList.remove('showing-certs');
                     applyTimelineFilter(filterValue);
+                    if (expandAll) expandAll.hidden = false;
+                    scrollTimelineIntoView();
                 }
             });
         });
@@ -479,16 +504,17 @@ function animateLogo() {
     setTimeout(typeSmile, 1500);
 }
 
+const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            fadeObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1 });
+
 function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in:not(.visible)').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in:not(.visible)').forEach(el => fadeObserver.observe(el));
 }
 
 function initScrollHint() {
@@ -556,14 +582,40 @@ function initMobileNav() {
     });
 }
 
+function initExpandAll() {
+    const btn = document.getElementById('expand-all');
+    if (!btn) return;
+    let expanded = false;
+    btn.addEventListener('click', () => {
+        expanded = !expanded;
+        document.querySelectorAll('.timeline-node').forEach(node => setNodeExpanded(node, expanded));
+        btn.textContent = expanded ? 'Collapse all' : 'Expand all';
+    });
+}
+
+// Filter switches change document height; re-anchor to the timeline top
+// so freshly-filtered content does not jump under the viewport.
+function scrollTimelineIntoView() {
+    const section = document.getElementById('timeline');
+    if (section) section.scrollIntoView({ block: 'start' });
+}
+
+// Honor a URL hash only after async content has rendered, so the target
+// section is at its final height.
+function restoreScrollPosition() {
+    const id = window.location.hash.slice(1);
+    const target = id ? document.getElementById(id) : null;
+    if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
+}
+
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
-    loadProfile();
-    loadTimeline();
     animateLogo();
     initScrollHint();
     initNavHighlight();
     initMobileNav();
+    initExpandAll();
+    Promise.all([loadProfile(), loadTimeline()]).then(restoreScrollPosition);
 });

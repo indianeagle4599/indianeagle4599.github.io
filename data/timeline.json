@@ -1,7 +1,8 @@
 [
     {
         "type": "project",
-        "title": "Media Search Engine",
+        "title": "Aftersight: Media Search Engine",
+        "logo": "./assets/aftersight-logo.png",
         "startDate": "15/02/2026",
         "endDate": "30/04/2026",
         "description": "Paused in April 2026. A multimodal media retrieval pipeline indexing image/video assets via VLM-generated descriptions, OCR, and metadata across semantic and lexical retrieval surfaces.",
@@ -31,6 +32,7 @@
     {
         "type": "project",
         "title": "Pixtyle",
+        "logo": "./assets/pixtyle-logo.png",
         "startDate": "01/09/2024",
         "endDate": "On and Off",
         "description": "Pixel Stylizer Toolkit for transforming photos and videos into stylized, flat-color wallpapers using advanced computer vision techniques.",
@@ -182,6 +184,7 @@
         "title": "LazyResume: OCR & LLM Document Parsing",
         "startDate": "01/05/2025",
         "endDate": "31/05/2025",
+        "description": "A resume optimisation tool that improves parse accuracy and alignment between resumes and job descriptions.",
         "points": [
             "Engineered a pipeline using Vision-based OCR and LLMs; designed to bridge the recruiter-candidate gap by automating unstructured data parsing into structured JSON.",
             "Improved parseability of complex layouts by 20% via custom evaluation hooks for resume-to-JD alignment."
@@ -197,6 +200,7 @@
         "title": "Fuzzy Hybrid Model for Stock Trading",
         "startDate": "01/09/2024",
         "endDate": "30/09/2024",
+        "description": "Algorithmic trading bot combining fuzzy logic and neural networks to generate buy/sell signals from domain-specific financial market features.",
         "media": {
             "github": "https://github.com/tristan-till/ai6124-project/tree/main"
         },
@@ -242,10 +246,12 @@
     {
         "type": "project",
         "title": "Ask Krishna",
+        "logo": "./assets/ask-krishna-logo.svg",
         "startDate": "01/05/2026",
         "endDate": "Present",
         "description": "A quiet Bhagavad Gita reflection tool in the browser — surfaces a mantra, a pause, and five passages in response to whatever is on your mind. Fully static, no server, no tracking.",
         "media": {
+            "github": "https://github.com/indianeagle4599/ask-krishna",
             "demo": "https://hiteshgoyal.me/ask-krishna/"
         },
         "points": [
@@ -264,10 +270,12 @@
     {
         "type": "project",
         "title": "Flodoro",
+        "logo": "./assets/flodoro-logo.png",
         "startDate": "01/07/2024",
         "endDate": "On and Off",
         "description": "A local-first Pomodoro timer and task manager built as a gift for a family member — configurable sessions, ambient audio playlists, theme controls, and full history tracking. Runs as a static HTML page.",
         "media": {
+            "github": "https://github.com/indianeagle4599/pomodoro-app",
             "demo": "https://hiteshgoyal.me/pomodoro-app/"
         },
         "points": [
@@ -286,6 +294,7 @@
     {
         "type": "project",
         "title": "OS Toolkit",
+        "logo": "./assets/os-toolkit-logo-blink.gif",
         "startDate": "01/01/2024",
         "endDate": "On and Off",
         "description": "A Python-first CLI toolkit for filesystem analysis, safe file transfer, migration planning, and developer workflow automation. An ongoing personal utility project.",
