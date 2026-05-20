@@ -74,10 +74,6 @@ p {
     opacity: 0.92;
 }
 
-#hero-summary::first-letter {
-    font-weight: 600;
-}
-
 
 /* --- Navigation --- */
 #navbar {
@@ -335,6 +331,11 @@ p {
     position: relative;
     padding-left: 30px;
     border-left: 2px solid var(--border);
+}
+
+.timeline-container.showing-certs {
+    border-left: none;
+    padding-left: 0;
 }
 
 .timeline-node {

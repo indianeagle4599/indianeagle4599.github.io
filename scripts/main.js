@@ -325,11 +325,37 @@ async function loadTimeline() {
 async function loadCertificates() {
     if (certificatesLoaded) return;
     certificatesLoaded = true;
-    const primaryGrid = document.getElementById('certificate-grid');
-    const archiveGrid = document.getElementById('certificate-archive');
-    const toggleBtn = document.getElementById('cert-toggle');
-    const controls = document.getElementById('cert-controls');
-    if (!primaryGrid) return;
+
+    const timelineGrid = document.getElementById('timeline-grid');
+    if (!timelineGrid) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'cert-panel';
+
+    const primaryGrid = document.createElement('div');
+    primaryGrid.id = 'certificate-grid';
+
+    const controls = document.createElement('div');
+    controls.id = 'cert-controls';
+    controls.className = 'cert-controls';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.id = 'cert-toggle';
+    toggleBtn.className = 'cert-toggle';
+    toggleBtn.setAttribute('aria-expanded', 'false');
+
+    controls.appendChild(toggleBtn);
+
+    const archiveGrid = document.createElement('div');
+    archiveGrid.id = 'certificate-archive';
+    archiveGrid.className = 'cert-archive';
+    archiveGrid.hidden = true;
+
+    panel.appendChild(primaryGrid);
+    panel.appendChild(controls);
+    panel.appendChild(archiveGrid);
+    timelineGrid.appendChild(panel);
+
     try {
         const response = await fetch('./data/certificates.json');
         if (!response.ok) throw new Error(`Certificates fetch failed: ${response.status}`);
@@ -350,13 +376,12 @@ async function loadCertificates() {
 
         renderCertificateSections(featured, primaryGrid, true);
 
-        if (archive.length && archiveGrid && toggleBtn) {
+        if (archive.length) {
             renderCertificateSections(archive, archiveGrid, false);
             toggleBtn.style.display = 'inline-flex';
             toggleBtn.textContent = 'Show additional certificates';
-            toggleBtn.setAttribute('aria-expanded', 'false');
             archiveGrid.hidden = true;
-            if (controls) controls.style.display = 'block';
+            controls.style.display = 'block';
 
             toggleBtn.addEventListener('click', () => {
                 const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
@@ -365,8 +390,8 @@ async function loadCertificates() {
                 toggleBtn.textContent = expanded ? 'Show additional certificates' : 'Hide additional certificates';
             });
         } else {
-            if (toggleBtn) toggleBtn.style.display = 'none';
-            if (controls) controls.style.display = 'none';
+            toggleBtn.style.display = 'none';
+            controls.style.display = 'none';
         }
 
         initScrollAnimations();
@@ -374,27 +399,6 @@ async function loadCertificates() {
         console.error('Error loading certificates:', error);
         primaryGrid.innerHTML = '<p style="color: var(--text-muted);">Unable to load certificates right now.</p>';
     }
-}
-
-function initCertificateLoader() {
-    const certificatesSection = document.getElementById('certificates');
-    if (!certificatesSection) return;
-
-    if (!('IntersectionObserver' in window)) {
-        loadCertificates();
-        return;
-    }
-
-    const certObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                loadCertificates();
-                observer.disconnect();
-            }
-        });
-    }, { rootMargin: '0px 0px -20% 0px' });
-
-    certObserver.observe(certificatesSection);
 }
 
 // --- Interaction Logic ---
@@ -411,7 +415,7 @@ function updateFilterButtons(activeFilter) {
 function applyTimelineFilter(filterValue) {
     const nodes = document.querySelectorAll('.timeline-node');
     nodes.forEach(node => {
-        node.style.display = node.getAttribute('data-type') === filterValue ? 'block' : 'none';
+        node.style.display = filterValue && node.getAttribute('data-type') === filterValue ? 'block' : 'none';
     });
 }
 
@@ -423,8 +427,19 @@ function setupFilters(defaultFilter = 'work') {
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const filterValue = btn.getAttribute('data-filter');
+                const grid = document.getElementById('timeline-grid');
+                const panel = document.getElementById('cert-panel');
                 updateFilterButtons(filterValue);
-                applyTimelineFilter(filterValue);
+                if (filterValue === 'certificates') {
+                    applyTimelineFilter(null);
+                    if (grid) grid.classList.add('showing-certs');
+                    loadCertificates();
+                    if (panel) panel.hidden = false;
+                } else {
+                    if (panel) panel.hidden = true;
+                    if (grid) grid.classList.remove('showing-certs');
+                    applyTimelineFilter(filterValue);
+                }
             });
         });
         filtersInitialized = true;
@@ -491,7 +506,7 @@ function initScrollHint() {
 }
 
 function initNavHighlight() {
-    const sections = ['home', 'about', 'timeline', 'certificates']
+    const sections = ['home', 'about', 'timeline']
         .map(id => document.getElementById(id))
         .filter(Boolean);
     const navLinks = Array.from(document.querySelectorAll('.nav-links a'))
@@ -551,5 +566,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollHint();
     initNavHighlight();
     initMobileNav();
-    initCertificateLoader();
 });
