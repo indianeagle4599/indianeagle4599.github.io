@@ -86,14 +86,13 @@ function renderCredentialButtons(credentials) {
     `;
 }
 
-// Helper to generate dynamic content blocks (Description, Subtitle, Points)
 function generateContentHTML(item) {
     let html = '';
     if (item.description) {
-        html += `<p style="margin-bottom: 12px; font-size: 0.95rem; color: var(--text-main);">${item.description}</p>`;
+        html += `<p class="node-desc">${item.description}</p>`;
     }
     if (item.subtitle) {
-        html += `<h5 style="color: var(--text-main); margin-top: 15px; margin-bottom: 8px; font-size: 1rem; font-weight: 600;">${item.subtitle}</h5>`;
+        html += `<h5 class="node-subtitle">${item.subtitle}</h5>`;
     }
     if (item.points && item.points.length > 0) {
         html += `<ul>${item.points.map(p => `<li>${p}</li>`).join('')}</ul>`;
@@ -203,6 +202,13 @@ function hydrateAboutSection(profile) {
         contactBtn.textContent = profile.contact_cta || 'Say hello';
         if (profile.email) {
             contactBtn.href = `mailto:${profile.email}`;
+            contactBtn.addEventListener('click', () => {
+                const original = contactBtn.textContent;
+                navigator.clipboard.writeText(profile.email).then(() => {
+                    contactBtn.textContent = 'Copied!';
+                    setTimeout(() => { contactBtn.textContent = original; }, 1500);
+                }).catch(() => {});
+            });
         }
     }
 }
@@ -254,37 +260,35 @@ async function loadTimeline() {
             nodeDiv.setAttribute('data-type', node.type);
 
             const tagsHTML = node.tags ? node.tags.map(tech => `<span class="tech-tag">${tech}</span>`).join('') : '';
-            const tagsBlock = tagsHTML ? `<div style="margin-top: 10px;">${tagsHTML}</div>` : '';
+            const tagsBlock = tagsHTML ? `<div class="node-tags">${tagsHTML}</div>` : '';
             const period = getPeriodMeta(node.startDate, node.endDate);
             const credentialHTML = renderCredentialButtons(node.credentials);
 
             if (node.type === 'project') {
                 let mediaLinks = '';
                 if (node.media) {
-                    if (node.media.github) mediaLinks += `<a href="${node.media.github}" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;">GitHub</a>`;
-                    if (node.media.demo) mediaLinks += `<a href="${node.media.demo}" target="_blank" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.85rem;">Live Demo</a>`;
-                    if (node.media.medium) mediaLinks += `<a href="${node.media.medium}" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.85rem;">Blog</a>`;
+                    if (node.media.github) mediaLinks += `<a href="${node.media.github}" target="_blank" class="btn btn-outline btn-tiny">GitHub</a>`;
+                    if (node.media.demo) mediaLinks += `<a href="${node.media.demo}" target="_blank" class="btn btn-primary btn-tiny">Live Demo</a>`;
+                    if (node.media.medium) mediaLinks += `<a href="${node.media.medium}" target="_blank" class="btn btn-outline btn-tiny">Blog</a>`;
                 }
 
-                // Pass the node directly to the content generator
                 const contentHTML = generateContentHTML(node);
 
                 nodeDiv.innerHTML = `
                     <div class="node-header">
-                        <div class="node-entity" style="color: var(--proj-color);">${node.title}</div>
+                        <div class="node-entity">${node.title}</div>
                         <div class="node-period ${period.className}">${period.text}</div>
                     </div>
                     <div class="sub-item">
                         ${contentHTML}
                         ${credentialHTML}
-                        ${mediaLinks ? `<div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">${mediaLinks}</div>` : ''}
+                        ${mediaLinks ? `<div class="node-media">${mediaLinks}</div>` : ''}
                     </div>
                     ${tagsBlock}
                 `;
             } else {
                 const logoHTML = node.logo ? `<img src="${node.logo}" alt="${node.entity} logo" class="node-logo" loading="lazy">` : '';
 
-                // Pass each role to the content generator
                 const rolesHTML = node.roles.map((role, index) => `
                     <div class="sub-item">
                         <h4 class="sub-title">${role.title}</h4>
@@ -294,8 +298,8 @@ async function loadTimeline() {
                 `).join('');
 
                 nodeDiv.innerHTML = `
-                    <div class="node-header" style="align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="node-header">
+                        <div class="node-entity-group">
                             ${logoHTML}
                             <div class="node-entity">${node.entity}</div>
                         </div>
@@ -472,67 +476,18 @@ function initScrollAnimations() {
     document.querySelectorAll('.fade-in:not(.visible)').forEach(el => observer.observe(el));
 }
 
-function initAutoScroll() {
-    const sections = Array.from(document.querySelectorAll('header[id], section[id]'));
+function initScrollHint() {
     const scrollHint = document.querySelector('.scroll-hint');
-    let isAutoScrolling = false;
-    const NAV_OFFSET = 90;
-    let lastScrollY = window.scrollY;
-    let scrollDirection = 'down';
-
-    if (!sections.length) return;
+    if (!scrollHint) return;
 
     window.addEventListener('scroll', () => {
-        if (scrollHint) {
-            if (window.scrollY > 50) {
-                scrollHint.classList.add('hidden');
-            } else {
-                scrollHint.classList.remove('hidden');
-            }
-        }
-        const current = window.scrollY;
-        if (current > lastScrollY + 5) {
-            scrollDirection = 'down';
-        } else if (current < lastScrollY - 5) {
-            scrollDirection = 'up';
-        }
-        lastScrollY = current;
+        scrollHint.classList.toggle('hidden', window.scrollY > 50);
     }, { passive: true });
 
-    if (!window.matchMedia('(max-width: 768px)').matches) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !isAutoScrolling) {
-                    const targetTop = entry.target.offsetTop - NAV_OFFSET;
-                    const distance = Math.abs(window.scrollY - targetTop);
-                    if (distance < 5) return;
-                    const desiredDirection = targetTop > window.scrollY ? 'down' : 'up';
-                    if (desiredDirection !== scrollDirection) return;
-                    isAutoScrolling = true;
-                    window.scrollTo({
-                        top: targetTop,
-                        behavior: 'smooth'
-                    });
-                    setTimeout(() => {
-                        isAutoScrolling = false;
-                    }, 800);
-                }
-            });
-        }, { threshold: 0.4 });
-
-        sections.forEach(section => observer.observe(section));
-    }
-
-    if (scrollHint) {
-        const timelineSection = document.getElementById('timeline');
-        scrollHint.addEventListener('click', () => {
-            if (!timelineSection) return;
-            window.scrollTo({
-                top: timelineSection.offsetTop - NAV_OFFSET,
-                behavior: 'smooth'
-            });
-        });
-    }
+    const target = document.getElementById('about');
+    scrollHint.addEventListener('click', () => {
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 }
 
 function initNavHighlight() {
@@ -593,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
     loadTimeline();
     animateLogo();
-    initAutoScroll();
+    initScrollHint();
     initNavHighlight();
     initMobileNav();
     initCertificateLoader();

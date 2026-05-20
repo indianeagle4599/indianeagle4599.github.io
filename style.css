@@ -31,6 +31,12 @@ html {
     scroll-padding-top: 90px;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
 /* --- Typography --- */
 h1,
 h2 {
@@ -39,7 +45,6 @@ h2 {
 
 h1 {
     font-size: clamp(2.5rem, 5vw, 4rem);
-    /* Auto-scales between mobile and desktop */
     line-height: 1.2;
     margin-bottom: 0.5rem;
 }
@@ -214,7 +219,7 @@ p {
 }
 
 .section-header {
-    margin-bottom: 0rem;
+    margin-bottom: 0;
 }
 
 .section-subtitle {
@@ -257,8 +262,9 @@ p {
     font-weight: 600;
     font-size: 0.95rem;
     transition: all 0.3s ease;
-    display: inline-block;
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-primary {
@@ -364,7 +370,7 @@ p {
 .node-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 10px;
@@ -419,6 +425,18 @@ p {
     color: var(--accent);
     margin-bottom: 12px;
     font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.node-desc {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.node-subtitle {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -513,6 +531,27 @@ p {
     .cert-card {
         padding: 20px;
     }
+}
+
+.timeline-node[data-type="project"] .node-entity {
+    color: var(--proj-color);
+}
+
+.node-entity-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.node-tags {
+    margin-top: 10px;
+}
+
+.node-media {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* --- Timeline Entity Logos --- */
@@ -623,8 +662,8 @@ p {
 }
 
 .btn-tiny {
-    font-size: 0.8rem;
-    padding: 6px 14px;
+    font-size: 0.85rem;
+    padding: 6px 12px;
 }
 
 /* --- Certificates --- */
@@ -735,8 +774,8 @@ p {
     color: var(--accent);
 }
 
-[id="certificate-grid"],
-[id="certificate-archive"] {
+#certificate-grid,
+#certificate-archive {
     display: flex;
     flex-direction: column;
     gap: 32px;

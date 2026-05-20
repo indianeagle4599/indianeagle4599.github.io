@@ -1,0 +1,9 @@
+# Agent kit templates and settings.
+agent-kit/
+docs
+.claude/
+.cursor/
+AGENTS.md
+CLAUDE.md
+
+TODO.md
