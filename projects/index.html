@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Project | Hitesh Goyal</title>
+    <meta name="description" content="Project detail page for Hitesh Goyal's portfolio.">
+    <meta name="author" content="Hitesh Goyal">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0d1117">
+
+    <link rel="icon" type="image/svg+xml" href="../assets/hg-logo.svg">
+    <link rel="apple-touch-icon" href="../assets/hg-logo.svg">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Hitesh Goyal">
+    <meta property="og:title" content="Project | Hitesh Goyal">
+    <meta property="og:description" content="Project detail page for Hitesh Goyal's portfolio.">
+    <meta property="og:url" content="https://hiteshgoyal.me/projects/">
+    <meta property="og:image" content="https://hiteshgoyal.me/assets/hg-logo.svg">
+
+    <script>
+        (function () {
+            let stored = null;
+            try {
+                stored = localStorage.getItem('portfolio-theme');
+            } catch (error) {}
+            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const theme = stored === 'light' || stored === 'dark'
+                ? stored
+                : prefersLight ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f6f8fa' : '#0d1117');
+        }());
+    </script>
+    <link rel="stylesheet" href="../style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Inter:wght@300;400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="project-page">
+    <nav id="navbar" aria-label="Primary">
+        <div class="nav-content">
+            <a id="nav-logo" class="logo" href="../index.html">HG :)</a>
+            <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links">
+                <a href="../index.html#home">Home</a>
+                <a href="../index.html#about">About</a>
+                <a href="../index.html#timeline">Timeline</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="section project-hero">
+            <a class="back-button" href="../index.html#timeline">← Back to portfolio</a>
+            <p class="section-eyebrow">PROJECT</p>
+            <h1 id="project-title">Loading project...</h1>
+            <div class="project-meta-row">
+                <span id="project-period" class="node-period"></span>
+            </div>
+            <p id="project-description" class="project-summary"></p>
+            <div id="project-tags" class="node-tags"></div>
+            <div id="project-links" class="node-links-bar"></div>
+        </section>
+
+        <section id="project-demos" class="section project-demos" hidden>
+            <h2 class="section-title">Demos</h2>
+            <div id="project-demo-grid" class="project-demo-grid"></div>
+        </section>
+
+        <section id="project-writeup-section" class="section project-writeup-section">
+            <h2 class="section-title">Writeup</h2>
+            <div id="project-writeup" class="project-writeup"></div>
+        </section>
+
+        <section id="project-coming-soon" class="section project-coming-soon" hidden>
+            <p>More info coming soon</p>
+        </section>
+    </main>
+
+    <footer class="section project-footer">
+        <a class="btn btn-outline" href="../index.html#timeline">Explore more projects →</a>
+    </footer>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        const SITE_ORIGIN = 'https://hiteshgoyal.me';
+
+        function redirectToTimeline() {
+            window.location.replace('../index.html#timeline');
+        }
+
+        function setMeta(selector, value) {
+            const el = document.querySelector(selector);
+            if (el) el.setAttribute('content', value || '');
+        }
+
+        function absoluteUrl(src) {
+            if (!src) return '';
+            if (/^[a-z][a-z0-9+.-]*:\/\//i.test(src) || src.startsWith('//')) return src;
+            const path = src.startsWith('/') ? src : '/' + src.replace(/^\.\//, '');
+            return SITE_ORIGIN + path;
+        }
+
+        function updateSeo(project, slug) {
+            const title = `${project.title} | Hitesh Goyal`;
+            const description = project.description || 'Project detail page for Hitesh Goyal.';
+            const url = `${SITE_ORIGIN}/projects/?slug=${slug}`;
+
+            document.title = title;
+            setMeta('meta[name="description"]', description);
+            setMeta('meta[property="og:title"]', title);
+            setMeta('meta[property="og:description"]', description);
+            setMeta('meta[property="og:url"]', url);
+
+            const firstDemoSrc = project.demos && project.demos.length ? project.demos[0].src : '';
+            const ogImageSrc = firstDemoSrc || project.logo || 'assets/hg-logo.svg';
+            let ogImage = document.head.querySelector('meta[property="og:image"]');
+            if (!ogImage) {
+                ogImage = document.createElement('meta');
+                ogImage.setAttribute('property', 'og:image');
+                document.head.appendChild(ogImage);
+            }
+            ogImage.setAttribute('content', absoluteUrl(ogImageSrc));
+        }
+
+        function renderProjectHero(project) {
+            const period = getPeriodMeta(project.startDate, project.endDate);
+            const periodEl = document.getElementById('project-period');
+            periodEl.textContent = period.text;
+            periodEl.className = `node-period ${period.className}`;
+
+            document.getElementById('project-title').textContent = project.title;
+            document.getElementById('project-description').textContent = project.description || '';
+
+            document.getElementById('project-tags').innerHTML = (project.tags || [])
+                .map(tag => `<span class="tech-tag">${tag}</span>`)
+                .join('');
+
+            const media = project.media || {};
+            const links = [];
+            if (media.github) links.push(`<a href="${media.github}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">GitHub</a>`);
+            if (media.demo) links.push(`<a href="${media.demo}" target="_blank" rel="noopener" class="btn btn-primary btn-tiny">Live Demo</a>`);
+            if (media.medium) links.push(`<a href="${media.medium}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">Blog</a>`);
+            document.getElementById('project-links').innerHTML = links.join('');
+        }
+
+        function renderDemos(project) {
+            const demos = project.demos || [];
+            if (!demos.length) return;
+
+            const grid = document.getElementById('project-demo-grid');
+            grid.innerHTML = demos.map(demo => {
+                const src = demo.src || '';
+                const caption = demo.caption || '';
+                return `
+                    <figure class="project-demo-figure">
+                        <img class="project-demo-image" src="${src}" alt="${caption || project.title}" loading="lazy">
+                        ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+                    </figure>
+                `;
+            }).join('');
+
+            document.getElementById('project-demos').hidden = false;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderMarkdown(src) {
+            if (!src) return '';
+            const codeBlocks = [];
+            const text = escapeHtml(src.replace(/```([a-zA-Z0-9_-]*)\n?([\s\S]*?)```/g, (_, _lang, code) => {
+                codeBlocks.push(code.replace(/\n$/, ''));
+                return `\n\n@@CB${codeBlocks.length - 1}@@\n\n`;
+            }));
+
+            const inline = s => s
+                .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
+
+            return text.split(/\n{2,}/).map(block => {
+                const trimmed = block.trim();
+                if (!trimmed) return '';
+                const codeMatch = trimmed.match(/^@@CB(\d+)@@$/);
+                if (codeMatch) return `<pre><code>${escapeHtml(codeBlocks[+codeMatch[1]])}</code></pre>`;
+                if (/^### /.test(trimmed)) return `<h3>${inline(trimmed.slice(4))}</h3>`;
+                if (/^## /.test(trimmed)) return `<h2>${inline(trimmed.slice(3))}</h2>`;
+                if (/^# /.test(trimmed)) return `<h1>${inline(trimmed.slice(2))}</h1>`;
+                const lines = trimmed.split('\n');
+                if (lines.every(line => /^(?:- |\* )/.test(line))) {
+                    return '<ul>' + lines.map(line => `<li>${inline(line.slice(2))}</li>`).join('') + '</ul>';
+                }
+                return `<p>${inline(trimmed).replace(/\n/g, '<br>')}</p>`;
+            }).filter(Boolean).join('\n');
+        }
+
+        function renderWriteup(project) {
+            document.getElementById('project-writeup').innerHTML = renderMarkdown(project.writeup);
+        }
+
+        async function initProjectPage() {
+            const slug = new URLSearchParams(window.location.search).get('slug');
+            if (!slug) {
+                redirectToTimeline();
+                return;
+            }
+
+            const response = await fetch('../data/timeline.json');
+            const timeline = await response.json();
+            const project = timeline.find(entry => entry.type === 'project' && entry.slug === slug);
+
+            if (!project) {
+                redirectToTimeline();
+                return;
+            }
+
+            updateSeo(project, slug);
+            renderProjectHero(project);
+
+            const hasDemos = (project.demos || []).length > 0;
+            const hasWriteup = (project.writeup || '').trim().length > 0;
+            const hasLiveDemo = !!(project.media && project.media.demo);
+
+            if (hasDemos) renderDemos(project);
+            if (hasWriteup) renderWriteup(project);
+            if (!hasWriteup) document.getElementById('project-writeup-section').hidden = true;
+            if (!hasDemos && !hasWriteup && !hasLiveDemo) {
+                document.getElementById('project-coming-soon').hidden = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initProjectPage().catch(redirectToTimeline);
+        });
+    </script>
+    <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+
+</html>

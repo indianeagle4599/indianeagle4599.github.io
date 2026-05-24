@@ -335,6 +335,7 @@ async function loadTimeline() {
                     if (node.media.demo) mediaLinks += `<a href="${node.media.demo}" target="_blank" class="btn btn-primary btn-tiny">Live Demo</a>`;
                     if (node.media.medium) mediaLinks += `<a href="${node.media.medium}" target="_blank" class="btn btn-outline btn-tiny">Blog</a>`;
                 }
+                if (node.slug) mediaLinks += `<a href="./projects/?slug=${node.slug}" class="btn btn-outline btn-tiny">Read more →</a>`;
 
                 const allLinks = credentialHTML + mediaLinks;
                 const descHTML = node.description ? `<p class="node-desc">${node.description}</p>` : '';
@@ -669,12 +670,14 @@ function restoreScrollPosition() {
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
+    initMobileNav();
+    initThemeToggle();
+    if (document.body.classList.contains('project-page')) return;
+
     initScrollAnimations();
     animateLogo();
     initScrollHint();
     initNavHighlight();
-    initMobileNav();
-    initThemeToggle();
     initExpandAll();
     Promise.all([loadProfile(), loadTimeline()]).then(restoreScrollPosition);
 });
