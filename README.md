@@ -1,4 +1,7 @@
-# Hitesh Goyal – Portfolio
+<h1>
+  <img src="assets/hg-logo.svg" alt="" width="39" align="absmiddle" />
+  <samp>Hitesh Goyal – Portfolio</samp>
+</h1>
 
 A single-page, data-driven portfolio that spotlights my AI engineering experience, timeline, and curated credentials.
 

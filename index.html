@@ -13,9 +13,11 @@
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="application-name" content="Hitesh Goyal Portfolio">
-    <meta name="theme-color" content="#0a0c10">
+    <meta name="theme-color" content="#0d1117">
     <link rel="canonical" href="https://hiteshgoyal.me/">
     <link rel="author" href="https://www.linkedin.com/in/hitesh-goyal-5732bb208/">
+    <link rel="icon" type="image/svg+xml" href="assets/hg-logo.svg">
+    <link rel="apple-touch-icon" href="assets/hg-logo.svg">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Hitesh Goyal">
@@ -23,12 +25,28 @@
     <meta property="og:description"
         content="Applied AI Engineer building production AI systems across computer vision, NLP, and generative models.">
     <meta property="og:url" content="https://hiteshgoyal.me/">
+    <meta property="og:image" content="https://hiteshgoyal.me/assets/hg-logo.svg">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Hitesh Goyal | Applied AI Engineer">
     <meta name="twitter:description"
         content="Applied AI Engineer building production AI systems across computer vision, NLP, and generative models.">
+    <meta name="twitter:image" content="https://hiteshgoyal.me/assets/hg-logo.svg">
 
+    <script>
+        (function () {
+            let stored = null;
+            try {
+                stored = localStorage.getItem('portfolio-theme');
+            } catch (error) {}
+            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const theme = stored === 'light' || stored === 'dark'
+                ? stored
+                : prefersLight ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f6f8fa' : '#0d1117');
+        }());
+    </script>
     <link rel="stylesheet" href="style.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Inter:wght@300;400;700&display=swap"

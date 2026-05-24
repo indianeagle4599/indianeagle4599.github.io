@@ -1,7 +1,8 @@
 /* --- Global Variables --- */
 :root {
-    --bg-dark: #0a0c10;
-    --bg-card: #1c2128;
+    color-scheme: dark;
+    --bg-dark: #0d1117;
+    --bg-card: #161b22;
     --text-main: #c9d1d9;
     --text-muted: #8b949e;
     --accent: #58a6ff;
@@ -12,6 +13,20 @@
     --achievement-color: #d29922;
 }
 
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg-dark: #f6f8fa;
+    --bg-card: #ffffff;
+    --text-main: #1f2328;
+    --text-muted: #59636e;
+    --accent: #0969da;
+    --border: #d1d9e0;
+    --edu-color: #8250df;
+    --work-color: #1a7f37;
+    --proj-color: #0969da;
+    --achievement-color: #9a6700;
+}
+
 /* --- Base Reset --- */
 * {
     margin: 0;
@@ -20,7 +35,7 @@
 }
 
 body {
-    background-color: var(--bg-dark);
+    background: var(--bg-dark);
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
@@ -51,7 +66,7 @@ html {
 /* --- Typography --- */
 h1,
 h2 {
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 h1 {
@@ -62,8 +77,7 @@ h1 {
 
 .terminal-text {
     font-family: 'Fira Code', monospace;
-    color: #58a6ff;
-    /* stable classic terminal accent */
+    color: var(--accent);
     font-weight: 600;
     font-size: clamp(1rem, 2vw, 1.2rem);
     margin-bottom: 1.5rem;
@@ -80,7 +94,7 @@ p {
     margin-bottom: 1.5rem;
     font-size: clamp(0.95rem, 1.1vw, 1rem);
     line-height: 1.6;
-    color: #d4d9df;
+    color: var(--text-main);
     letter-spacing: 0.01em;
     opacity: 0.92;
 }
@@ -91,7 +105,7 @@ p {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(10, 12, 16, 0.9);
+    background: color-mix(in srgb, var(--bg-card) 90%, transparent);
     backdrop-filter: blur(10px);
     z-index: 100;
     border-bottom: 1px solid var(--border);
@@ -99,7 +113,6 @@ p {
 
 .nav-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
@@ -109,6 +122,7 @@ p {
 .nav-links {
     display: flex;
     align-items: center;
+    margin-left: auto;
 }
 
 .logo {
@@ -166,6 +180,33 @@ p {
     border-radius: 999px;
 }
 
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-left: 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.theme-toggle svg {
+    width: 16px;
+    height: 16px;
+}
+
 /* --- Typing cursor effect --- */
 .cursor {
     animation: blink 1s step-end infinite;
@@ -221,7 +262,7 @@ p {
 }
 
 .section-alt {
-    background: radial-gradient(circle at top, rgba(88, 166, 255, 0.08), transparent 60%);
+    background: linear-gradient(180deg, var(--bg-card), color-mix(in srgb, var(--accent) 6%, var(--bg-dark)));
     border-radius: 24px;
 }
 
@@ -280,7 +321,7 @@ p {
 }
 
 .btn-primary:hover {
-    background: #79b8ff;
+    background: color-mix(in srgb, var(--accent) 80%, var(--text-main));
 }
 
 .btn-outline {
@@ -298,13 +339,18 @@ p {
     height: 16px;
 }
 
+.btn svg,
+.btn svg * {
+    fill: currentColor;
+}
+
 /* --- Tech Tags --- */
 .tech-tag {
     display: inline-block;
     font-family: 'Fira Code', monospace;
     font-size: 0.75rem;
     color: var(--accent);
-    background: rgba(88, 166, 255, 0.1);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
     padding: 4px 10px;
     border-radius: 12px;
     margin-right: 8px;
@@ -416,7 +462,7 @@ p {
 .node-entity {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 .node-period {
@@ -435,14 +481,14 @@ p {
 
 .node-period--present {
     color: var(--work-color);
-    background: rgba(63, 185, 80, 0.1);
-    border-color: rgba(63, 185, 80, 0.35);
+    background: color-mix(in srgb, var(--work-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--work-color) 35%, transparent);
 }
 
 .node-period--intermittent {
     color: var(--achievement-color);
-    background: rgba(210, 153, 34, 0.1);
-    border-color: rgba(210, 153, 34, 0.35);
+    background: color-mix(in srgb, var(--achievement-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--achievement-color) 35%, transparent);
 }
 
 .sub-item {
@@ -455,7 +501,7 @@ p {
 }
 
 .sub-item:hover {
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: color-mix(in srgb, var(--text-main) 18%, var(--border));
 }
 
 .sub-title {
@@ -518,10 +564,11 @@ p {
         position: fixed;
         top: 60px;
         right: 0;
+        margin-left: 0;
         width: 80%;
         max-width: 320px;
         height: calc(100vh - 60px);
-        background: rgba(10, 12, 16, 0.98);
+        background: color-mix(in srgb, var(--bg-dark) 98%, transparent);
         border-left: 1px solid var(--border);
         flex-direction: column;
         align-items: flex-start;
@@ -529,6 +576,15 @@ p {
         gap: 16px;
         transform: translateX(100%);
         transition: transform 0.3s ease;
+    }
+
+    .nav-toggle {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .theme-toggle {
+        margin-left: 10px;
     }
 
     .nav-links.open {
@@ -613,7 +669,7 @@ p {
 
 .about-bio {
     font-size: 1.05rem;
-    color: #e5e7eb;
+    color: var(--text-main);
 }
 
 .about-list {
@@ -671,7 +727,7 @@ p {
     padding: 6px 14px;
     font-size: 0.85rem;
     color: var(--text-main);
-    background: rgba(255, 255, 255, 0.02);
+    background: color-mix(in srgb, var(--text-main) 4%, transparent);
 }
 
 .about-footer {
@@ -705,7 +761,7 @@ p {
 
 .cert-card {
     --cert-accent: var(--edu-color);
-    border: 1px solid rgba(163, 113, 247, 0.28);
+    border: 1px solid color-mix(in srgb, var(--cert-accent) 28%, transparent);
     border-top: 3px solid var(--cert-accent);
     border-radius: 14px;
     padding: 20px;
@@ -723,19 +779,19 @@ p {
 
 .cert-card--internship {
     --cert-accent: var(--work-color);
-    border-color: rgba(63, 185, 80, 0.28);
-    background: linear-gradient(180deg, rgba(63, 185, 80, 0.08), var(--bg-card) 42%);
+    border-color: color-mix(in srgb, var(--work-color) 28%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--work-color) 8%, transparent), var(--bg-card) 42%);
 }
 
 .cert-card--course {
     --cert-accent: var(--edu-color);
-    background: linear-gradient(180deg, rgba(163, 113, 247, 0.08), var(--bg-card) 42%);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--edu-color) 8%, transparent), var(--bg-card) 42%);
 }
 
 .cert-card--achievement {
     --cert-accent: var(--achievement-color);
-    border-color: rgba(210, 153, 34, 0.3);
-    background: linear-gradient(180deg, rgba(210, 153, 34, 0.1), var(--bg-card) 42%);
+    border-color: color-mix(in srgb, var(--achievement-color) 30%, transparent);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--achievement-color) 10%, transparent), var(--bg-card) 42%);
 }
 
 .cert-card--internship,
@@ -746,7 +802,7 @@ p {
 
 .cert-card h3 {
     font-size: 1rem;
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 .cert-meta {
@@ -779,7 +835,7 @@ p {
 }
 
 .cert-card-core {
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--text-main) 6%, transparent);
 }
 
 .cert-controls {
@@ -858,7 +914,7 @@ p {
 }
 
 .node-toggle:hover {
-    color: #79b8ff;
+    color: color-mix(in srgb, var(--accent) 80%, var(--text-main));
 }
 
 .node-toggle svg {
