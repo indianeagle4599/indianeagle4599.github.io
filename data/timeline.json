@@ -295,7 +295,7 @@
         "description": "A local-first Pomodoro timer and task manager built as a gift for a family member — configurable sessions, ambient audio playlists, theme controls, and full history tracking. Runs as a static HTML page.",
         "media": {
             "github": "https://github.com/indianeagle4599/pomodoro-app",
-            "demo": "https://hiteshgoyal.me/pomodoro-app/"
+            "demo": "https://hiteshgoyal.me/flodoro/"
         },
         "points": [
             "Serverless and local-first — all data persisted in localStorage, no backend.",

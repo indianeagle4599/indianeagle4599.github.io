@@ -50,5 +50,5 @@ Hitesh Goyal builds production-grade AI systems across vision, language, speech,
 - Pixtyle repository: https://github.com/indianeagle4599/Pixtyle
 - AI generated image classifier: https://github.com/indianeagle4599/ai-generated-image-classifier
 - Ask Krishna demo: https://hiteshgoyal.me/ask-krishna/
-- Flodoro demo: https://hiteshgoyal.me/pomodoro-app/
+- Flodoro demo: https://hiteshgoyal.me/flodoro/
 - OS Toolkit repository: https://github.com/indianeagle4599/os-toolkit
