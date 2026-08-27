@@ -2578,7 +2578,14 @@ function selectTimelineTab(index, { direction = 0, focusTab = false, fromDrag = 
         placeUnderlineIndicator(tablist, indicator, current.tab, { instant: reduce || !direction });
         if (!reduce && direction) requestAnimationFrame(() => indicator.classList.remove('nav-indicator--instant'));
     }
-    current.tab.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'instant' });
+    // Keep the active tab visible in a horizontally scrollable tablist without
+    // scrolling the document (scrollIntoView would jump a fresh home load mid-page).
+    if (tablist) {
+        const tabRect = current.tab.getBoundingClientRect();
+        const listRect = tablist.getBoundingClientRect();
+        if (tabRect.left < listRect.left) tablist.scrollLeft -= listRect.left - tabRect.left;
+        else if (tabRect.right > listRect.right) tablist.scrollLeft += tabRect.right - listRect.right;
+    }
     if (focusTab) current.tab.focus();
 }
 
