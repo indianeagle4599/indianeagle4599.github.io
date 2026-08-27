@@ -1,8 +1,8 @@
 const THEME_STORAGE_KEY = 'portfolio-theme';
 /* Keep equal to --bg-page in style.css. Head scripts cannot read that variable before paint. */
 const THEME_PAGE_COLOR = {
-    light: '#e9eef5',
-    dark: '#080d18'
+    light: '#f4f4f2',
+    dark: '#121212'
 };
 const THEME_ICONS = {
     light: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m17.07-7.07-1.41 1.41M6.34 17.66l-1.41 1.41m14.14 0-1.41-1.41M6.34 6.34 4.93 4.93"></path></svg>',
@@ -266,8 +266,7 @@ function setTheme(theme, persist = false, animate = false) {
         root.classList.remove('theme-transitioning');
     }
     root.setAttribute('data-theme', nextTheme);
-    const themeColor = getComputedStyle(root).getPropertyValue('--bg-page').trim() || THEME_PAGE_COLOR[nextTheme];
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColor);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_PAGE_COLOR[nextTheme]);
 
     if (persist) {
         try {
@@ -500,11 +499,9 @@ function getCertificateKind(cert) {
     return CERT_KIND_LABELS[kind] ? kind : 'course';
 }
 
-function renderCertificateCard(cert, isCore = false) {
-    const classes = ['cert-card', 'fade-in'];
-    if (isCore) classes.push('cert-card-core');
+function renderCertificateCard(cert) {
     const kind = getCertificateKind(cert);
-    classes.push(`cert-card--${kind}`);
+    const classes = ['cert-card', 'fade-in', `cert-card--${kind}`];
     const meta = cert.issuer ? `<div class="cert-meta">${escapeHtml(cert.issuer)}</div>` : '';
     const description = cert.description ? `<p>${escapeHtml(cert.description)}</p>` : '';
     const href = safeHref(cert.link);
@@ -517,7 +514,7 @@ function renderCertificateCard(cert, isCore = false) {
     return `
         <article class="${classes.join(' ')}">
             <div>
-                <div class="cert-kind">${CERT_KIND_LABELS[kind]}</div>
+                <div class="cert-kind"><span class="cert-kind-dot" aria-hidden="true"></span>${CERT_KIND_LABELS[kind]}</div>
                 <h3>${escapeHtml(cert.title)}</h3>
                 ${meta}
             </div>
@@ -527,7 +524,7 @@ function renderCertificateCard(cert, isCore = false) {
     `;
 }
 
-function renderCertificateSections(categories, container, include, highlight = false) {
+function renderCertificateSections(categories, container, include) {
     if (!container) return;
     container.innerHTML = categories.map(category => {
         const items = category.certificates.filter(include);
@@ -538,7 +535,7 @@ function renderCertificateSections(categories, container, include, highlight = f
                     <h3 class="cert-category-title">${escapeHtml(category.name)}</h3>
                 </div>
                 <div class="cert-grid">
-                    ${items.map(cert => renderCertificateCard(cert, highlight && cert.importance === 'core')).join('')}
+                    ${items.map(cert => renderCertificateCard(cert)).join('')}
                 </div>
             </section>
         `;
@@ -2013,7 +2010,6 @@ function renderProjectMediaInto(project, {
         && blocks[1]?.presentation === 'gallery'
         && blocks[1].items?.length > 1;
     grid.classList.toggle('project-demo-grid--lead-gallery', hasLeadGalleryPair);
-    grid.classList.toggle('project-media-card', hasLeadGalleryPair);
     section.setAttribute('aria-label', `${project.title} media`);
     section.hidden = !renderedBlocks.length;
     if (!section.hidden) {
@@ -2377,11 +2373,11 @@ async function loadCertificates() {
         const isFeatured = cert => !hasCore || cert.importance === 'core';
         const isArchived = cert => hasCore && cert.importance !== 'core';
 
-        renderCertificateSections(categories, primaryGrid, isFeatured, true);
+        renderCertificateSections(categories, primaryGrid, isFeatured);
         revealCertificateCards(primaryGrid);
 
         if (certificates.some(isArchived)) {
-            renderCertificateSections(categories, archiveGrid, isArchived, false);
+            renderCertificateSections(categories, archiveGrid, isArchived);
             toggleBtn.style.display = 'inline-flex';
             toggleBtn.textContent = 'Show additional certificates';
             archiveGrid.hidden = true;
@@ -2768,6 +2764,74 @@ function initScrollAnimations() {
     document.querySelectorAll('.fade-in:not(.cert-card):not(.visible)').forEach(el => fadeObserver.observe(el));
 }
 
+let pageScrollFrame = 0;
+let pageScrollUnbind = null;
+
+function stopPageScroll() {
+    if (pageScrollFrame) cancelAnimationFrame(pageScrollFrame);
+    pageScrollFrame = 0;
+    if (pageScrollUnbind) {
+        pageScrollUnbind();
+        pageScrollUnbind = null;
+    }
+}
+
+function pageScrollAnchor(el) {
+    if (!el || el.id === 'home') return null;
+    return el.querySelector('.section-header')
+        || el.querySelector('.section-eyebrow, .section-title, h1, h2')
+        || el;
+}
+
+function pageScrollTargetY(el) {
+    if (!el || el.id === 'home') return 0;
+    const anchor = pageScrollAnchor(el);
+    const desired = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    const scrolling = document.scrollingElement || document.documentElement;
+    const max = Math.max(0, scrolling.scrollHeight - window.innerHeight);
+    return Math.max(0, Math.min(max, window.scrollY + anchor.getBoundingClientRect().top - desired));
+}
+
+function scrollPageTo(el, { instant = false } = {}) {
+    const dest = pageScrollTargetY(el);
+    stopPageScroll();
+    if (instant || prefersReducedMotion() || Math.abs(dest - window.scrollY) < 1) {
+        window.scrollTo(0, dest);
+        return;
+    }
+    const start = window.scrollY;
+    const duration = 300;
+    const origin = performance.now();
+    const easeOut = t => 1 - (1 - t) ** 3;
+    const onInterrupt = event => {
+        if (event.type === 'keydown' && !['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) return;
+        stopPageScroll();
+    };
+    window.addEventListener('wheel', onInterrupt, { passive: true });
+    window.addEventListener('touchstart', onInterrupt, { passive: true });
+    window.addEventListener('keydown', onInterrupt);
+    pageScrollUnbind = () => {
+        window.removeEventListener('wheel', onInterrupt);
+        window.removeEventListener('touchstart', onInterrupt);
+        window.removeEventListener('keydown', onInterrupt);
+    };
+    const step = now => {
+        const t = Math.min(1, (now - origin) / duration);
+        window.scrollTo(0, start + (dest - start) * easeOut(t));
+        if (t < 1) pageScrollFrame = requestAnimationFrame(step);
+        else stopPageScroll();
+    };
+    pageScrollFrame = requestAnimationFrame(step);
+}
+
+function navigateToHash(hash, { instant = false } = {}) {
+    const id = String(hash || '').replace(/^#/, '');
+    const el = id ? document.getElementById(id) : document.getElementById('home');
+    const next = el && id ? `#${id}` : '#home';
+    if (location.hash !== next) history.pushState(null, '', next);
+    scrollPageTo(el, { instant });
+}
+
 function initScrollHint() {
     const scrollHint = document.querySelector('.scroll-hint');
     if (!scrollHint) return;
@@ -2779,10 +2843,7 @@ function initScrollHint() {
 
     scrollHint.addEventListener('click', () => {
         if (!target) return;
-        target.scrollIntoView({
-            behavior: prefersReducedMotion() ? 'instant' : 'smooth',
-            block: 'start'
-        });
+        navigateToHash('#about');
     });
 }
 
@@ -2885,11 +2946,14 @@ function initNavHighlight() {
     window.addEventListener('scroll', () => requestSync(false), { passive: true });
     window.addEventListener('resize', () => requestSync(true));
     links.forEach(link => {
-        link.addEventListener('click', () => {
+        link.addEventListener('click', event => {
             const hash = link.getAttribute('href');
+            if (!hash || !hash.startsWith('#')) return;
+            event.preventDefault();
             pinnedHash = hash;
-            pinUntil = performance.now() + 800;
+            pinUntil = performance.now() + 500;
             setActive(hash, false);
+            navigateToHash(hash);
         });
     });
 
@@ -2963,7 +3027,7 @@ function initExpandAll() {
 function restoreScrollPosition() {
     const id = window.location.hash.slice(1);
     const target = id ? document.getElementById(id) : null;
-    if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
+    if (target) scrollPageTo(target, { instant: true });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2980,5 +3044,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavHighlight();
     initContactModal();
     initExpandAll();
-    Promise.all([loadProfile(), loadProjects(), loadTimeline(), loadRecommendations()]).then(restoreScrollPosition);
+    window.addEventListener('popstate', () => {
+        const id = window.location.hash.slice(1);
+        const target = id ? document.getElementById(id) : document.getElementById('home');
+        scrollPageTo(target, { instant: true });
+    });
+    restoreScrollPosition();
+    window.addEventListener('load', restoreScrollPosition);
+    const boot = [loadProfile(), loadProjects(), loadTimeline(), loadRecommendations()];
+    boot.forEach(task => task.then(restoreScrollPosition));
+    Promise.all(boot).then(() => requestAnimationFrame(restoreScrollPosition));
 });

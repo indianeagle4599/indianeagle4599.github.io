@@ -238,6 +238,41 @@ function check(name, ok, detail = '') {
     return { detail, name, ok: Boolean(ok) };
 }
 
+async function waitGalleryReady(client) {
+    await evaluate(client, `document.querySelector('.project-media-gallery')?.scrollIntoView({ block: 'center' })`);
+    for (let attempt = 0; attempt < 40; attempt++) {
+        if (await evaluate(client, `Boolean(document.querySelector('.project-media-gallery .carousel-slide[aria-hidden="false"] img')?.naturalWidth)`)) return;
+        await delay(50);
+    }
+}
+
+async function galleryCaptionGeom(client) {
+    return evaluate(client, `(() => {
+        const gallery = document.querySelector('.project-media-gallery');
+        const track = gallery?.querySelector('.carousel-track');
+        const metadata = gallery?.querySelector('.project-media-metadata');
+        const card = gallery?.getBoundingClientRect();
+        const trackBox = track?.getBoundingClientRect();
+        const metaBox = metadata?.getBoundingClientRect();
+        const media = trackBox;
+        const leftDelta = Math.abs((metaBox?.left || 0) - (media?.left || 0));
+        const widthDelta = Math.abs((metaBox?.width || 0) - (media?.width || 0));
+        return {
+            portrait: Boolean(gallery?.classList.contains('project-media-gallery--portrait')),
+            cardW: Math.round(card?.width || 0),
+            trackW: Math.round(trackBox?.width || 0),
+            mediaW: Math.round(media?.width || 0),
+            captionW: Math.round(metaBox?.width || 0),
+            leftDelta: Math.round(leftDelta * 10) / 10,
+            widthDelta: Math.round(widthDelta * 10) / 10,
+            aligned: leftDelta <= 3 && widthDelta <= 4,
+            max: Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--project-gallery-max')) || 0,
+            portraitMax: Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--project-gallery-portrait')) || 0,
+            overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+        };
+    })()`);
+}
+
 async function runE2E(session) {
     const { client, url } = session;
     const results = [];
@@ -299,24 +334,89 @@ async function runE2E(session) {
     results.push(check('theme-toggle-persists-light', toggled.theme === 'light' && toggled.stored === 'light', JSON.stringify(toggled)));
     results.push(check('theme-color-tracks-page', Boolean(toggled.themeColor) && toggled.themeColor.replace(/\s/g, '') !== '', `theme-color=${toggled.themeColor}`));
 
+    const landingOk = geom => geom.gap >= 48 && geom.gap <= 120 && geom.headingTop > geom.navBottom + 40;
+
     await goto(client, new URL('/#projects', url).href, 'home');
-    const projectsHash = await evaluate(client, `({
-        hash: location.hash,
-        top: Math.round(document.getElementById('projects')?.getBoundingClientRect().top || 9999)
-    })`);
-    results.push(check('hash-projects', projectsHash.hash === '#projects' && projectsHash.top < 140, JSON.stringify(projectsHash)));
+    await evaluate(client, 'typeof restoreScrollPosition === "function" && restoreScrollPosition()');
+    await delay(50);
+    const projectsHash = await evaluate(client, `(() => {
+        const nav = document.getElementById('navbar')?.getBoundingClientRect();
+        const heading = document.querySelector('#projects .section-eyebrow, #projects .section-title');
+        const head = heading?.getBoundingClientRect();
+        return {
+            hash: location.hash,
+            top: Math.round(document.getElementById('projects')?.getBoundingClientRect().top || 9999),
+            headingTop: Math.round(head?.top || 9999),
+            navBottom: Math.round(nav?.bottom || 0),
+            gap: head && nav ? Math.round(head.top - nav.bottom) : 9999
+        };
+    })()`);
+    results.push(check('hash-projects', projectsHash.hash === '#projects' && landingOk(projectsHash), JSON.stringify(projectsHash)));
 
     await goto(client, new URL('/#timeline', url).href, 'home');
-    const timelineHash = await evaluate(client, `({
-        hash: location.hash,
-        top: Math.round(document.getElementById('timeline')?.getBoundingClientRect().top || 9999)
-    })`);
-    results.push(check('hash-timeline', timelineHash.hash === '#timeline' && timelineHash.top < 140, JSON.stringify(timelineHash)));
+    await evaluate(client, 'typeof restoreScrollPosition === "function" && restoreScrollPosition()');
+    await delay(50);
+    const timelineHash = await evaluate(client, `(() => {
+        const nav = document.getElementById('navbar')?.getBoundingClientRect();
+        const heading = document.querySelector('#timeline .section-title, #timeline h2');
+        const head = heading?.getBoundingClientRect();
+        return {
+            hash: location.hash,
+            top: Math.round(document.getElementById('timeline')?.getBoundingClientRect().top || 9999),
+            headingTop: Math.round(head?.top || 9999),
+            navBottom: Math.round(nav?.bottom || 0),
+            gap: head && nav ? Math.round(head.top - nav.bottom) : 9999
+        };
+    })()`);
+    results.push(check('hash-timeline', timelineHash.hash === '#timeline' && landingOk(timelineHash), JSON.stringify(timelineHash)));
 
     await evaluate(client, 'history.back()');
     await delay(200);
     const backState = await evaluate(client, 'location.hash');
     results.push(check('history-back-to-projects', backState === '#projects', `hash=${backState}`));
+    await evaluate(client, 'history.forward()');
+    await delay(200);
+    const forwardState = await evaluate(client, 'location.hash');
+    results.push(check('history-forward-to-timeline', forwardState === '#timeline', `hash=${forwardState}`));
+
+    const navGeom = id => evaluate(client, `(() => {
+        const nav = document.getElementById('navbar')?.getBoundingClientRect();
+        const section = document.getElementById(${JSON.stringify(id)});
+        const heading = section?.querySelector('.section-eyebrow, .section-title, h1, h2');
+        const head = heading?.getBoundingClientRect();
+        return {
+            hash: location.hash,
+            headingTop: Math.round(head?.top || 9999),
+            navBottom: Math.round(nav?.bottom || 0),
+            gap: head && nav ? Math.round(head.top - nav.bottom) : 9999,
+            scrollY: Math.round(window.scrollY)
+        };
+    })()`);
+
+    await goto(client, new URL('/', url).href, 'home');
+    await click(client, '.nav-links a[href="#projects"]');
+    await delay(80);
+    const clickProjects = await navGeom('projects');
+    results.push(check('nav-click-projects-landing', clickProjects.hash === '#projects' && landingOk(clickProjects), JSON.stringify(clickProjects)));
+    const yAfterClick = clickProjects.scrollY;
+    await delay(120);
+    const yLater = await evaluate(client, 'Math.round(window.scrollY)');
+    results.push(check('nav-reduced-motion-instant', Math.abs(yLater - yAfterClick) < 2, `y0=${yAfterClick} y1=${yLater}`));
+
+    await click(client, '.nav-links a[href="#timeline"]');
+    await delay(80);
+    const clickTimeline = await navGeom('timeline');
+    results.push(check('nav-click-timeline-landing', clickTimeline.hash === '#timeline' && landingOk(clickTimeline), JSON.stringify(clickTimeline)));
+
+    await click(client, '.nav-links a[href="#recommendations"]');
+    await delay(80);
+    const clickEndorsements = await navGeom('recommendations');
+    results.push(check('nav-click-endorsements-landing', clickEndorsements.hash === '#recommendations' && landingOk(clickEndorsements), JSON.stringify(clickEndorsements)));
+
+    await click(client, '.nav-links a[href="#home"]');
+    await delay(80);
+    const clickHome = await evaluate(client, `({ hash: location.hash, scrollY: Math.round(window.scrollY) })`);
+    results.push(check('nav-click-home-top', clickHome.scrollY === 0, JSON.stringify(clickHome)));
 
     const contact = await evaluate(client, `({
         labels: [...document.querySelectorAll('#contact-form label[for], #contact-form legend')].map(node => ({
@@ -337,6 +437,10 @@ async function runE2E(session) {
     results.push(check('mobile-nav-opens', mobileNav.expanded === 'true' && mobileNav.open, JSON.stringify(mobileNav)));
     const mobileOverflow = await evaluate(client, 'document.documentElement.scrollWidth > document.documentElement.clientWidth + 1');
     results.push(check('mobile-no-overflow', !mobileOverflow, `overflow=${mobileOverflow}`));
+    await click(client, '.nav-links a[href="#projects"]');
+    await delay(80);
+    const mobileProjects = await navGeom('projects');
+    results.push(check('nav-click-projects-mobile-landing', mobileProjects.hash === '#projects' && landingOk(mobileProjects), JSON.stringify(mobileProjects)));
 
     await setViewportTheme(client, 'desktop', 'dark', 'dark');
     await goto(client, new URL('/projects/?slug=ask-krishna', url).href, 'project');
@@ -351,6 +455,31 @@ async function runE2E(session) {
     results.push(check('project-canonical', /\/projects\/\?slug=ask-krishna$/.test(project.canonical || ''), project.canonical));
     results.push(check('project-gallery-label', /previous|next|show/i.test(project.galleryNext), project.galleryNext || 'missing gallery next label'));
     results.push(check('project-no-overflow', !project.overflowX, `overflowX=${project.overflowX}`));
+
+    await waitGalleryReady(client);
+    const askGallery = await galleryCaptionGeom(client);
+    results.push(check('project-gallery-portrait-token', askGallery.portraitMax === 560, JSON.stringify(askGallery)));
+    results.push(check('project-gallery-ask-krishna-width', !askGallery.portrait && askGallery.cardW >= 800 && askGallery.cardW <= askGallery.max + 2 && !askGallery.overflowX, JSON.stringify(askGallery)));
+    const askBefore = await evaluate(client, 'document.getElementById("project-media-title-0")?.textContent.trim() || ""');
+    await click(client, '#project-media .carousel-nav--next');
+    const askAfter = await evaluate(client, 'document.getElementById("project-media-title-0")?.textContent.trim() || ""');
+    results.push(check('project-gallery-navigates', Boolean(askBefore) && Boolean(askAfter) && askAfter !== askBefore, JSON.stringify({ askBefore, askAfter })));
+
+    await goto(client, new URL('/projects/?slug=media-search-engine', url).href, 'project');
+    await waitGalleryReady(client);
+    const aftersightGallery = await galleryCaptionGeom(client);
+    results.push(check('project-gallery-landscape-width', !aftersightGallery.portrait && aftersightGallery.cardW >= 800 && aftersightGallery.cardW <= aftersightGallery.max + 2 && !aftersightGallery.overflowX, JSON.stringify(aftersightGallery)));
+
+    await goto(client, new URL('/projects/?slug=flodoro', url).href, 'project');
+    await waitGalleryReady(client);
+    const flodoroGallery = await galleryCaptionGeom(client);
+
+    await setViewportTheme(client, 'mobile', 'dark', 'dark');
+    await goto(client, new URL('/projects/?slug=ask-krishna', url).href, 'project');
+    await waitGalleryReady(client);
+    const askMobile = await galleryCaptionGeom(client);
+    results.push(check('project-gallery-caption-aligns', askGallery.aligned && aftersightGallery.aligned && flodoroGallery.aligned && askMobile.aligned && !flodoroGallery.overflowX && !askMobile.overflowX, JSON.stringify({ ask: askGallery, aftersight: aftersightGallery, flodoro: flodoroGallery, mobile: askMobile })));
+    await setViewportTheme(client, 'desktop', 'dark', 'dark');
 
     const focusRule = await evaluate(client, `(() => {
         for (const sheet of document.styleSheets) {
@@ -379,6 +508,59 @@ async function runE2E(session) {
     })`);
     results.push(check('system-light-fallback', systemLight.stored === null && systemLight.theme === 'light', JSON.stringify(systemLight)));
 
+    await client.send('Emulation.setEmulatedMedia', {
+        features: [
+            { name: 'prefers-color-scheme', value: 'light' },
+            { name: 'prefers-reduced-motion', value: 'no-preference' }
+        ],
+        media: 'screen'
+    });
+    const loaded = client.once('Page.loadEventFired', 30000);
+    await client.send('Page.navigate', { url: new URL('/', url).href });
+    try { await loaded; } catch (error) {
+        const ready = await evaluate(client, 'document.readyState');
+        if (ready !== 'complete' && ready !== 'interactive') throw error;
+    }
+    for (let attempt = 0; attempt < 80; attempt++) {
+        if (await evaluate(client, `Boolean(document.querySelector('.cursor') && document.querySelector('.scroll-hint'))`)) break;
+        await delay(50);
+    }
+    await evaluate(client, `document.getElementById('theme-regression-freeze')?.remove()`);
+    await delay(120);
+    const blinkSample = () => evaluate(client, `(() => {
+        const cursor = document.querySelector('.cursor');
+        const hint = document.querySelector('.scroll-hint');
+        const cursorOp = cursor ? Number.parseFloat(getComputedStyle(cursor).opacity) : NaN;
+        const hintOp = hint ? Number.parseFloat(getComputedStyle(hint).opacity) : NaN;
+        const clock = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--blink-on'));
+        return {
+            cursor: cursorOp,
+            hint: hintOp,
+            clock,
+            hidden: Boolean(hint?.classList.contains('hidden')),
+            anim: getComputedStyle(document.documentElement).animationName,
+            synced: cursorOp === hintOp && cursorOp === clock
+        };
+    })()`);
+    const blinkA = await blinkSample();
+    await delay(550);
+    const blinkB = await blinkSample();
+    results.push(check('blink-shared-clock', blinkA.anim === 'blink-clock' && blinkA.synced && !blinkA.hidden, JSON.stringify(blinkA)));
+    results.push(check('blink-phase-holds', blinkB.synced && !blinkB.hidden, JSON.stringify({ blinkA, blinkB })));
+    await click(client, '#theme-toggle');
+    await evaluate(client, `document.getElementById('theme-regression-freeze')?.remove()`);
+    await delay(80);
+    const blinkTheme = await blinkSample();
+    results.push(check('blink-theme-stays-synced', blinkTheme.synced, JSON.stringify(blinkTheme)));
+    await click(client, '.nav-links a[href="#about"]');
+    await delay(80);
+    await click(client, '.nav-links a[href="#home"]');
+    await delay(360);
+    await evaluate(client, `document.getElementById('theme-regression-freeze')?.remove()`);
+    await delay(80);
+    const blinkHome = await blinkSample();
+    results.push(check('blink-return-home-synced', !blinkHome.hidden && blinkHome.synced, JSON.stringify(blinkHome)));
+
     const failed = results.filter(item => !item.ok);
     for (const item of results) {
         console.log(`${item.ok ? 'PASS' : 'FAIL'}  ${item.name}${item.detail ? `  (${item.detail})` : ''}`);
@@ -398,10 +580,13 @@ async function runSource() {
     const stale = [];
     if (/\b--bg-dark\b/.test(css) || /\b--bg-dark\b/.test(js)) stale.push('--bg-dark');
     if (/\b--bg-card\b/.test(css) || /\b--bg-card\b/.test(js)) stale.push('--bg-card');
-    const required = ['--bg-page', '--bg-surface', '--on-accent', '--logo-plate', '--media-letterbox', '--about-wash', '--overlay', '--dialog-shadow', '--nav-drawer-shadow'];
+    const required = ['--bg-page', '--bg-surface', '--bg-interactive', '--bg-transient', '--on-accent', '--accent-interact', '--kind-course', '--kind-internship', '--kind-achievement', '--logo-plate', '--media-letterbox', '--overlay', '--dialog-shadow', '--nav-drawer-shadow', '--shadow-raised', '--shadow-floating', '--shadow-control', '--shadow-quiet'];
     const missing = required.filter(token => !css.includes(token));
     if (stale.length || missing.length) {
         throw new Error(`source check failed: stale=${stale.join(',') || 'none'} missing=${missing.join(',') || 'none'}`);
+    }
+    if (!css.includes('@keyframes blink-clock') || !css.includes('--project-gallery-max') || !js.includes('pageScrollAnchor')) {
+        throw new Error('source check failed: missing blink-clock, gallery max token, or heading-anchor scroll');
     }
     console.log('Source checks passed (JSON parse, normalized token names)');
 }
