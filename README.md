@@ -28,6 +28,37 @@ HTML metadata, `sitemap.xml`, and `llms.txt` are static exceptions: crawlers tha
 - **Timeline:** Extend `data/timeline.json` with `work` or `education` entries.
 - **Certificates:** Edit `data/certificates.json`.
 
+Project-page media is configured as ordered blocks:
+
+```json
+"media": {
+    "title": "Optional shared title",
+    "caption": "Optional shared caption",
+    "blocks": [
+        {
+            "presentation": "gallery",
+            "items": [
+                { "type": "image", "src": "./assets/projects/slug/screenshot.png", "alt": "Required image description" }
+            ]
+        },
+        {
+            "presentation": "grid",
+            "items": []
+        },
+        {
+            "presentation": "comparison",
+            "groups": [
+                { "source": {}, "variants": [] }
+            ]
+        }
+    ]
+}
+```
+
+Blocks support explicit `image`, `video`, and `youtube` leaves. A gallery with one item renders directly without carousel controls. `title` and `caption` inherit through media → block → group → item; omit a field to inherit it or set it to `null` to suppress it. Images always require their own `alt`, and comparison variants require their own `label`.
+
+`data/media/` is ignored local intake for full-quality source/reference material. Curated website derivatives belong under `assets/projects/<project-slug>/`; never overwrite intake files with optimized copies.
+
 ## Screenshots
 `node tools/capture-screenshots.mjs --preset all --theme both --motion both` writes PNGs under ignored `.artifacts/screenshots-spacing/{theme}/{motion}/{viewport}/`. Use `--preset quick` for a shorter desktop/mobile pass.
 

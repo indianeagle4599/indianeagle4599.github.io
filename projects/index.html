@@ -58,7 +58,7 @@
 
     <main>
         <section class="section project-introduction">
-            <a class="back-button" href="../index.html#projects">← Back to projects</a>
+            <a class="back-button" href="../index.html#projects" aria-label="Back">← Back</a>
             <div class="project-introduction-heading">
                 <img id="project-logo" class="project-logo" alt="" hidden>
                 <h1 id="project-title">Loading project...</h1>
@@ -69,9 +69,10 @@
         </section>
 
         <section id="project-media" class="section project-demos" hidden>
-            <h2 class="section-title">Media</h2>
             <div id="project-media-grid" class="project-demo-grid"></div>
         </section>
+
+        <section id="project-results" class="section project-results" hidden></section>
 
         <section id="project-writeup-section" class="section project-writeup-section" hidden>
             <div id="project-writeup" class="project-writeup"></div>
@@ -80,11 +81,12 @@
         <section id="project-coming-soon" class="section project-coming-soon" hidden>
             <p>More info coming soon</p>
         </section>
-    </main>
 
-    <footer class="section project-footer">
-        <a class="btn btn-outline" href="../index.html#projects">Explore more projects →</a>
-    </footer>
+        <footer class="section project-footer">
+            <div id="project-footer-links" class="node-links-bar" hidden></div>
+            <a class="back-button" href="../index.html#projects" aria-label="Back">← Back</a>
+        </footer>
+    </main>
 
     <script src="../scripts/main.js"></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"

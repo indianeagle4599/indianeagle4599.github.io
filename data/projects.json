@@ -31,11 +31,48 @@
             }
         ],
         "writeup": "## What it is\n\nAsk Krishna is a personal, local-first reflection experience. There is no chatbot and no question box: you hold your question in your mind, turn through five pages, and let passages from the Bhagavad Gita answer in their own way. The question is never entered, recorded, or sent anywhere.\n\n## How it is built\n\n- Vanilla HTML, CSS, and JavaScript — no build step and no npm dependencies.\n- State lives in `localStorage` so preferences stay private and offline-friendly.\n- i18n covers Gita passages across languages.\n- Deployed as a static GitHub Pages site at [hiteshgoyal.me/ask-krishna](https://hiteshgoyal.me/ask-krishna/).\n\n## Why it exists\n\nIt is a gift-to-self project: a quiet interface for internal reflection that lets the Gita speak without turning the experience into a conversation with software.",
-        "media": []
+        "media": {
+            "blocks": [
+                {
+                    "presentation": "gallery",
+                    "title": "Core reflection flow",
+                    "items": [
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/ask-krishna/reflection-begin.png",
+                            "alt": "Ask Krishna opening screen with the Hare Krishna mantra and a Begin action",
+                            "title": "Begin",
+                            "caption": "The opening screen invites a quiet start before the reflection begins."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/ask-krishna/reflection-purification.png",
+                            "alt": "Ask Krishna purification screen showing a Sanskrit verse and English translation",
+                            "title": "Prepare",
+                            "caption": "A short purification verse creates a deliberate pause before reflection."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/ask-krishna/reflection-question.png",
+                            "alt": "Ask Krishna reflection screen prompting the visitor to hold a question silently",
+                            "title": "Hold the question",
+                            "caption": "The question stays unspoken while the experience prepares a response."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/ask-krishna/reflection-passage.png",
+                            "alt": "Ask Krishna passage screen showing selected Bhagavad Gita verses with reading and save actions",
+                            "title": "Receive a passage",
+                            "caption": "A Bhagavad Gita passage is presented as the response, with navigation and save actions."
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "slug": "media-search-engine",
-        "title": "Aftersight: Media Search Engine",
+        "title": "Aftersight",
         "logo": "./assets/aftersight-logo.png",
         "featured": true,
         "summary": "A multimodal media retrieval pipeline indexing image/video assets via VLM-generated descriptions, OCR, and metadata across semantic and lexical retrieval surfaces.",
@@ -70,7 +107,51 @@
             }
         ],
         "writeup": "## What it is\n\nAftersight indexes image and video assets so they can be searched by meaning, on-screen text, and structured metadata — not just filenames.\n\n## Approach\n\n- VLM-generated descriptions plus OCR and metadata feed both semantic and lexical retrieval surfaces.\n- MongoDB + ChromaDB with weighted multi-collection ranking across narrative content, OCR text, and metadata fields.\n- Streamlit UI for exploring the retrieval pipeline locally, with Ollama and Gemini in the generation/embedding path.",
-        "media": []
+        "media": {
+            "blocks": [
+                {
+                    "presentation": "gallery",
+                    "title": "Semantic retrieval in practice",
+                    "items": [
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/media-search-engine/public-building-search.png",
+                            "alt": "Aftersight search results for a natural-language query describing a public building with a flag and parked cars",
+                            "title": "Natural-language retrieval",
+                            "caption": "A descriptive query retrieves visually and semantically relevant images with ranked evidence."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/media-search-engine/source-building.jpg",
+                            "alt": "Original photograph of a public building with a flag and parked cars indexed by Aftersight",
+                            "title": "Matched source",
+                            "caption": "The top-ranked result corresponds to this indexed source photograph."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/media-search-engine/upload-indexing.png",
+                            "alt": "Aftersight upload page showing media moving through store, describe, and index stages",
+                            "title": "Ingestion pipeline",
+                            "caption": "Media moves through store, describe, and index stages before retrieval."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/media-search-engine/agreement-search.png",
+                            "alt": "Aftersight grid of image results returned for the search term Agreement",
+                            "title": "Concept search",
+                            "caption": "The same retrieval surface can present a compact visual overview for a broader concept."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/media-search-engine/agreement-detail.png",
+                            "alt": "Aftersight media detail view showing an agreement image, generated summary, and relevance controls",
+                            "title": "Result inspection",
+                            "caption": "A selected result exposes its generated summary, management actions, and relevance feedback."
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "slug": "pixtyle",
@@ -98,7 +179,156 @@
             }
         ],
         "writeup": "## What it is\n\nPixtyle is a pixel stylizer toolkit: photos and videos in, flat-color / cartoon-like wallpapers out.\n\n## Approach\n\n- Multiple stylization transforms: K-means clustering, enhanced clustering, Fourier-based animation, and edge enhancement.\n- GPU-accelerated processing with PyTorch and NumPy backends; video paths include temporal smoothing so animations stay stable.\n- Modular transform classes and configuration-driven pipelines, with optional TensorFlow super-resolution upscaling.\n- Batch processing for folders and videos.\n\nThis is an on-and-off personal toolkit rather than a shipped product.",
-        "media": []
+        "media": {
+            "blocks": [
+                {
+                    "presentation": "comparison",
+                    "groups": [
+                        {
+                            "title": "Daylight landmark",
+                            "caption": null,
+                            "source": {
+                                "type": "image",
+                                "src": "./assets/projects/pixtyle/day-one-original.jpg",
+                                "alt": "Original daylight photograph of a carved landmark and surrounding architecture",
+                                "title": "Original"
+                            },
+                            "variants": [
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-one-k-means.jpg",
+                                    "alt": "Daylight landmark transformed with K-means color clustering",
+                                    "title": "K-means",
+                                    "label": "K-means"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-one-enhanced.jpg",
+                                    "alt": "Daylight landmark transformed with enhanced color clustering",
+                                    "title": "Enhanced",
+                                    "label": "Enhanced"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-one-edge-pop.jpg",
+                                    "alt": "Daylight landmark stylized with emphasized edges",
+                                    "title": "Edge Pop",
+                                    "label": "Edge Pop"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-one-fourier.jpg",
+                                    "alt": "Daylight landmark processed with the Fourier transform style",
+                                    "title": "Fourier",
+                                    "label": "Fourier"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-one-combo.jpg",
+                                    "alt": "Daylight landmark processed with the combined cartoon transform",
+                                    "title": "Combo",
+                                    "label": "Combo"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "Daylight prayer wheels",
+                            "caption": null,
+                            "source": {
+                                "type": "image",
+                                "src": "./assets/projects/pixtyle/day-two-original.jpg",
+                                "alt": "Original daylight photograph of prayer wheels and colorful flags",
+                                "title": "Original"
+                            },
+                            "variants": [
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-two-k-means.jpg",
+                                    "alt": "Prayer wheels transformed with K-means color clustering",
+                                    "title": "K-means",
+                                    "label": "K-means"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-two-enhanced.jpg",
+                                    "alt": "Prayer wheels transformed with enhanced color clustering",
+                                    "title": "Enhanced",
+                                    "label": "Enhanced"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-two-edge-pop.jpg",
+                                    "alt": "Prayer wheels stylized with emphasized edges",
+                                    "title": "Edge Pop",
+                                    "label": "Edge Pop"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-two-fourier.jpg",
+                                    "alt": "Prayer wheels processed with the Fourier transform style",
+                                    "title": "Fourier",
+                                    "label": "Fourier"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/day-two-combo.jpg",
+                                    "alt": "Prayer wheels processed with the combined cartoon transform",
+                                    "title": "Combo",
+                                    "label": "Combo"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "Night landscape",
+                            "caption": null,
+                            "source": {
+                                "type": "image",
+                                "src": "./assets/projects/pixtyle/night-original.jpg",
+                                "alt": "Original night photograph of a tree and grass under artificial light",
+                                "title": "Original"
+                            },
+                            "variants": [
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/night-k-means.jpg",
+                                    "alt": "Night landscape transformed with K-means color clustering",
+                                    "title": "K-means",
+                                    "label": "K-means"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/night-enhanced.jpg",
+                                    "alt": "Night landscape transformed with enhanced color clustering",
+                                    "title": "Enhanced",
+                                    "label": "Enhanced"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/night-edge-pop.jpg",
+                                    "alt": "Night landscape stylized with emphasized edges",
+                                    "title": "Edge Pop",
+                                    "label": "Edge Pop"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/night-fourier.jpg",
+                                    "alt": "Night landscape processed with the Fourier transform style",
+                                    "title": "Fourier",
+                                    "label": "Fourier"
+                                },
+                                {
+                                    "type": "image",
+                                    "src": "./assets/projects/pixtyle/night-combo.jpg",
+                                    "alt": "Night landscape processed with the combined cartoon transform",
+                                    "title": "Combo",
+                                    "label": "Combo"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "slug": "flodoro",
@@ -131,7 +361,70 @@
             }
         ],
         "writeup": "## What it is\n\nFlodoro is a Pomodoro timer and task manager that runs entirely in the browser. It was built as a gift: configurable work and break sessions, ambient audio, themes, and history — without an account or backend.\n\n## How it is built\n\n- Static HTML, CSS, and vanilla JavaScript.\n- All data (tasks, history, settings, playlists) persists in `localStorage`.\n- Configurable work / short-break / long-break lengths, notification settings, and a local playlist manager.\n- Multiple theme presets and dark mode.\n- Originally opened as a local HTML file on Windows; now also deployed at [hiteshgoyal.me/flodoro](https://hiteshgoyal.me/flodoro/).\n\n## Design constraint\n\nStay serverless. If a feature needs a server, it does not belong in Flodoro.",
-        "media": []
+        "media": {
+            "blocks": [
+                {
+                    "presentation": "gallery",
+                    "items": [
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/timer.png",
+                            "alt": "Flodoro timer showing the active focus session, task queue, session progress, and audio controls",
+                            "title": "Focus timer",
+                            "caption": "The main workspace keeps the timer, active task, session progress, and ambient audio together."
+                        }
+                    ]
+                },
+                {
+                    "presentation": "gallery",
+                    "title": "Supporting workflow",
+                    "items": [
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/tasks.png",
+                            "alt": "Flodoro tasks panel for adding, completing, and organizing focus tasks",
+                            "title": "Tasks",
+                            "caption": "A compact task queue keeps the current focus session grounded."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/statistics.png",
+                            "alt": "Flodoro statistics panel showing focus totals and productivity trends",
+                            "title": "Statistics",
+                            "caption": "Session totals and trends make progress visible without an account."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/history.png",
+                            "alt": "Flodoro history panel listing completed focus sessions",
+                            "title": "History",
+                            "caption": "Completed sessions remain available locally for review."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/ambient-audio.png",
+                            "alt": "Flodoro ambient audio panel with selectable focus sounds",
+                            "title": "Ambient audio",
+                            "caption": "Built-in sounds can accompany a focus session without another app."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/playlist-manager.png",
+                            "alt": "Flodoro playlist manager for organizing local focus audio",
+                            "title": "Playlist manager",
+                            "caption": "Local audio can be arranged into reusable focus playlists."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/flodoro/notifications.png",
+                            "alt": "Flodoro notification settings for session alerts",
+                            "title": "Notifications",
+                            "caption": "Session alerts are configurable while the app stays local-first."
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "slug": "os-toolkit",
@@ -160,7 +453,69 @@
             }
         ],
         "writeup": "## What it is\n\nOS Toolkit is a Python CLI I keep extending for my own machines: filesystem analysis, safe file transfer, migration planning, and small developer-workflow automations.\n\n## Approach\n\n- Multithreaded and multiprocessed file reading/transfer for large directory trees.\n- Emphasis on *safe* migrations — plan first, copy second.\n- Treated as a forever project: new utilities land when a real need shows up.\n\nNo hosted demo; the GitHub repo is the product.",
-        "media": []
+        "media": {
+            "blocks": []
+        },
+        "results": {
+            "title": "Benchmark results",
+            "caption": "Owner-machine medians after MAD outlier filtering (threshold 3.5). Not a hardware-independent claim.",
+            "tables": [
+                {
+                    "title": "Disk analysis",
+                    "caption": "small/mixed (~2.0 GB, ~108K files) on SSD. Ours builds a usage tree (size, % of root); stdlib baselines report a byte total only.",
+                    "columns": ["Tool", "Median wall", "Median throughput", "Output"],
+                    "rows": [
+                        {
+                            "cells": ["os_toolkit.usage (ours)", "~0.299 s", "~6.7 GB/s", "usage tree"],
+                            "ours": true,
+                            "best": [false, false, false, false]
+                        },
+                        {
+                            "cells": ["stdlib.os.walk", "~3.31 s", "~649 MB/s", "size total only"],
+                            "best": [false, false, false, false]
+                        },
+                        {
+                            "cells": ["stdlib.scandir", "~0.277 s", "~7.3 GB/s", "size total only"],
+                            "best": [false, true, true, false]
+                        }
+                    ],
+                    "interpretation": "stdlib.scandir has the best raw wall time and throughput (~0.277 s, ~7.3 GB/s). os_toolkit.usage is about 8% slower while returning a usage tree instead of a size total — and about 11.1× faster than os.walk on the same corpus."
+                },
+                {
+                    "title": "Transfer rollups",
+                    "caption": "Median of per-scenario medians for ~1.00 GB copies vs stdlib.copytree and robocopy. SSD: C: and D:; HDD paths include E:.",
+                    "columns": ["Profile", "Storage", "os_toolkit.transfer (ours)", "stdlib.copytree", "robocopy"],
+                    "oursColumn": 2,
+                    "rows": [
+                        {
+                            "cells": ["1G/balanced", "SSD", "~14.3 s, ~70 MB/s", "~20.8 s, ~48 MB/s", "~24.2 s, ~42 MB/s"],
+                            "best": [false, false, true, false, false]
+                        },
+                        {
+                            "cells": ["1G/balanced", "HDD", "~60 s, ~17 MB/s", "~62 s, ~16 MB/s", "~81 s, ~12 MB/s"],
+                            "best": [false, false, true, false, false]
+                        },
+                        {
+                            "cells": ["1G/tiny-heavy", "SSD", "~15.6 s, ~65 MB/s", "~21.3 s, ~47 MB/s", "~25.5 s, ~39 MB/s"],
+                            "best": [false, false, true, false, false]
+                        },
+                        {
+                            "cells": ["1G/tiny-heavy", "HDD", "~63 s, ~16 MB/s", "~68 s, ~15 MB/s", "~90 s, ~12 MB/s"],
+                            "best": [false, false, true, false, false]
+                        },
+                        {
+                            "cells": ["1G/media-heavy", "SSD", "~1.8 s, ~553 MB/s", "~2.6 s, ~392 MB/s", "~2.7 s, ~370 MB/s"],
+                            "best": [false, false, true, false, false]
+                        },
+                        {
+                            "cells": ["1G/media-heavy", "HDD", "~10.7 s, ~95 MB/s", "~11.3 s, ~88 MB/s", "~11.3 s, ~90 MB/s"],
+                            "best": [false, false, true, false, false]
+                        }
+                    ],
+                    "interpretation": "On these owner-machine rollups, os_toolkit.transfer leads each profile on median wall time and throughput versus copytree and robocopy. SSD gaps are clearest on balanced and tiny-heavy mixes; media-heavy is faster overall for every tool. HDD medians mix slow HDD-touching paths with faster SSD-leg paths, so they are not a single operating point."
+                }
+            ]
+        }
     },
     {
         "slug": "lazy-resume",
@@ -177,7 +532,9 @@
         ],
         "links": [],
         "writeup": "## What it is\n\nLazyResume is a resume-optimisation pipeline: take messy resume layouts, parse them into structured JSON, and score alignment against a job description.\n\n## Approach\n\n- Vision-based OCR plus LLMs to turn unstructured documents into structured fields.\n- Custom evaluation hooks for resume-to-JD alignment.\n- About a 20% improvement in parseability on complex layouts under those hooks.\n- FastAPI service wrapping the parser.\n\nNo public demo yet.",
-        "media": []
+        "media": {
+            "blocks": []
+        }
     },
     {
         "slug": "fuzzy-hybrid-stock-trading",
@@ -201,7 +558,22 @@
             }
         ],
         "writeup": "## What it is\n\nCourse project: a hybrid fuzzy-logic + neural-network trading model that emits buy/sell signals from domain-specific market features.\n\n## Results\n\n- Feature extraction tailored to financial indicators instead of a generic tabular baseline.\n- Feature dimensionality reduced by about 5x while model performance improved by roughly 20%.\n- Data-loading and training pipelines sped up by about 10x.\n\nRepository is a shared course project on GitHub.",
-        "media": []
+        "media": {
+            "blocks": [
+                {
+                    "presentation": "gallery",
+                    "items": [
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/fuzzy-hybrid-stock-trading/model-architecture.png",
+                            "alt": "Architecture diagram showing a GRU-LSTM-Attention backbone feeding three objective-specific GenFIS heads and an aggregation layer",
+                            "title": "Hybrid model architecture",
+                            "caption": "A GRU-LSTM-Attention backbone feeds objective-specific GenFIS heads for cumulative reward, Sharpe ratio, and maximum drawdown before aggregation."
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "slug": "ai-generated-image-classifier",
@@ -230,6 +602,29 @@
             }
         ],
         "writeup": "## What it is\n\nA binary classifier and training pipeline for telling AI-generated images apart from human-captured ones, aimed at Kaggle-style evaluation rather than a production API.\n\n## Approach\n\n- Multiple architectures and feature-engineering paths, including FFT-based methods alongside classical computer vision features.\n- Training loop with hyperparameter tuning, data augmentation, and evaluation metrics.\n- Modular experiment tracking, dataset organization, and evaluation scripts so runs stay comparable.\n\nCode and experiment layout live on GitHub.",
-        "media": []
+        "media": {
+            "blocks": [
+                {
+                    "presentation": "gallery",
+                    "title": "Tracked experiment evidence",
+                    "items": [
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/ai-generated-image-classifier/training-curves-swin-v2-t.png",
+                            "alt": "Loss, accuracy, and F1 curves for the train and validation splits across a 25-epoch Swin V2 Tiny experiment",
+                            "title": "Training and validation curves",
+                            "caption": "A tracked 25-epoch Swin V2 Tiny run records loss, accuracy, and F1 for both training and validation splits."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t.png",
+                            "alt": "Train and validation confusion matrices for the best checkpoint of the Swin V2 Tiny experiment",
+                            "title": "Best-checkpoint evaluation",
+                            "caption": "The same run stores separate train and validation confusion matrices for its selected checkpoint."
+                        }
+                    ]
+                }
+            ]
+        }
     }
 ]

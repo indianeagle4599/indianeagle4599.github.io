@@ -35,9 +35,11 @@ const MIME_TYPES = {
     '.jpg': 'image/jpeg',
     '.js': 'text/javascript; charset=utf-8',
     '.json': 'application/json; charset=utf-8',
+    '.mp4': 'video/mp4',
     '.png': 'image/png',
     '.svg': 'image/svg+xml',
     '.txt': 'text/plain; charset=utf-8',
+    '.webm': 'video/webm',
     '.xml': 'application/xml; charset=utf-8'
 };
 
@@ -274,7 +276,9 @@ async function evaluate(client, expression) {
         expression,
         returnByValue: true
     });
-    if (response.exceptionDetails) throw new Error(response.exceptionDetails.text || 'Page evaluation failed');
+    if (response.exceptionDetails) {
+        throw new Error(response.exceptionDetails.exception?.description || response.exceptionDetails.text || 'Page evaluation failed');
+    }
     return response.result?.value;
 }
 
@@ -284,7 +288,9 @@ async function waitForPage(client, kind, motion) {
             && document.querySelector('.project-card')
             && document.querySelector('.timeline-node')`
         : `document.querySelector('#project-title')?.textContent !== 'Loading project...'
-            && document.querySelector('#project-writeup')?.children.length`;
+            && (document.querySelector('#project-writeup')?.children.length
+                || document.querySelector('#project-media:not([hidden])')
+                || document.querySelector('#project-coming-soon:not([hidden])'))`;
 
     for (let attempt = 0; attempt < 120; attempt++) {
         if (await evaluate(client, `Boolean(${condition})`)) {
@@ -332,7 +338,7 @@ async function pageMetrics(client) {
     return evaluate(client, `(() => {
         const viewportWidth = document.documentElement.clientWidth;
         const viewportHeight = document.documentElement.clientHeight;
-        const selectors = ['.nav-content', '#home', '#about', '#projects', '#timeline', '.projects-carousel', '.project-card', '.carousel-stage', '.project-introduction', '.project-writeup-section'];
+        const selectors = ['.nav-content', '#home', '#about', '#projects', '#timeline', '.projects-carousel', '.project-card', '.carousel-stage', '.project-introduction', '#project-media', '.project-writeup-section'];
         const bounds = {};
         selectors.forEach(selector => {
             const element = document.querySelector(selector);
@@ -342,8 +348,8 @@ async function pageMetrics(client) {
         });
 
         const beyondViewport = [];
-        document.querySelectorAll('section, .nav-content, .projects-carousel, .project-card, .stack-item, .cert-card, h1, h2, h3, p, img').forEach(element => {
-            if (element.closest('.projects-strip')) return;
+        document.querySelectorAll('section, .nav-content, .projects-carousel, .project-card, .stack-item, .cert-card, h1, h2, h3, p, img, video, iframe').forEach(element => {
+            if (element.closest('.carousel-strip')) return;
             const rect = element.getBoundingClientRect();
             if (!rect.width || !rect.height) return;
             if (rect.right > viewportWidth + 1 || rect.left < -1) {

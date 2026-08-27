@@ -12,17 +12,17 @@ const CERT_KIND_LABELS = {
     achievement: 'Achievement'
 };
 const CHEVRON_HTML = `<span class="stack-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>`;
+const CAROUSEL_NAV_PREV_HTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+const CAROUSEL_NAV_NEXT_HTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+const GITHUB_MARK_HTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>';
+const PROJECT_PAGE_CTA_LABEL = 'Learn More';
 const PROJECTS_CAROUSEL_MS = 12000;
+const CAROUSEL_TRANSITION_MS = 420;
+const CAROUSEL_SWIPE_PX = 48;
 
 let filtersInitialized = false;
 let certificatesLoaded = false;
 let stackUid = 0;
-let projectsCarouselTimer = null;
-let projectsCarouselIndex = 1;
-let projectsCarouselCount = 0;
-let projectsCarouselAnimating = false;
-let projectsCarouselHovered = false;
-let projectsCarouselPointerActive = false;
 
 function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -201,16 +201,28 @@ function renderTags(tags) {
     return (tags || []).map(tag => `<span class="tech-tag">${escapeHtml(tag)}</span>`).join('');
 }
 
-function renderLinks(links) {
+function hasDemoLink(links) {
+    return (links || []).some(link => String(link.kind || '').toLowerCase() === 'demo'
+        && safeHref(link.url)
+        && link.label);
+}
+
+function actionButtonClass(primary) {
+    return primary ? 'btn btn-primary btn-tiny' : 'btn btn-outline btn-tiny';
+}
+
+function renderLinks(links, options = {}) {
     return (links || [])
         .filter(link => link && safeHref(link.url) && link.label)
         .map(link => {
             const href = safeHref(link.url);
             const kind = String(link.kind || '').toLowerCase();
-            const cls = kind === 'demo' ? 'btn btn-primary btn-tiny' : 'btn btn-outline btn-tiny';
+            const classes = [actionButtonClass(kind === 'demo')];
+            if (kind === 'demo' && options.liveDemoMotion) classes.push('btn-live');
             const external = /^https?:\/\//i.test(href);
             const target = external ? ' target="_blank" rel="noopener"' : '';
-            return `<a href="${escapeHtml(href)}"${target} class="${cls}">${escapeHtml(link.label)}</a>`;
+            const icon = kind === 'github' ? GITHUB_MARK_HTML : '';
+            return `<a href="${escapeHtml(href)}"${target} class="${classes.join(' ')}">${icon}${escapeHtml(link.label)}</a>`;
         })
         .join('');
 }
@@ -218,7 +230,7 @@ function renderLinks(links) {
 function renderCredentialButtons(credentials) {
     return (credentials || [])
         .filter(url => typeof url === 'string' && safeHref(url))
-        .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">View Credentials</a>`)
+        .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">Credentials</a>`)
         .join('');
 }
 
@@ -297,7 +309,7 @@ function renderCertificateCard(cert, isCore = false) {
     const href = safeHref(cert.link);
     const link = href ? `
         <a href="${escapeHtml(href)}" target="_blank" rel="noopener" class="cert-link btn btn-outline">
-            View Credentials
+            Credentials
         </a>
     ` : '';
 
@@ -350,6 +362,9 @@ function revealCertificateCards(container) {
 function normalizeProject(project) {
     requireFields(project, ['slug', 'title'], 'project');
     if (!PROJECT_SLUG_RE.test(project.slug)) throw new Error(`Invalid project slug: ${project.slug}`);
+    const media = project.media && typeof project.media === 'object' && !Array.isArray(project.media)
+        ? project.media
+        : {};
     return {
         slug: project.slug,
         title: project.title,
@@ -361,7 +376,14 @@ function normalizeProject(project) {
         tags: project.tags || [],
         links: project.links || [],
         writeup: project.writeup || '',
-        media: project.media || []
+        media: {
+            ...(Object.prototype.hasOwnProperty.call(media, 'title') ? { title: media.title } : {}),
+            ...(Object.prototype.hasOwnProperty.call(media, 'caption') ? { caption: media.caption } : {}),
+            blocks: Array.isArray(media.blocks) ? media.blocks : []
+        },
+        results: project.results && typeof project.results === 'object' && !Array.isArray(project.results)
+            ? project.results
+            : null
     };
 }
 
@@ -531,7 +553,7 @@ function renderProjectCard(project) {
         ? `<ul class="project-card-highlights">${highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
         : '';
     const detailsHref = `./projects/?slug=${encodeURIComponent(project.slug)}`;
-    const detailsBtn = `<a href="${detailsHref}" class="btn btn-primary btn-tiny">Details</a>`;
+    const detailsBtn = `<a href="${detailsHref}" class="${actionButtonClass(true)}">${PROJECT_PAGE_CTA_LABEL}</a>`;
 
     return `
         <article class="project-card">
@@ -542,7 +564,7 @@ function renderProjectCard(project) {
             ${project.summary ? `<p class="project-card-desc">${escapeHtml(project.summary)}</p>` : ''}
             ${highlightsHTML}
             <div class="node-tags">${renderTags(project.tags)}</div>
-            <div class="node-links-bar">${renderLinks(project.links)}${detailsBtn}</div>
+            <div class="node-links-bar">${renderLinks(project.links, { liveDemoMotion: true })}${detailsBtn}</div>
         </article>
     `;
 }
@@ -554,7 +576,7 @@ function renderOtherProject(project) {
         ? `<ul>${highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
         : '';
     const detailsHref = `./projects/?slug=${encodeURIComponent(project.slug)}`;
-    const pageLink = `<a href="${detailsHref}" class="btn btn-outline btn-tiny">Project page</a>`;
+    const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}">${PROJECT_PAGE_CTA_LABEL}</a>`;
     const footerHTML = renderStackFooter(renderTags(project.tags), renderLinks(project.links) + pageLink);
     const hasBody = Boolean(highlightsHTML);
     const panelId = hasBody ? `stack-panel-${++stackUid}` : '';
@@ -581,287 +603,573 @@ function renderOtherProject(project) {
     `;
 }
 
-function carouselStrip() {
-    return document.querySelector('.projects-strip');
+function createSlideStrip(track, slides, { loop = false, className = 'carousel-strip' } = {}) {
+    const count = slides.length;
+    const useLoop = loop && count > 1;
+    const strip = document.createElement('div');
+    strip.className = className;
+    if (useLoop) strip.append(slides[count - 1].cloneNode(true), ...slides, slides[0].cloneNode(true));
+    else strip.append(...slides);
+    track.replaceChildren(strip);
+    const cards = Array.from(strip.children);
+    let physicalIndex = useLoop ? 1 : 0;
+
+    const setOffset = animate => {
+        const width = track.clientWidth;
+        if (!width) return;
+        const gap = parseFloat(getComputedStyle(strip).columnGap) || 0;
+        strip.classList.toggle('is-jumping', !animate);
+        strip.style.transform = `translate3d(${-(physicalIndex * (width + gap))}px, 0, 0)`;
+        if (!animate) {
+            strip.offsetHeight;
+            strip.classList.remove('is-jumping');
+        }
+    };
+
+    const syncActive = onActive => {
+        cards.forEach((card, index) => {
+            const active = index === physicalIndex;
+            card.setAttribute('aria-hidden', String(!active));
+            card.toggleAttribute('inert', !active);
+            onActive?.(card, active, index);
+        });
+    };
+
+    return {
+        strip,
+        cards,
+        setOffset,
+        render(index, direction, animate) {
+            if (animate && direction) physicalIndex += direction;
+            else physicalIndex = useLoop ? index + 1 : index;
+            setOffset(animate);
+            return animate && Boolean(direction);
+        },
+        settle(index, onActive) {
+            if (useLoop) {
+                if (physicalIndex === count + 1) physicalIndex = 1;
+                else if (physicalIndex === 0) physicalIndex = count;
+            } else {
+                physicalIndex = index;
+            }
+            setOffset(false);
+            syncActive(onActive);
+        }
+    };
 }
 
-function carouselGap() {
-    const strip = carouselStrip();
-    if (!strip) return 0;
-    return parseFloat(getComputedStyle(strip).columnGap) || 0;
+function attachCarouselProgressFill(host) {
+    if (!host || host.querySelector(':scope > .carousel-dot-progress')) return;
+    const progress = document.createElement('span');
+    progress.className = 'carousel-dot-progress';
+    progress.setAttribute('aria-hidden', 'true');
+    const fill = document.createElement('span');
+    fill.className = 'carousel-dot-progress-fill';
+    progress.appendChild(fill);
+    host.appendChild(progress);
 }
 
-function setCarouselOffset(animate) {
-    const strip = carouselStrip();
-    const track = document.getElementById('projects-track');
-    if (!strip || !track) return;
-    const offset = -(projectsCarouselIndex * (track.clientWidth + carouselGap()));
-    strip.classList.toggle('is-jumping', !animate);
-    strip.style.transform = `translate3d(${offset}px, 0, 0)`;
-    if (!animate) {
-        strip.offsetHeight;
-        strip.classList.remove('is-jumping');
+function createCarouselController({
+    root,
+    count,
+    render,
+    settle,
+    previous,
+    next,
+    indicators = [],
+    gestureTarget = root,
+    manualWrap = false,
+    pauseWhenOffscreen = false,
+    ignoreGesture = () => false,
+    ignoreKeyboard = event => Boolean(event.target.closest('video, iframe, input, textarea, select')),
+    onDragChange = () => {},
+    onResize,
+    transitionTarget,
+    ariaLabel
+}) {
+    if (!root || count < 1 || typeof render !== 'function') return null;
+    root._carouselController?.destroy();
+
+    let activeIndex = 0;
+    let timer = null;
+    let transitionTimer = null;
+    let clickTimer = null;
+    let transitioning = false;
+    let pointerActive = false;
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let captureTarget = null;
+    let suppressClick = false;
+    let remainingMs = PROJECTS_CAROUSEL_MS;
+    let runningSince = 0;
+    let progressAnimation = null;
+    const PAUSE = { hover: 1, pointer: 2, focus: 4, hidden: 8, offscreen: 16 };
+    let pauseFlags = (pauseWhenOffscreen ? PAUSE.offscreen : 0) | (document.hidden ? PAUSE.hidden : 0);
+    const abortController = new AbortController();
+    const listenerOptions = { signal: abortController.signal };
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    indicators.forEach(attachCarouselProgressFill);
+
+    const clearTimer = () => {
+        if (timer !== null) window.clearTimeout(timer);
+        timer = null;
+    };
+    const remainingNow = () => {
+        if (runningSince === 0) return remainingMs;
+        return Math.max(0, remainingMs - (performance.now() - runningSince));
+    };
+    const progressFill = (indicator) => indicator?.querySelector(':scope > .carousel-dot-progress > .carousel-dot-progress-fill');
+    const stopProgressAnimation = () => {
+        if (!progressAnimation) return;
+        const target = progressAnimation.effect?.target;
+        progressAnimation.cancel();
+        progressAnimation = null;
+        target?.style.removeProperty('transform');
+    };
+    const rootReady = () => root.isConnected && !root.closest('[hidden]') && root.getBoundingClientRect().width > 0;
+    const syncProgress = (playing) => {
+        const showTrack = count > 1 && !prefersReducedMotion();
+        if (showTrack) root.setAttribute('data-autoplay-progress', '');
+        else root.removeAttribute('data-autoplay-progress');
+        const activeFill = progressFill(indicators[activeIndex]);
+        indicators.forEach((indicator, index) => {
+            const fill = progressFill(indicator);
+            if (!fill || index === activeIndex) return;
+            fill.getAnimations().forEach(animation => animation.cancel());
+            fill.style.transform = 'scaleX(0)';
+        });
+        if (!showTrack || !activeFill?.isConnected || !rootReady()) {
+            stopProgressAnimation();
+            if (activeFill) activeFill.style.transform = 'scaleX(0)';
+            return;
+        }
+        const elapsed = Math.min(PROJECTS_CAROUSEL_MS, Math.max(0, PROJECTS_CAROUSEL_MS - remainingNow()));
+        if (progressAnimation && progressAnimation.effect?.target !== activeFill) stopProgressAnimation();
+        if (!progressAnimation) {
+            activeFill.style.removeProperty('transform');
+            progressAnimation = activeFill.animate(
+                [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+                { duration: PROJECTS_CAROUSEL_MS, easing: 'linear', fill: 'forwards' }
+            );
+            progressAnimation.pause();
+        }
+        progressAnimation.currentTime = elapsed;
+        if (playing) progressAnimation.play();
+        else progressAnimation.pause();
+    };
+    const pauseCycle = () => {
+        remainingMs = remainingNow();
+        runningSince = 0;
+        clearTimer();
+        syncProgress(false);
+    };
+    const focusPausesAutoplay = () => {
+        const active = document.activeElement;
+        if (!active || !root.contains(active)) return false;
+        if (active.closest('.carousel-controls')) return false;
+        return true;
+    };
+    const canAutoplay = () => count > 1 && !prefersReducedMotion() && pauseFlags === 0;
+    const applyPause = (flag, on) => {
+        const next = on ? pauseFlags | flag : pauseFlags & ~flag;
+        if (next === pauseFlags) {
+            if (!on && canAutoplay() && timer === null) start();
+            return;
+        }
+        pauseFlags = next;
+        if (canAutoplay()) start();
+        else pauseCycle();
+    };
+    const finishTransition = () => {
+        if (transitionTimer !== null) window.clearTimeout(transitionTimer);
+        transitionTimer = null;
+        if (!transitioning) return;
+        transitioning = false;
+        settle?.(activeIndex);
+    };
+    const syncControls = () => {
+        if (previous) previous.disabled = !manualWrap && activeIndex === 0;
+        if (next) next.disabled = !manualWrap && activeIndex === count - 1;
+        indicators.forEach((indicator, index) => {
+            const active = index === activeIndex;
+            indicator.classList.toggle('is-active', active);
+            indicator.setAttribute('aria-current', String(active));
+        });
+        if (ariaLabel) root.setAttribute('aria-label', ariaLabel(activeIndex, count));
+    };
+    const normalizeIndex = (index, wrap) => {
+        if (wrap) return (index + count) % count;
+        return Math.max(0, Math.min(index, count - 1));
+    };
+    const start = () => {
+        if (timer !== null) remainingMs = remainingNow();
+        runningSince = 0;
+        clearTimer();
+        if (!canAutoplay()) {
+            syncProgress(false);
+            return;
+        }
+        runningSince = performance.now();
+        const delay = remainingMs;
+        timer = window.setTimeout(() => {
+            timer = null;
+            runningSince = 0;
+            if (!canAutoplay()) {
+                remainingMs = PROJECTS_CAROUSEL_MS;
+                syncProgress(false);
+                return;
+            }
+            remainingMs = PROJECTS_CAROUSEL_MS;
+            moveTo(activeIndex + 1, { direction: 1, wrap: true });
+            start();
+        }, delay);
+        syncProgress(true);
+    };
+    const moveTo = (index, { direction, manual = false, wrap = manualWrap } = {}) => {
+        if (count < 2 || transitioning) return false;
+        const nextIndex = normalizeIndex(index, wrap);
+        if (nextIndex === activeIndex) {
+            if (manual) start();
+            return false;
+        }
+        remainingMs = PROJECTS_CAROUSEL_MS;
+        runningSince = 0;
+        clearTimer();
+        stopProgressAnimation();
+        const movement = direction || nextIndex - activeIndex;
+        activeIndex = nextIndex;
+        const animated = !prefersReducedMotion() && Boolean(movement);
+        const rendered = render(activeIndex, movement, animated);
+        transitioning = animated && rendered !== false;
+        syncControls();
+        syncProgress(false);
+        if (transitioning) {
+            transitionTimer = window.setTimeout(finishTransition, CAROUSEL_TRANSITION_MS + 80);
+        } else {
+            settle?.(activeIndex);
+        }
+        if (manual) start();
+        return true;
+    };
+    const moveBy = (delta, manual = true) => moveTo(activeIndex + delta, {
+        direction: delta,
+        manual
+    });
+
+    previous?.addEventListener('click', () => moveBy(-1), listenerOptions);
+    next?.addEventListener('click', () => moveBy(1), listenerOptions);
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => moveTo(index, { manual: true }), listenerOptions);
+    });
+    root.addEventListener('keydown', event => {
+        if (ignoreKeyboard(event)) return;
+        if (event.key === 'ArrowLeft' && (manualWrap || activeIndex > 0)) {
+            event.preventDefault();
+            moveBy(-1);
+        }
+        if (event.key === 'ArrowRight' && (manualWrap || activeIndex < count - 1)) {
+            event.preventDefault();
+            moveBy(1);
+        }
+    }, listenerOptions);
+    root.addEventListener('pointerenter', event => {
+        if (event.pointerType === 'touch') return;
+        applyPause(PAUSE.hover, true);
+    }, listenerOptions);
+    root.addEventListener('pointerleave', event => {
+        if (event.pointerType === 'touch') return;
+        applyPause(PAUSE.hover, false);
+    }, listenerOptions);
+    const syncFocusPause = () => applyPause(PAUSE.focus, focusPausesAutoplay());
+    root.addEventListener('focusin', syncFocusPause, listenerOptions);
+    root.addEventListener('focus', syncFocusPause, listenerOptions);
+    root.addEventListener('focusout', syncFocusPause, listenerOptions);
+
+    if (gestureTarget) {
+        const finishPointer = (event, navigate) => {
+            if (event.pointerId !== pointerId) return;
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
+            const swiped = navigate && Math.abs(dx) > CAROUSEL_SWIPE_PX && Math.abs(dx) > Math.abs(dy);
+            if (captureTarget?.hasPointerCapture(pointerId)) captureTarget.releasePointerCapture(pointerId);
+            pointerId = null;
+            captureTarget = null;
+            pointerActive = false;
+            onDragChange(false);
+            if (swiped && moveBy(dx < 0 ? 1 : -1)) {
+                suppressClick = true;
+                if (clickTimer !== null) window.clearTimeout(clickTimer);
+                clickTimer = window.setTimeout(() => {
+                    suppressClick = false;
+                    clickTimer = null;
+                }, CAROUSEL_TRANSITION_MS + 80);
+                applyPause(PAUSE.pointer, false);
+                return;
+            }
+            applyPause(PAUSE.pointer, false);
+        };
+        gestureTarget.addEventListener('pointerdown', event => {
+            if (!event.isPrimary || event.button !== 0 || pointerId !== null || ignoreGesture(event)) return;
+            pointerActive = true;
+            applyPause(PAUSE.pointer, true);
+            suppressClick = false;
+            pointerId = event.pointerId;
+            startX = event.clientX;
+            startY = event.clientY;
+            captureTarget = event.target.closest?.('a, button') || gestureTarget;
+            captureTarget.setPointerCapture(pointerId);
+        }, listenerOptions);
+        gestureTarget.addEventListener('pointermove', event => {
+            if (event.pointerId !== pointerId) return;
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
+            if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
+                onDragChange(true);
+                if (event.cancelable) event.preventDefault();
+            }
+        }, listenerOptions);
+        gestureTarget.addEventListener('pointerup', event => finishPointer(event, true), listenerOptions);
+        gestureTarget.addEventListener('pointercancel', event => finishPointer(event, false), listenerOptions);
+        gestureTarget.addEventListener('dragstart', event => event.preventDefault(), listenerOptions);
+        gestureTarget.addEventListener('click', event => {
+            if (!suppressClick) return;
+            suppressClick = false;
+            event.preventDefault();
+            event.stopPropagation();
+        }, { ...listenerOptions, capture: true });
     }
+
+    document.addEventListener('visibilitychange', () => applyPause(PAUSE.hidden, document.hidden), listenerOptions);
+    motionQuery.addEventListener('change', () => {
+        remainingMs = PROJECTS_CAROUSEL_MS;
+        runningSince = 0;
+        start();
+    }, listenerOptions);
+    const relayout = () => {
+        if (!transitioning && typeof onResize === 'function') onResize();
+        if (canAutoplay() && timer === null) start();
+        else syncProgress(timer !== null);
+    };
+    if (typeof onResize === 'function') {
+        window.addEventListener('resize', relayout, listenerOptions);
+        if (typeof ResizeObserver === 'function') {
+            const resizeTarget = gestureTarget || root;
+            if (resizeTarget) {
+                const resizeObserver = new ResizeObserver(relayout);
+                resizeObserver.observe(resizeTarget);
+                abortController.signal.addEventListener('abort', () => resizeObserver.disconnect(), { once: true });
+            }
+        }
+    }
+    if (transitionTarget) {
+        transitionTarget.addEventListener('transitionend', event => {
+            if (event.target === transitionTarget && event.propertyName === 'transform') finishTransition();
+        }, listenerOptions);
+    }
+    let observer = null;
+    if (pauseWhenOffscreen && 'IntersectionObserver' in window) {
+        observer = new IntersectionObserver(entries => {
+            applyPause(PAUSE.offscreen, !entries.some(entry => entry.isIntersecting));
+        });
+        observer.observe(root);
+    } else {
+        pauseFlags &= ~PAUSE.offscreen;
+    }
+
+    render(activeIndex, 0, false);
+    syncControls();
+    settle?.(activeIndex);
+    start();
+
+    const api = {
+        finishTransition,
+        getIndex: () => activeIndex,
+        goTo: (index, direction) => moveTo(index, { direction, manual: true }),
+        isAutoplaying: () => timer !== null,
+        remainingMs: remainingNow,
+        progressTime: () => progressAnimation?.currentTime ?? null,
+        pauseReasons: () => ({
+            hover: Boolean(pauseFlags & PAUSE.hover),
+            pointer: Boolean(pauseFlags & PAUSE.pointer),
+            focus: Boolean(pauseFlags & PAUSE.focus),
+            hidden: Boolean(pauseFlags & PAUSE.hidden),
+            offscreen: Boolean(pauseFlags & PAUSE.offscreen)
+        }),
+        relayout,
+        restart: start,
+        destroy() {
+            if (root._carouselController === api) delete root._carouselController;
+            pauseCycle();
+            if (transitionTimer !== null) window.clearTimeout(transitionTimer);
+            if (clickTimer !== null) window.clearTimeout(clickTimer);
+            observer?.disconnect();
+            abortController.abort();
+            stopProgressAnimation();
+            root.removeAttribute('data-autoplay-progress');
+        }
+    };
+    root._carouselController = api;
+    return api;
 }
 
-function realCarouselIndex() {
-    if (projectsCarouselCount < 1) return 0;
-    if (projectsCarouselIndex === 0) return projectsCarouselCount - 1;
-    if (projectsCarouselIndex === projectsCarouselCount + 1) return 0;
-    return projectsCarouselIndex - 1;
+function createCarouselSlide(content, index, count) {
+    const slide = document.createElement('div');
+    slide.className = 'carousel-slide';
+    slide.setAttribute('role', 'group');
+    slide.setAttribute('aria-roledescription', 'slide');
+    slide.setAttribute('aria-label', `${index + 1} of ${count}`);
+    slide.append(content);
+    return slide;
 }
 
-function updateCarouselStatus() {
-    const carousel = document.querySelector('.projects-carousel');
-    const dots = document.getElementById('projects-dots');
-    const active = realCarouselIndex();
+function createCarouselView({
+    root,
+    slides,
+    loop = slides.length > 1,
+    pauseWhenOffscreen = true,
+    ignoreGesture,
+    onDragChange,
+    ariaLabel,
+    onRender,
+    onSettle,
+    previousLabel = 'Previous slide',
+    nextLabel = 'Next slide',
+    indicatorLabel = (index, count) => `Go to slide ${index + 1} of ${count}`
+}) {
+    if (!root) return null;
+    const count = slides.length;
+    root.classList.add('carousel');
+    root.setAttribute('role', 'region');
+    root.setAttribute('aria-roledescription', 'carousel');
+
+    let track = root.querySelector('.carousel-track');
+    let stage = track?.closest('.carousel-stage') || root.querySelector(':scope > .carousel-stage');
+    if (!stage) {
+        stage = document.createElement('div');
+        stage.className = 'carousel-stage';
+        if (track) {
+            track.parentNode.insertBefore(stage, track);
+            stage.append(track);
+        } else {
+            track = document.createElement('div');
+            track.className = 'carousel-track';
+            track.id = `carousel-track-${++stackUid}`;
+            stage.append(track);
+            root.prepend(stage);
+        }
+    } else if (!track) {
+        track = document.createElement('div');
+        track.className = 'carousel-track';
+        track.id = `carousel-track-${++stackUid}`;
+        stage.append(track);
+    }
+    track.classList.add('carousel-track');
+    if (!track.id) track.id = `carousel-track-${++stackUid}`;
+
+    let controls = root.querySelector(':scope > .carousel-controls');
+    if (count < 2) {
+        root._carouselController?.destroy();
+        if (controls) controls.hidden = true;
+        root.removeAttribute('tabindex');
+        track.replaceChildren(...(count ? [createCarouselSlide(slides[0], 0, 1)] : []));
+        return { root, track, stage, motion: null, controls };
+    }
+
+    if (!controls) {
+        controls = document.createElement('div');
+        controls.className = 'carousel-controls';
+        const previousBtn = document.createElement('button');
+        previousBtn.type = 'button';
+        previousBtn.className = 'carousel-nav carousel-nav--prev';
+        previousBtn.setAttribute('aria-label', previousLabel);
+        previousBtn.setAttribute('aria-controls', track.id);
+        previousBtn.innerHTML = CAROUSEL_NAV_PREV_HTML;
+        const dotsWrap = document.createElement('div');
+        dotsWrap.className = 'carousel-dots';
+        const nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'carousel-nav carousel-nav--next';
+        nextBtn.setAttribute('aria-label', nextLabel);
+        nextBtn.setAttribute('aria-controls', track.id);
+        nextBtn.innerHTML = CAROUSEL_NAV_NEXT_HTML;
+        controls.append(previousBtn, dotsWrap, nextBtn);
+        if (stage.parentElement === root) stage.after(controls);
+        else root.append(controls);
+    }
+    controls.hidden = false;
+    const previous = controls.querySelector('.carousel-nav--prev');
+    const next = controls.querySelector('.carousel-nav--next');
+    const dots = controls.querySelector('.carousel-dots');
     if (dots) {
-        dots.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-            const isActive = i === active;
-            dot.classList.toggle('is-active', isActive);
-            dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+        dots.replaceChildren();
+        slides.forEach((_, index) => {
+            const dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'carousel-dot';
+            dot.setAttribute('aria-label', indicatorLabel(index, count));
+            if (track.id) dot.setAttribute('aria-controls', track.id);
+            dots.appendChild(dot);
         });
     }
-    if (carousel && projectsCarouselCount) {
-        carousel.setAttribute('aria-label', `Showcase, slide ${active + 1} of ${projectsCarouselCount}`);
-    }
-}
 
-function updateSlideInert() {
-    const strip = carouselStrip();
-    if (!strip) return;
-    strip.querySelectorAll('.project-card').forEach((card, i) => {
-        const visible = i === projectsCarouselIndex;
-        card.setAttribute('aria-hidden', String(!visible));
-        card.toggleAttribute('inert', !visible);
+    root.tabIndex = 0;
+    const motion = createSlideStrip(track, slides.map((slide, index) => createCarouselSlide(slide, index, count)), {
+        loop
     });
-}
-
-function settleCarouselWrap() {
-    if (!projectsCarouselCount) return;
-    if (projectsCarouselIndex === projectsCarouselCount + 1) {
-        projectsCarouselIndex = 1;
-        setCarouselOffset(false);
-    } else if (projectsCarouselIndex === 0) {
-        projectsCarouselIndex = projectsCarouselCount;
-        setCarouselOffset(false);
-    }
-    updateSlideInert();
-    projectsCarouselAnimating = false;
-}
-
-function goCarousel(delta) {
-    if (projectsCarouselAnimating || projectsCarouselCount < 2) return false;
-    const reduceMotion = prefersReducedMotion();
-    projectsCarouselAnimating = !reduceMotion;
-    projectsCarouselIndex += delta;
-    setCarouselOffset(!reduceMotion);
-    updateCarouselStatus();
-    if (reduceMotion) {
-        settleCarouselWrap();
-        return true;
-    }
-    window.setTimeout(() => {
-        if (projectsCarouselAnimating) settleCarouselWrap();
-    }, 500);
-    return true;
-}
-
-function stopProjectsCarousel() {
-    if (projectsCarouselTimer) {
-        clearTimeout(projectsCarouselTimer);
-        projectsCarouselTimer = null;
-    }
-}
-
-function canAutoplayProjectsCarousel() {
-    const carousel = document.querySelector('.projects-carousel');
-    return Boolean(
-        carousel
-        && projectsCarouselCount > 1
-        && !prefersReducedMotion()
-        && !projectsCarouselHovered
-        && !projectsCarouselPointerActive
-        && !document.hidden
-        && !carousel.contains(document.activeElement)
-    );
-}
-
-function startProjectsCarousel() {
-    stopProjectsCarousel();
-    if (!canAutoplayProjectsCarousel()) return;
-    projectsCarouselTimer = window.setTimeout(() => {
-        projectsCarouselTimer = null;
-        if (!canAutoplayProjectsCarousel()) return;
-        goCarousel(1);
-        startProjectsCarousel();
-    }, PROJECTS_CAROUSEL_MS);
-}
-
-function navigateProjectsCarousel(delta) {
-    if (!goCarousel(delta)) return false;
-    startProjectsCarousel();
-    return true;
+    track.querySelectorAll('a, img').forEach(element => {
+        element.draggable = false;
+    });
+    createCarouselController({
+        root,
+        count,
+        previous,
+        next,
+        indicators: dots ? Array.from(dots.querySelectorAll('.carousel-dot')) : [],
+        gestureTarget: track,
+        manualWrap: loop,
+        pauseWhenOffscreen,
+        ignoreGesture,
+        onDragChange: dragging => {
+            track.classList.toggle('is-dragging', dragging);
+            onDragChange?.(dragging);
+        },
+        transitionTarget: motion.strip,
+        onResize: () => motion.setOffset(false),
+        ariaLabel,
+        render(index, direction, animate) {
+            onRender?.(index, direction, animate);
+            return motion.render(index, direction, animate);
+        },
+        settle(index) {
+            motion.settle(index, (card, active) => onSettle?.(index, card, active));
+        }
+    });
+    return { root, track, stage, motion, controls };
 }
 
 function initProjectsCarousel(projects) {
     const carousel = document.querySelector('.projects-carousel');
-    const controls = carousel?.querySelector('.carousel-controls');
     const track = document.getElementById('projects-track');
-    const prev = document.getElementById('projects-prev');
-    const next = document.getElementById('projects-next');
-    const dots = document.getElementById('projects-dots');
     if (!carousel || !track) return;
 
     if (!projects.length) {
+        carousel._carouselController?.destroy();
         track.innerHTML = '<p class="cert-status">No featured projects yet.</p>';
         return;
     }
 
-    projectsCarouselCount = projects.length;
-    projectsCarouselAnimating = false;
-    if (controls) controls.hidden = projectsCarouselCount < 2;
-
-    if (projectsCarouselCount > 1) {
-        const first = renderProjectCard(projects[0]);
-        const last = renderProjectCard(projects[projectsCarouselCount - 1]);
-        const middle = projects.map(renderProjectCard).join('');
-        track.innerHTML = `<div class="projects-strip">${last}${middle}${first}</div>`;
-        projectsCarouselIndex = 1;
-    } else {
-        track.innerHTML = `<div class="projects-strip">${projects.map(renderProjectCard).join('')}</div>`;
-        projectsCarouselIndex = 0;
-    }
-    track.querySelectorAll('a, img').forEach(element => {
-        element.draggable = false;
+    createCarouselView({
+        root: carousel,
+        slides: projects.map(project => {
+            const template = document.createElement('template');
+            template.innerHTML = renderProjectCard(project).trim();
+            return template.content.firstElementChild;
+        }),
+        loop: true,
+        ariaLabel: index => `Showcase, slide ${index + 1} of ${projects.length}`,
+        indicatorLabel: index => `Show ${projects[index].title}`
     });
-    setCarouselOffset(false);
-    updateSlideInert();
-
-    if (dots && projectsCarouselCount > 1) {
-        dots.innerHTML = projects.map((project, i) => (
-            `<button type="button" class="carousel-dot" aria-label="Show ${escapeHtml(project.title)}" aria-controls="projects-track"></button>`
-        )).join('');
-        dots.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                if (projectsCarouselAnimating) return;
-                const target = i + 1;
-                if (target === projectsCarouselIndex) return;
-                navigateProjectsCarousel(target - projectsCarouselIndex);
-            });
-        });
-    }
-
-    const strip = carouselStrip();
-    if (strip) {
-        strip.addEventListener('transitionend', event => {
-            if (event.target !== strip || event.propertyName !== 'transform') return;
-            settleCarouselWrap();
-            updateCarouselStatus();
-        });
-    }
-
-    if (prev) prev.addEventListener('click', () => navigateProjectsCarousel(-1));
-    if (next) next.addEventListener('click', () => navigateProjectsCarousel(1));
-
-    let pointerId = null;
-    let pointerStartX = 0;
-    let pointerStartY = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-    let pointerCaptureTarget = null;
-    let suppressClick = false;
-
-    const finishPointerGesture = (event, allowNavigation) => {
-        if (event.pointerId !== pointerId) return;
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        const dx = pointerX - pointerStartX;
-        const dy = pointerY - pointerStartY;
-        const isSwipe = allowNavigation && Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy);
-
-        if (pointerCaptureTarget?.hasPointerCapture(pointerId)) pointerCaptureTarget.releasePointerCapture(pointerId);
-        pointerId = null;
-        pointerCaptureTarget = null;
-        projectsCarouselPointerActive = false;
-
-        if (isSwipe && navigateProjectsCarousel(dx < 0 ? 1 : -1)) {
-            suppressClick = true;
-            window.setTimeout(() => {
-                suppressClick = false;
-            }, 500);
-            return;
-        }
-        startProjectsCarousel();
-    };
-
-    track.addEventListener('pointerdown', event => {
-        if (!event.isPrimary || event.button !== 0 || pointerId !== null) return;
-        pointerId = event.pointerId;
-        pointerStartX = event.clientX;
-        pointerStartY = event.clientY;
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        pointerCaptureTarget = event.target.closest?.('a, button') || track;
-        projectsCarouselPointerActive = true;
-        stopProjectsCarousel();
-        pointerCaptureTarget.setPointerCapture(pointerId);
-    });
-    track.addEventListener('pointermove', event => {
-        if (event.pointerId !== pointerId) return;
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-    });
-    track.addEventListener('pointerup', event => {
-        finishPointerGesture(event, true);
-    });
-    track.addEventListener('pointercancel', event => {
-        finishPointerGesture(event, false);
-    });
-    track.addEventListener('dragstart', event => {
-        event.preventDefault();
-    });
-    track.addEventListener('click', event => {
-        if (!suppressClick) return;
-        suppressClick = false;
-        event.preventDefault();
-        event.stopPropagation();
-    }, true);
-
-    carousel.addEventListener('pointerenter', event => {
-        if (event.pointerType === 'touch') return;
-        projectsCarouselHovered = true;
-        stopProjectsCarousel();
-    });
-    carousel.addEventListener('pointerleave', event => {
-        if (event.pointerType === 'touch') return;
-        projectsCarouselHovered = false;
-        startProjectsCarousel();
-    });
-    carousel.addEventListener('focusin', stopProjectsCarousel);
-    carousel.addEventListener('focusout', event => {
-        if (carousel.contains(event.relatedTarget)) return;
-        startProjectsCarousel();
-    });
-    carousel.addEventListener('keydown', event => {
-        if (event.key === 'ArrowLeft') {
-            event.preventDefault();
-            navigateProjectsCarousel(-1);
-        }
-        if (event.key === 'ArrowRight') {
-            event.preventDefault();
-            navigateProjectsCarousel(1);
-        }
-    });
-
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) stopProjectsCarousel();
-        else startProjectsCarousel();
-    });
-    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', startProjectsCarousel);
-    window.addEventListener('resize', () => setCarouselOffset(false));
-    updateCarouselStatus();
-    startProjectsCarousel();
 }
 
 async function loadProjects() {
@@ -898,39 +1206,499 @@ function setMeta(selector, value) {
 }
 
 function youtubeEmbedUrl(url) {
-    const match = String(url || '').match(/(?:youtu\.be\/|v=)([A-Za-z0-9_-]{6,})/);
-    return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+    try {
+        const parsed = new URL(String(url || ''));
+        const host = parsed.hostname.toLowerCase();
+        const allowedHosts = ['youtube.com', 'www.youtube.com', 'm.youtube.com', 'youtu.be'];
+        if (!allowedHosts.includes(host)) return '';
+
+        const videoId = host === 'youtu.be'
+            ? parsed.pathname.split('/').filter(Boolean)[0]
+            : parsed.pathname === '/watch' ? parsed.searchParams.get('v') : '';
+        return /^[A-Za-z0-9_-]{11}$/.test(videoId || '')
+            ? `https://www.youtube-nocookie.com/embed/${videoId}`
+            : '';
+    } catch (error) {
+        return '';
+    }
+}
+
+function resolveInheritedText(field, ...ancestry) {
+    for (let index = ancestry.length - 1; index >= 0; index--) {
+        const node = ancestry[index];
+        if (!node || !Object.prototype.hasOwnProperty.call(node, field)) continue;
+        if (node[field] === null) return null;
+        if (typeof node[field] !== 'string' || !node[field].trim()) {
+            throw new Error(`Invalid media ${field}: expected a non-empty string or null`);
+        }
+        return node[field].trim();
+    }
+    return undefined;
+}
+
+function projectMediaBlocks(project) {
+    return Array.isArray(project.media?.blocks) ? project.media.blocks : [];
+}
+
+function mediaBlockLeaves(block) {
+    if (!block || typeof block !== 'object') return [];
+    switch (block.presentation) {
+        case 'gallery':
+        case 'grid':
+            return Array.isArray(block.items) ? block.items : [];
+        case 'comparison':
+            return (Array.isArray(block.groups) ? block.groups : []).flatMap(group => [
+                group?.source,
+                ...(Array.isArray(group?.variants) ? group.variants : [])
+            ]).filter(Boolean);
+        default:
+            return [];
+    }
+}
+
+function projectMediaLeaves(project) {
+    return projectMediaBlocks(project).flatMap(mediaBlockLeaves);
+}
+
+function createProjectMediaLeaf(item, projectTitle, ancestry, deferImage = false) {
+    if (!item || typeof item.src !== 'string' || !item.src.trim()) return null;
+    const title = resolveInheritedText('title', ...ancestry, item);
+    const caption = resolveInheritedText('caption', ...ancestry, item);
+    const figure = document.createElement('figure');
+    figure.className = 'project-media-leaf';
+
+    if (item.type === 'image') {
+        if (typeof item.alt !== 'string' || !item.alt.trim()) return null;
+        const src = assetUrl(item.src);
+        const link = document.createElement('a');
+        link.className = 'project-media-image-link';
+        link.href = src;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        const image = document.createElement('img');
+        image.className = 'project-media-image';
+        if (deferImage) image.dataset.src = src;
+        else image.src = src;
+        image.alt = item.alt.trim();
+        image.loading = 'lazy';
+        image.decoding = 'async';
+        image.draggable = false;
+        link.appendChild(image);
+        figure.appendChild(link);
+    } else if (item.type === 'video') {
+        const video = document.createElement('video');
+        video.className = 'project-media-frame';
+        video.src = assetUrl(item.src);
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'none';
+        if (typeof item.poster === 'string' && item.poster.trim()) video.poster = assetUrl(item.poster);
+        figure.appendChild(video);
+    } else if (item.type === 'youtube') {
+        const embed = youtubeEmbedUrl(item.src);
+        if (!embed) return null;
+        const iframe = document.createElement('iframe');
+        iframe.className = 'project-media-frame';
+        iframe.dataset.src = embed;
+        iframe.title = title || caption || `${projectTitle} video`;
+        iframe.loading = 'lazy';
+        iframe.allow = 'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.allowFullscreen = true;
+        figure.appendChild(iframe);
+    } else {
+        return null;
+    }
+
+    return { caption, element: figure, title, type: item.type };
+}
+
+function setProjectMediaLeafActive(element, active) {
+    if (!active) element.querySelector('video')?.pause();
+    const image = element.querySelector('img[data-src]');
+    if (active && image && !image.hasAttribute('src')) image.src = image.dataset.src;
+    const iframe = element.querySelector('iframe[data-src]');
+    if (!iframe) return;
+    if (active && !iframe.hasAttribute('src')) iframe.src = iframe.dataset.src;
+    if (!active) iframe.removeAttribute('src');
+}
+
+function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
+    const items = Array.isArray(block.items) ? block.items : [];
+    const leaves = items.map((item, index) => createProjectMediaLeaf(item, projectTitle, [media, block], index > 0)).filter(Boolean);
+    if (!leaves.length) return null;
+
+    const gallery = document.createElement('section');
+    gallery.className = `project-media-card project-media-gallery${leaves.length > 1 ? ' project-media-gallery--multiple' : ''}${leaves.length > 4 ? ' project-media-gallery--many' : ''}`;
+    const galleryLabel = resolveInheritedText('title', media, block) || `${projectTitle} gallery`;
+    gallery.setAttribute('aria-label', galleryLabel);
+
+    const metadata = document.createElement('div');
+    metadata.className = 'project-media-metadata';
+    const title = document.createElement('h3');
+    title.className = 'project-media-title';
+    title.id = `project-media-title-${blockIndex}`;
+    const caption = document.createElement('p');
+    caption.className = 'project-media-caption';
+    caption.id = `project-media-caption-${blockIndex}`;
+    metadata.append(title, caption);
+
+    leaves.forEach((leaf, index) => {
+        leaf.element.dataset.mediaIndex = String(index);
+        const image = leaf.element.querySelector('img[data-src]');
+        if (image && !image.hasAttribute('src')) image.src = image.dataset.src;
+    });
+
+    const updateCopy = activeIndex => {
+        const activeLeaf = leaves[activeIndex];
+        title.textContent = activeLeaf.title || '';
+        title.hidden = !activeLeaf.title;
+        caption.textContent = activeLeaf.caption || '';
+        caption.hidden = !activeLeaf.caption;
+        metadata.hidden = !activeLeaf.title && !activeLeaf.caption;
+        const descriptions = [activeLeaf.title ? title.id : '', activeLeaf.caption ? caption.id : ''].filter(Boolean);
+        if (descriptions.length) activeLeaf.element.setAttribute('aria-describedby', descriptions.join(' '));
+        else activeLeaf.element.removeAttribute('aria-describedby');
+    };
+
+    const view = createCarouselView({
+        root: gallery,
+        slides: leaves.map(leaf => leaf.element),
+        loop: leaves.length > 1,
+        pauseWhenOffscreen: true,
+        ignoreGesture: event => Boolean(event.target.closest('video, iframe')),
+        previousLabel: 'Previous media',
+        nextLabel: 'Next media',
+        indicatorLabel: (index) => {
+            const title = leaves[index]?.title;
+            return title ? `Show ${title}` : `Go to slide ${index + 1} of ${leaves.length}`;
+        },
+        ariaLabel: index => `${galleryLabel}, slide ${index + 1} of ${leaves.length}`,
+        onRender: updateCopy,
+        onSettle: (_index, card, active) => setProjectMediaLeafActive(card, active)
+    });
+    if (view?.stage) {
+        const viewport = document.createElement('div');
+        viewport.className = 'project-media-viewport';
+        view.stage.before(viewport);
+        viewport.append(view.stage, metadata);
+    } else if (view?.controls) {
+        view.controls.before(metadata);
+    } else {
+        gallery.append(metadata);
+    }
+    updateCopy(0);
+    if (leaves.length === 1) setProjectMediaLeafActive(leaves[0].element, true);
+
+    const firstImage = leaves[0].element.querySelector('img');
+    const syncViewport = () => {
+        if (firstImage?.naturalWidth && firstImage.naturalHeight) {
+            gallery.style.setProperty('--project-media-aspect', `${firstImage.naturalWidth} / ${firstImage.naturalHeight}`);
+            gallery.classList.toggle('project-media-gallery--portrait', firstImage.naturalHeight > firstImage.naturalWidth);
+        } else if (!firstImage) {
+            gallery.style.setProperty('--project-media-aspect', '16 / 9');
+        }
+        view?.motion?.setOffset(false);
+    };
+    if (firstImage) {
+        if (firstImage.complete) syncViewport();
+        else firstImage.addEventListener('load', syncViewport, { once: true });
+    } else {
+        syncViewport();
+    }
+    return gallery;
+}
+
+function appendProjectMediaLeafMetadata(leaf) {
+    if (!leaf.title && !leaf.caption) return;
+    const metadata = document.createElement('figcaption');
+    metadata.className = 'project-media-item-metadata';
+    if (leaf.title) {
+        const title = document.createElement('h4');
+        title.className = 'project-media-item-title';
+        title.textContent = leaf.title;
+        metadata.appendChild(title);
+    }
+    if (leaf.caption) {
+        const caption = document.createElement('p');
+        caption.className = 'project-media-item-caption';
+        caption.textContent = leaf.caption;
+        metadata.appendChild(caption);
+    }
+    leaf.element.appendChild(metadata);
+}
+
+function createProjectMediaBlockHeader(media, block) {
+    const title = resolveInheritedText('title', media, block);
+    const caption = resolveInheritedText('caption', media, block);
+    if (!title && !caption) return null;
+    const header = document.createElement('header');
+    header.className = 'project-media-block-header';
+    if (title) {
+        const heading = document.createElement('h3');
+        heading.textContent = title;
+        header.appendChild(heading);
+    }
+    if (caption) {
+        const description = document.createElement('p');
+        description.textContent = caption;
+        header.appendChild(description);
+    }
+    return header;
+}
+
+function activateProjectMediaLeafOnView(element) {
+    if (!element.querySelector('iframe[data-src]') || !('IntersectionObserver' in window)) {
+        setProjectMediaLeafActive(element, true);
+        return;
+    }
+    const observer = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        setProjectMediaLeafActive(element, true);
+        observer.disconnect();
+    }, { rootMargin: '200px' });
+    observer.observe(element);
+}
+
+function renderProjectMediaGrid(block, media, projectTitle, blockIndex) {
+    const items = Array.isArray(block.items) ? block.items : [];
+    const leaves = items.map(item => createProjectMediaLeaf(item, projectTitle, [media, block])).filter(Boolean);
+    if (!leaves.length) return null;
+
+    const section = document.createElement('section');
+    section.className = 'project-media-grid-block';
+    section.setAttribute('aria-label', resolveInheritedText('title', media, block) || `${projectTitle} media grid ${blockIndex + 1}`);
+    const header = createProjectMediaBlockHeader(media, block);
+    if (header) section.appendChild(header);
+    const grid = document.createElement('div');
+    grid.className = 'project-media-items-grid';
+    leaves.forEach(leaf => {
+        appendProjectMediaLeafMetadata(leaf);
+        grid.appendChild(leaf.element);
+        activateProjectMediaLeafOnView(leaf.element);
+    });
+    section.appendChild(grid);
+    return section;
+}
+
+function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
+    const configuredGroups = Array.isArray(block.groups) ? block.groups : [];
+    const section = document.createElement('section');
+    section.className = 'project-media-comparison';
+    section.setAttribute('aria-label', resolveInheritedText('title', media, block) || `${projectTitle} comparisons ${blockIndex + 1}`);
+    configuredGroups.forEach((group, groupIndex) => {
+        const source = createProjectMediaLeaf(group?.source, projectTitle, [media, block, group]);
+        const variants = (Array.isArray(group?.variants) ? group.variants : []).map(variant => ({
+            label: typeof variant?.label === 'string' ? variant.label.trim() : '',
+            leaf: createProjectMediaLeaf(variant, projectTitle, [media, block, group], true)
+        })).filter(variant => variant.label && variant.leaf);
+        if (!source || !variants.length) return;
+
+        const comparison = document.createElement('section');
+        comparison.className = 'project-media-card project-media-comparison-group';
+        const groupTitle = resolveInheritedText('title', media, block, group);
+        if (groupTitle) {
+            const label = document.createElement('p');
+            label.className = 'project-media-group-label';
+            label.textContent = groupTitle;
+            comparison.appendChild(label);
+        }
+
+        const pair = document.createElement('div');
+        pair.className = 'project-media-comparison-pair';
+        source.element.classList.add('project-media-comparison-source');
+        appendProjectMediaLeafMetadata(source);
+        setProjectMediaLeafActive(source.element, true);
+        const results = document.createElement('div');
+        results.className = 'carousel-track project-media-comparison-results';
+        variants.forEach(({ leaf }, index) => {
+            leaf.element.classList.add('project-media-comparison-result');
+            leaf.element.dataset.variantIndex = String(index);
+            appendProjectMediaLeafMetadata(leaf);
+            const image = leaf.element.querySelector('img[data-src]');
+            if (image && !image.hasAttribute('src')) image.src = image.dataset.src;
+        });
+        pair.append(source.element, results);
+        comparison.append(pair);
+        section.appendChild(comparison);
+
+        createCarouselView({
+            root: comparison,
+            slides: variants.map(({ leaf }) => leaf.element),
+            loop: true,
+            ignoreGesture: event => Boolean(event.target.closest('video, iframe')),
+            onDragChange: dragging => results.classList.toggle('is-dragging', dragging),
+            previousLabel: 'Previous transform',
+            nextLabel: 'Next transform',
+            indicatorLabel: index => `Show ${variants[index].label}`,
+            ariaLabel: index => `${groupTitle || `Comparison ${groupIndex + 1}`}, ${variants[index].label}, ${index + 1} of ${variants.length}`,
+            onSettle: (_index, card, active) => setProjectMediaLeafActive(card, active)
+        });
+    });
+
+    return section.querySelector('.project-media-comparison-group') ? section : null;
+}
+
+function renderProjectMediaBlock(block, media, projectTitle, blockIndex) {
+    switch (block?.presentation) {
+        case 'gallery':
+            return renderProjectMediaGallery(block, media, projectTitle, blockIndex);
+        case 'grid':
+            return renderProjectMediaGrid(block, media, projectTitle, blockIndex);
+        case 'comparison':
+            return renderProjectMediaComparison(block, media, projectTitle, blockIndex);
+        default:
+            return null;
+    }
 }
 
 function renderProjectMedia(project) {
-    const items = (project.media || []).filter(item => item && item.src);
     const section = document.getElementById('project-media');
     const grid = document.getElementById('project-media-grid');
-    if (!section || !grid || !items.length) return false;
+    if (!section || !grid) return false;
 
-    grid.innerHTML = items.map(item => {
-        const src = assetUrl(item.src || '');
-        const caption = item.caption || '';
-        const alt = caption || project.title;
-        let body = '';
-        if (item.type === 'video') {
-            const embed = youtubeEmbedUrl(item.src);
-            body = embed
-                ? `<iframe class="project-demo-frame" src="${escapeHtml(embed)}" title="${escapeHtml(alt)}" allowfullscreen loading="lazy"></iframe>`
-                : `<video class="project-demo-frame" src="${escapeHtml(src)}" controls preload="metadata"></video>`;
-        } else {
-            body = `<img class="project-demo-image" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy">`;
+    grid.querySelectorAll('.project-media-gallery, .project-media-comparison-group').forEach(root => {
+        root._carouselController?.destroy();
+    });
+
+    const blocks = projectMediaBlocks(project);
+    const renderedBlocks = blocks
+        .map((block, index) => renderProjectMediaBlock(block, project.media, project.title, index))
+        .filter(Boolean);
+    grid.replaceChildren(...renderedBlocks);
+    const hasLeadGalleryPair = renderedBlocks.length === 2
+        && blocks[0]?.presentation === 'gallery'
+        && blocks[0].items?.length === 1
+        && blocks[1]?.presentation === 'gallery'
+        && blocks[1].items?.length > 1;
+    grid.classList.toggle('project-demo-grid--lead-gallery', hasLeadGalleryPair);
+    grid.classList.toggle('project-media-card', hasLeadGalleryPair);
+    section.setAttribute('aria-label', `${project.title} media`);
+    section.hidden = !renderedBlocks.length;
+    if (!section.hidden) {
+        grid.querySelectorAll('.project-media-gallery, .project-media-comparison-group').forEach(root => {
+            root._carouselController?.relayout();
+        });
+    }
+    return renderedBlocks.length > 0;
+}
+
+function normalizeProjectResultRow(row, columnCount) {
+    const cells = Array.isArray(row)
+        ? row
+        : (row && typeof row === 'object' && Array.isArray(row.cells) ? row.cells : null);
+    if (!cells || cells.length !== columnCount) return null;
+    const best = Array.isArray(row?.best) ? row.best : [];
+    return {
+        cells,
+        ours: Boolean(row && typeof row === 'object' && !Array.isArray(row) && row.ours),
+        best
+    };
+}
+
+function renderProjectResults(project) {
+    const section = document.getElementById('project-results');
+    if (!section) return false;
+
+    const results = project.results;
+    const tables = Array.isArray(results?.tables) ? results.tables : [];
+    const rendered = tables.map(table => {
+        const columns = Array.isArray(table.columns) ? table.columns.filter(column => typeof column === 'string' && column.trim()) : [];
+        const rows = Array.isArray(table.rows)
+            ? table.rows.map(row => normalizeProjectResultRow(row, columns.length)).filter(Boolean)
+            : [];
+        if (typeof table.title !== 'string' || !table.title.trim() || !columns.length || !rows.length) return null;
+
+        const oursColumn = Number.isInteger(table.oursColumn) ? table.oursColumn : -1;
+        const figure = document.createElement('figure');
+        figure.className = 'project-results-figure';
+        const caption = document.createElement('figcaption');
+        caption.className = 'project-results-caption';
+        const heading = document.createElement('h3');
+        heading.textContent = table.title.trim();
+        caption.appendChild(heading);
+        if (typeof table.caption === 'string' && table.caption.trim()) {
+            const context = document.createElement('p');
+            context.textContent = table.caption.trim();
+            caption.appendChild(context);
         }
-        return `
-            <figure class="project-demo-figure${item.type === 'video' ? ' project-demo-figure--frame' : ''}">
-                ${body}
-                ${caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : ''}
-            </figure>
-        `;
-    }).join('');
+        const wrap = document.createElement('div');
+        wrap.className = 'project-results-table-wrap';
+        const tableEl = document.createElement('table');
+        tableEl.className = 'project-results-table';
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        columns.forEach((column, columnIndex) => {
+            const th = document.createElement('th');
+            th.scope = 'col';
+            th.textContent = column.trim();
+            if (columnIndex === oursColumn) th.classList.add('project-results-cell--ours');
+            headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        const tbody = document.createElement('tbody');
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            if (row.ours) tr.classList.add('project-results-row--ours');
+            row.cells.forEach((cell, cellIndex) => {
+                const td = document.createElement(cellIndex === 0 ? 'th' : 'td');
+                if (cellIndex === 0) td.scope = 'row';
+                if (cellIndex === oursColumn) td.classList.add('project-results-cell--ours');
+                const text = cell == null ? '' : String(cell);
+                if (row.best[cellIndex]) {
+                    td.classList.add('project-results-cell--best');
+                    const strong = document.createElement('strong');
+                    strong.textContent = text;
+                    td.appendChild(strong);
+                } else {
+                    td.textContent = text;
+                }
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        tableEl.append(thead, tbody);
+        wrap.appendChild(tableEl);
+        figure.append(caption, wrap);
+        if (typeof table.interpretation === 'string' && table.interpretation.trim()) {
+            const interpretation = document.createElement('p');
+            interpretation.className = 'project-results-interpretation';
+            interpretation.textContent = table.interpretation.trim();
+            figure.appendChild(interpretation);
+        }
+        const notes = Array.isArray(table.notes)
+            ? table.notes.filter(note => typeof note === 'string' && note.trim())
+            : [];
+        if (notes.length) {
+            const list = document.createElement('ul');
+            list.className = 'project-results-notes';
+            notes.forEach(note => {
+                const item = document.createElement('li');
+                item.textContent = note.trim();
+                list.appendChild(item);
+            });
+            figure.appendChild(list);
+        }
+        return figure;
+    }).filter(Boolean);
 
-    section.hidden = false;
-    return true;
+    const nodes = [];
+    if (typeof results?.title === 'string' && results.title.trim()) {
+        const heading = document.createElement('h2');
+        heading.className = 'section-title';
+        heading.textContent = results.title.trim();
+        nodes.push(heading);
+    }
+    if (typeof results?.caption === 'string' && results.caption.trim()) {
+        const intro = document.createElement('p');
+        intro.className = 'project-results-intro';
+        intro.textContent = results.caption.trim();
+        nodes.push(intro);
+    }
+    nodes.push(...rendered);
+    section.replaceChildren(...nodes);
+    section.hidden = !rendered.length;
+    return rendered.length > 0;
 }
 
 function updateProjectSeo(project, slug) {
@@ -942,8 +1710,14 @@ function updateProjectSeo(project, slug) {
     setMeta('meta[property="og:title"]', title);
     setMeta('meta[property="og:description"]', description);
     setMeta('meta[property="og:url"]', url);
-    const firstMedia = (project.media || []).find(item => item && item.src);
-    const ogImageSrc = (firstMedia && firstMedia.src) || project.logo || 'assets/hg-logo.svg';
+    const mediaItems = projectMediaLeaves(project);
+    const firstImage = mediaItems.find(item => item?.type === 'image'
+        && typeof item.src === 'string' && item.src.trim()
+        && typeof item.alt === 'string' && item.alt.trim());
+    const firstVideoPoster = mediaItems.find(item => item?.type === 'video'
+        && typeof item.src === 'string' && item.src.trim()
+        && typeof item.poster === 'string' && item.poster.trim());
+    const ogImageSrc = firstImage?.src || firstVideoPoster?.poster || project.logo || 'assets/hg-logo.svg';
     let ogImage = document.head.querySelector('meta[property="og:image"]');
     if (!ogImage) {
         ogImage = document.createElement('meta');
@@ -951,6 +1725,12 @@ function updateProjectSeo(project, slug) {
         document.head.appendChild(ogImage);
     }
     ogImage.setAttribute('content', absoluteUrl(ogImageSrc));
+}
+
+function renderProjectActionBar(project, element) {
+    if (!element) return;
+    element.innerHTML = renderLinks(project.links);
+    element.hidden = !element.innerHTML;
 }
 
 function renderProjectIntroduction(project) {
@@ -980,11 +1760,8 @@ function renderProjectIntroduction(project) {
         tagsEl.hidden = !tagsEl.innerHTML;
     }
 
-    const linksEl = document.getElementById('project-links');
-    if (linksEl) {
-        linksEl.innerHTML = renderLinks(project.links);
-        linksEl.hidden = !linksEl.innerHTML;
-    }
+    renderProjectActionBar(project, document.getElementById('project-links'));
+    renderProjectActionBar(project, document.getElementById('project-footer-links'));
 }
 
 function showProjectPageError(message) {
@@ -997,7 +1774,30 @@ function showProjectPageError(message) {
     }
 }
 
+function canNavigateHistoryBack() {
+    if (window.history.length < 2) return false;
+    const referrer = document.referrer;
+    if (!referrer) return false;
+    try {
+        return new URL(referrer).origin === window.location.origin;
+    } catch (error) {
+        return false;
+    }
+}
+
+function initProjectBackLink() {
+    document.querySelectorAll('a.back-button').forEach(link => {
+        link.addEventListener('click', event => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            if (!canNavigateHistoryBack()) return;
+            event.preventDefault();
+            history.back();
+        });
+    });
+}
+
 async function initProjectPage() {
+    initProjectBackLink();
     const slug = new URLSearchParams(window.location.search).get('slug');
     if (!slug || !PROJECT_SLUG_RE.test(slug)) {
         window.location.replace('../index.html#projects');
@@ -1025,6 +1825,7 @@ async function initProjectPage() {
 
     const hasWriteup = Boolean(project.writeup.trim());
     const hasMedia = renderProjectMedia(project);
+    const hasResults = renderProjectResults(project);
     const writeupSection = document.getElementById('project-writeup-section');
     if (hasWriteup) {
         document.getElementById('project-writeup').innerHTML = renderMarkdown(project.writeup);
@@ -1033,7 +1834,7 @@ async function initProjectPage() {
         writeupSection.hidden = true;
     }
 
-    if (!hasWriteup && !hasMedia) {
+    if (!hasWriteup && !hasMedia && !hasResults) {
         document.getElementById('project-coming-soon').hidden = false;
     }
 }
@@ -1232,29 +2033,118 @@ function initNavHighlight() {
     const sections = ['home', 'about', 'projects', 'timeline']
         .map(id => document.getElementById(id))
         .filter(Boolean);
-    const navLinks = Array.from(document.querySelectorAll('.nav-links a'))
-        .reduce((map, link) => {
-            map.set(link.getAttribute('href'), link);
-            return map;
-        }, new Map());
+    const nav = document.querySelector('.nav-links');
+    if (!sections.length || !nav) return;
 
-    if (!sections.length || !navLinks.size) return;
-    const defaultLink = navLinks.get('#home');
-    if (defaultLink) defaultLink.classList.add('active');
+    const links = Array.from(nav.querySelectorAll('a')).filter(link => (link.getAttribute('href') || '').startsWith('#'));
+    const linkByHash = new Map(links.map(link => [link.getAttribute('href'), link]));
+    if (!links.length) return;
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const targetId = `#${entry.target.id}`;
-                navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === targetId));
-            }
+    const indicator = document.createElement('span');
+    indicator.className = 'nav-indicator';
+    indicator.setAttribute('aria-hidden', 'true');
+    nav.insertBefore(indicator, nav.firstChild);
+
+    let activeHash = '';
+    let indicatorReady = false;
+    let ticking = false;
+    let pinnedHash = '';
+    let pinUntil = 0;
+
+    function navOffset() {
+        const navbar = document.getElementById('navbar');
+        const navHeight = navbar ? navbar.getBoundingClientRect().height : 68;
+        const pad = Number.parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop);
+        return Math.max(navHeight, Number.isFinite(pad) ? pad : 0) + 4;
+    }
+
+    function resolveHash() {
+        const offset = navOffset();
+        const scrollingElement = document.scrollingElement || document.documentElement;
+        if (window.scrollY <= 2) return '#home';
+        if (window.innerHeight + window.scrollY >= scrollingElement.scrollHeight - 2) {
+            return `#${sections[sections.length - 1].id}`;
+        }
+        let current = sections[0].id;
+        for (const section of sections) {
+            if (section.getBoundingClientRect().top <= offset) current = section.id;
+        }
+        return `#${current}`;
+    }
+
+    function placeIndicator(link, instant) {
+        if (!link) return;
+        const navRect = nav.getBoundingClientRect();
+        const rect = link.getBoundingClientRect();
+        const x = rect.left - navRect.left;
+        const y = rect.bottom - navRect.top - 2;
+        indicator.classList.toggle('nav-indicator--instant', instant || !indicatorReady);
+        indicator.style.width = `${Math.round(rect.width)}px`;
+        indicator.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+        if (instant || !indicatorReady) {
+            requestAnimationFrame(() => indicator.classList.remove('nav-indicator--instant'));
+        }
+        indicatorReady = true;
+    }
+
+    function setActive(hash, instant) {
+        const link = linkByHash.get(hash) || linkByHash.get('#home');
+        if (!link) return;
+        if (activeHash === hash && indicatorReady) {
+            if (instant) placeIndicator(link, true);
+            return;
+        }
+        activeHash = hash;
+        links.forEach(item => {
+            const isActive = item === link;
+            item.classList.toggle('active', isActive);
+            if (isActive) item.setAttribute('aria-current', 'page');
+            else item.removeAttribute('aria-current');
         });
-    }, {
-        rootMargin: '-40% 0px -40% 0px',
-        threshold: 0
+        placeIndicator(link, instant);
+    }
+
+    function sync(instant) {
+        const resolved = resolveHash();
+        if (pinnedHash && performance.now() < pinUntil && resolved !== pinnedHash) {
+            setActive(pinnedHash, instant);
+            return;
+        }
+        pinnedHash = '';
+        setActive(resolved, instant);
+    }
+
+    function requestSync(instant) {
+        if (instant) {
+            sync(true);
+            return;
+        }
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            ticking = false;
+            sync(false);
+        });
+    }
+
+    const observer = new IntersectionObserver(() => requestSync(false), {
+        rootMargin: '-15% 0px -45% 0px',
+        threshold: [0, 0.25, 0.5, 0.75, 1]
+    });
+    sections.forEach(section => observer.observe(section));
+    window.addEventListener('scroll', () => requestSync(false), { passive: true });
+    window.addEventListener('resize', () => requestSync(true));
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            const hash = link.getAttribute('href');
+            pinnedHash = hash;
+            pinUntil = performance.now() + 800;
+            setActive(hash, false);
+        });
     });
 
-    sections.forEach(section => observer.observe(section));
+    sync(true);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => requestSync(true));
 }
 
 function isDesktopNav() {
