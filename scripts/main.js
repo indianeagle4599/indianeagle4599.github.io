@@ -422,9 +422,10 @@ function renderLinks(links, options = {}) {
 }
 
 function renderCredentialButtons(credentials) {
-    return (credentials || [])
-        .filter(url => typeof url === 'string' && safeHref(url))
-        .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">${ACTION_ICONS.credentials}Credentials</a>`)
+    const urls = (credentials || []).filter(url => typeof url === 'string' && safeHref(url));
+    const label = urls.length === 1 ? 'Credential' : 'Credentials';
+    return urls
+        .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">${ACTION_ICONS.credentials}${label}</a>`)
         .join('');
 }
 
@@ -503,7 +504,7 @@ function renderCertificateCard(cert, isCore = false) {
     const href = safeHref(cert.link);
     const link = href ? `
         <a href="${escapeHtml(href)}" target="_blank" rel="noopener" class="cert-link btn btn-outline">
-            ${ACTION_ICONS.credentials}Credentials
+            ${ACTION_ICONS.credentials}Credential
         </a>
     ` : '';
 
@@ -1625,6 +1626,16 @@ function setMeta(selector, value) {
     if (el) el.setAttribute('content', value || '');
 }
 
+function setCanonical(url) {
+    let link = document.head.querySelector('link[rel="canonical"]');
+    if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
+    }
+    link.setAttribute('href', url);
+}
+
 function youtubeEmbedUrl(url) {
     try {
         const parsed = new URL(String(url || ''));
@@ -2145,12 +2156,15 @@ function renderProjectResults(project) {
 function updateProjectSeo(project, slug) {
     const title = `${project.title} | Hitesh Goyal`;
     const description = project.summary || 'Project detail page for Hitesh Goyal.';
-    const url = `${SITE_ORIGIN}/projects/?slug=${slug}`;
+    const url = `${SITE_ORIGIN}/projects/?slug=${encodeURIComponent(slug)}`;
     document.title = title;
     setMeta('meta[name="description"]', description);
     setMeta('meta[property="og:title"]', title);
     setMeta('meta[property="og:description"]', description);
     setMeta('meta[property="og:url"]', url);
+    setMeta('meta[name="twitter:title"]', title);
+    setMeta('meta[name="twitter:description"]', description);
+    setCanonical(url);
     const mediaItems = projectMediaLeaves(project);
     const firstImage = mediaItems.find(item => item?.type === 'image'
         && typeof item.src === 'string' && item.src.trim()
