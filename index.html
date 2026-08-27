@@ -118,6 +118,7 @@
                 <a href="#about">About</a>
                 <a href="#projects">Projects</a>
                 <a href="#timeline">Timeline</a>
+                <a href="#recommendations">Endorsements</a>
             </div>
         </div>
     </nav>
@@ -216,15 +217,43 @@
         <h2 class="section-title fade-in">Timeline</h2>
 
         <div class="timeline-toolbar fade-in">
-            <div class="filter-controls" role="group" aria-label="Timeline filter">
-                <button class="filter-btn active" data-filter="work" aria-pressed="true">Work</button>
-                <button class="filter-btn" data-filter="education" aria-pressed="false">Education</button>
-                <button class="filter-btn" data-filter="certificates" aria-pressed="false">Certificates</button>
+            <div class="timeline-tablist" role="tablist" aria-label="Timeline" aria-orientation="horizontal">
+                <span class="tab-indicator" aria-hidden="true"></span>
+                <button type="button" class="timeline-tab" role="tab" id="tab-work" data-panel="work" aria-controls="panel-work" aria-selected="true" tabindex="0">Work</button>
+                <button type="button" class="timeline-tab" role="tab" id="tab-education" data-panel="education" aria-controls="panel-education" aria-selected="false" tabindex="-1">Education</button>
+                <button type="button" class="timeline-tab" role="tab" id="tab-certificates" data-panel="certificates" aria-controls="panel-certificates" aria-selected="false" tabindex="-1">Certificates</button>
             </div>
-            <button type="button" id="expand-all" class="expand-all-btn" aria-controls="timeline-grid">Expand all</button>
+            <button type="button" id="expand-all" class="expand-all-btn" aria-controls="panel-work">Expand all</button>
         </div>
 
-        <div id="timeline-grid" class="timeline-container stack-list">
+        <div class="timeline-panels">
+            <div id="panel-work" class="timeline-panel is-active" role="tabpanel" aria-labelledby="tab-work">
+                <div class="timeline-panel-inner">
+                    <div id="timeline-work" class="timeline-container stack-list"></div>
+                </div>
+            </div>
+            <div id="panel-education" class="timeline-panel" role="tabpanel" aria-labelledby="tab-education" hidden inert>
+                <div class="timeline-panel-inner">
+                    <div id="timeline-education" class="timeline-container stack-list"></div>
+                </div>
+            </div>
+            <div id="panel-certificates" class="timeline-panel" role="tabpanel" aria-labelledby="tab-certificates" hidden inert>
+                <div class="timeline-panel-inner">
+                    <div id="timeline-certificates"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="recommendations" class="section">
+        <div class="section-header fade-in">
+            <p class="section-eyebrow">ENDORSEMENTS</p>
+            <h2 class="section-title">What others say</h2>
+        </div>
+        <div class="recommendations-carousel fade-in" role="region" aria-label="Endorsements">
+            <div class="carousel-stage">
+                <div id="recommendations-track" class="carousel-track"></div>
+            </div>
         </div>
     </section>
     </main>

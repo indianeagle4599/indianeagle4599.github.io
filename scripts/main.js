@@ -19,10 +19,146 @@ const PROJECT_PAGE_CTA_LABEL = 'Learn More';
 const PROJECTS_CAROUSEL_MS = 12000;
 const CAROUSEL_TRANSITION_MS = 420;
 const CAROUSEL_SWIPE_PX = 48;
+const TIMELINE_DRAG_INTENT_PX = 10;
+const TIMELINE_DRAG_COMMIT_RATIO = 0.25;
+const TIMELINE_DRAG_VELOCITY = 0.55;
+const TIMELINE_DRAG_EDGE = 0.26;
+const RECOMMENDATION_PAGE_SIZE = 5;
+const RECOMMENDATION_SPANS = ['wide', 'medium', 'small', 'small', 'small'];
 
 let filtersInitialized = false;
 let certificatesLoaded = false;
 let stackUid = 0;
+let timelineTabIndex = 0;
+let timelineDrag = null;
+
+function placeUnderlineIndicator(container, indicator, target, { instant = false } = {}) {
+    if (!container || !indicator || !target) return;
+    const containerRect = container.getBoundingClientRect();
+    const rect = target.getBoundingClientRect();
+    const x = rect.left - containerRect.left + container.scrollLeft;
+    const y = rect.bottom - containerRect.top - 2;
+    indicator.classList.toggle('nav-indicator--instant', instant);
+    indicator.style.width = `${Math.round(rect.width)}px`;
+    indicator.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+    if (instant) {
+        requestAnimationFrame(() => indicator.classList.remove('nav-indicator--instant'));
+    }
+}
+
+function attachHorizontalDragNavigation(target, {
+    ignore = () => false,
+    intentPx = TIMELINE_DRAG_INTENT_PX,
+    onDragStart,
+    onDrag,
+    onCommit,
+    onCancel
+} = {}) {
+    if (!target) return () => {};
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let velocity = 0;
+    let captureTarget = null;
+    let dragging = false;
+    let suppressClick = false;
+    let clickTimer = null;
+
+    const releasePointer = () => {
+        if (pointerId !== null && captureTarget?.hasPointerCapture?.(pointerId)) {
+            captureTarget.releasePointerCapture(pointerId);
+        }
+        pointerId = null;
+        captureTarget = null;
+        dragging = false;
+    };
+
+    const armClickSuppression = () => {
+        suppressClick = true;
+        if (clickTimer !== null) window.clearTimeout(clickTimer);
+        clickTimer = window.setTimeout(() => {
+            suppressClick = false;
+            clickTimer = null;
+        }, CAROUSEL_TRANSITION_MS + 80);
+    };
+
+    const finish = (event, commitGesture) => {
+        if (event.pointerId !== pointerId) return;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        const wasDragging = dragging;
+        releasePointer();
+        if (!wasDragging) return;
+        armClickSuppression();
+        const payload = { dx, dy, vx: velocity };
+        if (commitGesture) onCommit?.(payload);
+        else onCancel?.(payload);
+    };
+
+    const onDown = event => {
+        if (!event.isPrimary || event.button !== 0 || pointerId !== null || ignore(event)) return;
+        pointerId = event.pointerId;
+        startX = event.clientX;
+        startY = event.clientY;
+        lastX = event.clientX;
+        lastTime = event.timeStamp;
+        velocity = 0;
+        captureTarget = null;
+        dragging = false;
+    };
+    const onMove = event => {
+        if (event.pointerId !== pointerId) return;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        const absX = Math.abs(dx);
+        const absY = Math.abs(dy);
+        const elapsed = event.timeStamp - lastTime;
+        if (elapsed >= 8) velocity = (event.clientX - lastX) / elapsed;
+        lastX = event.clientX;
+        lastTime = event.timeStamp;
+        if (!dragging && absY > intentPx && absY >= absX) {
+            releasePointer();
+            return;
+        }
+        if (!dragging && absX > intentPx && absX > absY) {
+            dragging = true;
+            captureTarget = target;
+            try {
+                captureTarget.setPointerCapture(pointerId);
+            } catch (error) {}
+            onDragStart?.({ dx, dy });
+        }
+        if (dragging) {
+            if (event.cancelable) event.preventDefault();
+            onDrag?.({ dx, dy, vx: velocity });
+        }
+    };
+    const onClick = event => {
+        if (!suppressClick) return;
+        suppressClick = false;
+        event.preventDefault();
+        event.stopPropagation();
+    };
+
+    target.addEventListener('pointerdown', onDown);
+    target.addEventListener('pointermove', onMove, { passive: false });
+    const onUp = event => finish(event, true);
+    const onLost = event => finish(event, false);
+    target.addEventListener('pointerup', onUp);
+    target.addEventListener('pointercancel', onLost);
+    target.addEventListener('click', onClick, true);
+
+    return () => {
+        if (clickTimer !== null) window.clearTimeout(clickTimer);
+        target.removeEventListener('pointerdown', onDown);
+        target.removeEventListener('pointermove', onMove);
+        target.removeEventListener('pointerup', onUp);
+        target.removeEventListener('pointercancel', onLost);
+        target.removeEventListener('click', onClick, true);
+    };
+}
 
 function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -282,8 +418,8 @@ function toggleNode(nodeEl) {
 }
 
 function visibleTimelineNodes() {
-    return Array.from(document.querySelectorAll('.timeline-node'))
-        .filter(node => node.style.display !== 'none');
+    const activePanel = document.querySelector('.timeline-panel.is-active');
+    return Array.from((activePanel || document).querySelectorAll('.timeline-node'));
 }
 
 function syncExpandAllButton() {
@@ -528,21 +664,27 @@ function renderTimelineNode(node) {
 }
 
 async function loadTimeline() {
-    const container = document.getElementById('timeline-grid');
-    if (!container) return;
+    const workGrid = document.getElementById('timeline-work');
+    const educationGrid = document.getElementById('timeline-education');
+    if (!workGrid || !educationGrid) return;
     try {
         const timelineData = await fetchJson(dataUrl('timeline.json'));
         if (!Array.isArray(timelineData)) throw new Error('timeline.json must be an array');
         timelineData.forEach((node, index) => requireFields(node, ['type', 'entity', 'startDate'], `timeline[${index}]`));
         timelineData.sort(sortByRecency);
-        container.replaceChildren();
-        timelineData.forEach(node => container.appendChild(renderTimelineNode(node)));
-        setupFilters('work');
+        workGrid.replaceChildren();
+        educationGrid.replaceChildren();
+        timelineData.forEach(node => {
+            const rendered = renderTimelineNode(node);
+            if (node.type === 'education') educationGrid.appendChild(rendered);
+            else workGrid.appendChild(rendered);
+        });
+        setupTimelineTabs('work');
         initScrollAnimations();
         syncExpandAllButton();
     } catch (error) {
         console.error('Error loading timeline:', error);
-        container.innerHTML = '<p class="cert-status">Unable to load timeline right now.</p>';
+        workGrid.innerHTML = '<p class="cert-status">Unable to load timeline right now.</p>';
     }
 }
 
@@ -1840,7 +1982,7 @@ async function initProjectPage() {
 }
 
 async function loadCertificates() {
-    const timelineGrid = document.getElementById('timeline-grid');
+    const timelineGrid = document.getElementById('timeline-certificates');
     if (!timelineGrid) return;
     if (certificatesLoaded) return;
 
@@ -1907,49 +2049,300 @@ async function loadCertificates() {
     }
 }
 
-function updateFilterButtons(activeFilter) {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        const isActive = btn.getAttribute('data-filter') === activeFilter;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-pressed', String(isActive));
+function timelinePanels() {
+    return ['work', 'education', 'certificates'].map(id => ({
+        id,
+        tab: document.getElementById(`tab-${id}`),
+        panel: document.getElementById(`panel-${id}`)
+    })).filter(item => item.tab && item.panel);
+}
+
+function setTimelinePanelX(panel, x, settling) {
+    if (!panel) return;
+    panel.classList.toggle('is-settling', Boolean(settling));
+    panel.style.transform = `translate3d(${x}px, 0, 0)`;
+}
+
+function visualTimelineDx(dx) {
+    if (!timelineDrag) return 0;
+    return timelineDrag.to ? dx : dx * TIMELINE_DRAG_EDGE;
+}
+
+function clearTimelineDrag() {
+    const session = timelineDrag;
+    if (!session) return;
+    [session.from?.panel, session.to?.panel].filter(Boolean).forEach(panel => {
+        panel.classList.remove('is-drag-layer', 'is-settling');
+        panel.style.transform = '';
+    });
+    if (session.to && !session.to.panel.classList.contains('is-active')) {
+        session.to.panel.hidden = true;
+        session.to.panel.setAttribute('inert', '');
+    }
+    session.host.classList.remove('is-dragging');
+    session.host.style.height = '';
+    timelineDrag = null;
+}
+
+function waitTimelineSettle(panels, reduce, done) {
+    let finished = false;
+    const complete = () => {
+        if (finished) return;
+        finished = true;
+        done();
+    };
+    if (reduce || !panels.length) {
+        complete();
+        return;
+    }
+    let pending = panels.length;
+    panels.forEach(panel => {
+        const onEnd = event => {
+            if (event.target !== panel) return;
+            if (event.propertyName && event.propertyName !== 'transform') return;
+            panel.removeEventListener('transitionend', onEnd);
+            if (--pending === 0) complete();
+        };
+        panel.addEventListener('transitionend', onEnd);
+    });
+    window.setTimeout(complete, 450);
+}
+
+function beginTimelineDrag(dx) {
+    const items = timelinePanels();
+    const from = items[timelineTabIndex];
+    const host = document.querySelector('.timeline-panels');
+    if (!from || !host || timelineDrag) return;
+    const dir = dx < 0 ? 1 : -1;
+    const to = items[timelineTabIndex + dir] || null;
+    if (to?.id === 'certificates') loadCertificates();
+    const width = host.getBoundingClientRect().width;
+    const currentHeight = from.panel.offsetHeight;
+    from.panel.classList.add('is-drag-layer');
+    from.panel.classList.remove('is-from-left', 'is-from-right', 'is-settling');
+    let nextHeight = currentHeight;
+    if (to) {
+        to.panel.hidden = false;
+        to.panel.setAttribute('inert', '');
+        to.panel.classList.add('is-drag-layer');
+        to.panel.classList.remove('is-from-left', 'is-from-right', 'is-settling', 'is-active');
+        setTimelinePanelX(to.panel, dir > 0 ? width : -width, false);
+        nextHeight = to.panel.offsetHeight || currentHeight;
+    }
+    host.classList.add('is-dragging');
+    host.style.height = `${Math.max(currentHeight, nextHeight)}px`;
+    setTimelinePanelX(from.panel, 0, false);
+    timelineDrag = { host, from, to, dir, width };
+}
+
+function applyTimelineDrag(dx) {
+    if (!timelineDrag || timelineDrag.closing) return;
+    const x = visualTimelineDx(dx);
+    setTimelinePanelX(timelineDrag.from.panel, x, false);
+    if (timelineDrag.to) {
+        setTimelinePanelX(
+            timelineDrag.to.panel,
+            (timelineDrag.dir > 0 ? timelineDrag.width : -timelineDrag.width) + x,
+            false
+        );
+    }
+}
+
+function finishTimelineDrag({ dx, vx, commitRequested }) {
+    const session = timelineDrag;
+    if (!session || session.closing) return;
+    session.closing = true;
+    const reduce = prefersReducedMotion();
+    const x = visualTimelineDx(dx);
+    const ratio = Math.abs(x) / session.width;
+    const toward = session.dir > 0 ? x < 0 : x > 0;
+    const velocityToward = session.dir > 0 ? vx < -TIMELINE_DRAG_VELOCITY : vx > TIMELINE_DRAG_VELOCITY;
+    const commit = Boolean(commitRequested && session.to && toward && (
+        ratio >= TIMELINE_DRAG_COMMIT_RATIO
+        || (velocityToward && ratio >= 0.18)
+    ));
+    const toIndex = timelineTabIndex + session.dir;
+    if (reduce) {
+        if (commit) selectTimelineTab(toIndex, { direction: session.dir, fromDrag: true });
+        clearTimelineDrag();
+        return;
+    }
+    const current = session.from.panel;
+    const next = session.to?.panel;
+    const layers = [current, next].filter(Boolean);
+    layers.forEach(panel => panel.classList.remove('is-settling'));
+    session.host.offsetHeight;
+    const endCurrent = commit ? (session.dir > 0 ? -session.width : session.width) : 0;
+    const endNext = commit ? 0 : (session.dir > 0 ? session.width : -session.width);
+    layers.forEach(panel => panel.classList.add('is-settling'));
+    setTimelinePanelX(current, endCurrent, true);
+    if (next) setTimelinePanelX(next, endNext, true);
+    waitTimelineSettle(layers, false, () => {
+        if (commit) selectTimelineTab(toIndex, { direction: session.dir, fromDrag: true });
+        clearTimelineDrag();
     });
 }
 
-function applyTimelineFilter(filterValue) {
-    document.querySelectorAll('.timeline-node').forEach(node => {
-        node.style.display = filterValue && node.getAttribute('data-type') === filterValue ? 'block' : 'none';
+function selectTimelineTab(index, { direction = 0, focusTab = false, fromDrag = false } = {}) {
+    const items = timelinePanels();
+    if (!items.length) return;
+    const nextIndex = Math.max(0, Math.min(index, items.length - 1));
+    const current = items[nextIndex];
+    timelineTabIndex = nextIndex;
+    const reduce = prefersReducedMotion();
+    const expandAll = document.getElementById('expand-all');
+    const tablist = document.querySelector('.timeline-tablist');
+    const indicator = tablist?.querySelector('.tab-indicator');
+
+    items.forEach((item, itemIndex) => {
+        const selected = itemIndex === nextIndex;
+        item.tab.setAttribute('aria-selected', String(selected));
+        item.tab.tabIndex = selected ? 0 : -1;
+        item.tab.classList.toggle('is-active', selected);
+        if (selected) {
+            item.panel.hidden = false;
+            item.panel.removeAttribute('inert');
+            item.panel.classList.add('is-active');
+            if (!reduce && direction && !fromDrag) {
+                item.panel.classList.remove('is-from-left', 'is-from-right');
+                item.panel.classList.add(direction > 0 ? 'is-from-right' : 'is-from-left');
+                item.panel.offsetHeight;
+                item.panel.classList.remove('is-from-left', 'is-from-right');
+            }
+        } else {
+            item.panel.hidden = true;
+            item.panel.setAttribute('inert', '');
+            item.panel.classList.remove('is-active', 'is-from-left', 'is-from-right');
+        }
     });
+
+    if (expandAll) {
+        expandAll.hidden = current.id === 'certificates';
+        expandAll.setAttribute('aria-controls', current.panel.id);
+    }
+    if (current.id === 'certificates') loadCertificates();
+    else syncExpandAllButton();
+
+    if (indicator && tablist) {
+        placeUnderlineIndicator(tablist, indicator, current.tab, { instant: reduce || !direction });
+        if (!reduce && direction) requestAnimationFrame(() => indicator.classList.remove('nav-indicator--instant'));
+    }
+    current.tab.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'instant' });
+    if (focusTab) current.tab.focus();
 }
 
-function setupFilters(defaultFilter = 'work') {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    if (!filterBtns.length) return;
+function setupTimelineTabs(defaultFilter = 'work') {
+    const items = timelinePanels();
+    if (!items.length) return;
+    const tablist = document.querySelector('.timeline-tablist');
+    const panels = document.querySelector('.timeline-panels');
+    const defaultIndex = Math.max(0, items.findIndex(item => item.id === defaultFilter));
 
     if (!filtersInitialized) {
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const filterValue = btn.getAttribute('data-filter');
-                const panel = document.getElementById('cert-panel');
-                const expandAll = document.getElementById('expand-all');
-                updateFilterButtons(filterValue);
-                if (filterValue === 'certificates') {
-                    applyTimelineFilter(null);
-                    if (panel) panel.hidden = false;
-                    if (expandAll) expandAll.hidden = true;
-                    loadCertificates();
-                } else {
-                    if (panel) panel.hidden = true;
-                    applyTimelineFilter(filterValue);
-                    if (expandAll) expandAll.hidden = false;
-                    syncExpandAllButton();
-                }
+        items.forEach((item, index) => {
+            item.tab.addEventListener('click', () => {
+                selectTimelineTab(index, { direction: index - timelineTabIndex });
             });
+        });
+        tablist?.addEventListener('keydown', event => {
+            const last = items.length - 1;
+            let next = timelineTabIndex;
+            if (event.key === 'ArrowRight') next = Math.min(last, timelineTabIndex + 1);
+            else if (event.key === 'ArrowLeft') next = Math.max(0, timelineTabIndex - 1);
+            else if (event.key === 'Home') next = 0;
+            else if (event.key === 'End') next = last;
+            else return;
+            event.preventDefault();
+            selectTimelineTab(next, { direction: next - timelineTabIndex, focusTab: true });
+        });
+        attachHorizontalDragNavigation(panels, {
+            onDragStart: ({ dx }) => beginTimelineDrag(dx),
+            onDrag: ({ dx }) => applyTimelineDrag(dx),
+            onCommit: payload => finishTimelineDrag({ ...payload, commitRequested: true }),
+            onCancel: payload => finishTimelineDrag({ ...payload, commitRequested: false })
+        });
+        window.addEventListener('resize', () => {
+            if (timelineDrag) return;
+            selectTimelineTab(timelineTabIndex, { direction: 0 });
         });
         filtersInitialized = true;
     }
 
-    updateFilterButtons(defaultFilter);
-    applyTimelineFilter(defaultFilter);
+    selectTimelineTab(defaultIndex, { direction: 0 });
+}
+
+function renderRecommendationCard(entry, span = 'small') {
+    const card = document.createElement('article');
+    card.className = `recommendation-card recommendation-card--${span}`;
+    const quote = document.createElement('blockquote');
+    quote.className = 'recommendation-quote';
+    const open = document.createElement('span');
+    open.className = 'recommendation-mark';
+    open.setAttribute('aria-hidden', 'true');
+    open.textContent = '\u201C';
+    const text = document.createElement('p');
+    text.textContent = entry.quote;
+    quote.append(open, text);
+    const footer = document.createElement('footer');
+    footer.className = 'recommendation-attribution';
+    const name = document.createElement('cite');
+    name.className = 'recommendation-name';
+    name.textContent = entry.name;
+    const role = document.createElement('p');
+    role.className = 'recommendation-role';
+    role.textContent = entry.role;
+    const organization = document.createElement('p');
+    organization.className = 'recommendation-org';
+    organization.textContent = entry.organization;
+    footer.append(name, role, organization);
+    card.append(quote, footer);
+    return card;
+}
+
+function renderRecommendationMosaic(entries) {
+    const mosaic = document.createElement('div');
+    mosaic.className = 'recommendations-mosaic';
+    entries.forEach((entry, index) => {
+        mosaic.append(renderRecommendationCard(entry, RECOMMENDATION_SPANS[index] || 'small'));
+    });
+    return mosaic;
+}
+
+async function loadRecommendations() {
+    const root = document.querySelector('.recommendations-carousel');
+    if (!root) return;
+    const track = document.getElementById('recommendations-track');
+    try {
+        const data = await fetchJson(dataUrl('recommendations.json'));
+        if (!Array.isArray(data) || !data.length) throw new Error('recommendations.json must be a non-empty array');
+        data.forEach((entry, index) => requireFields(entry, ['quote', 'name', 'role', 'organization'], `recommendations[${index}]`));
+        const pages = [];
+        for (let i = 0; i < data.length; i += RECOMMENDATION_PAGE_SIZE) {
+            pages.push(data.slice(i, i + RECOMMENDATION_PAGE_SIZE));
+        }
+        if (pages.length > 1) {
+            createCarouselView({
+                root,
+                slides: pages.map(renderRecommendationMosaic),
+                loop: true,
+                ariaLabel: index => `Endorsements, page ${index + 1} of ${pages.length}`,
+                indicatorLabel: index => `Show endorsements page ${index + 1} of ${pages.length}`
+            });
+        } else {
+            root._carouselController?.destroy();
+            const controls = root.querySelector(':scope > .carousel-controls');
+            if (controls) controls.hidden = true;
+            root.classList.remove('carousel');
+            root.removeAttribute('aria-roledescription');
+            root.setAttribute('role', 'region');
+            root.setAttribute('aria-label', 'Endorsements');
+            if (track) track.replaceChildren(renderRecommendationMosaic(pages[0]));
+        }
+        initScrollAnimations();
+    } catch (error) {
+        console.error('Error loading recommendations:', error);
+        if (track) track.innerHTML = '<p class="cert-status">Unable to load recommendations right now.</p>';
+    }
 }
 
 function renderIntroductionTitle(text) {
@@ -2030,7 +2423,7 @@ function initScrollHint() {
 }
 
 function initNavHighlight() {
-    const sections = ['home', 'about', 'projects', 'timeline']
+    const sections = ['home', 'about', 'projects', 'timeline', 'recommendations']
         .map(id => document.getElementById(id))
         .filter(Boolean);
     const nav = document.querySelector('.nav-links');
@@ -2073,14 +2466,7 @@ function initNavHighlight() {
     }
 
     function placeIndicator(link, instant) {
-        if (!link) return;
-        const navRect = nav.getBoundingClientRect();
-        const rect = link.getBoundingClientRect();
-        const x = rect.left - navRect.left;
-        const y = rect.bottom - navRect.top - 2;
-        indicator.classList.toggle('nav-indicator--instant', instant || !indicatorReady);
-        indicator.style.width = `${Math.round(rect.width)}px`;
-        indicator.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+        placeUnderlineIndicator(nav, indicator, link, { instant: instant || !indicatorReady });
         if (instant || !indicatorReady) {
             requestAnimationFrame(() => indicator.classList.remove('nav-indicator--instant'));
         }
@@ -2229,5 +2615,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollHint();
     initNavHighlight();
     initExpandAll();
-    Promise.all([loadProfile(), loadProjects(), loadTimeline()]).then(restoreScrollPosition);
+    Promise.all([loadProfile(), loadProjects(), loadTimeline(), loadRecommendations()]).then(restoreScrollPosition);
 });

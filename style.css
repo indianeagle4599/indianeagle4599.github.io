@@ -281,6 +281,7 @@ body.nav-open {
     position: relative;
     padding: 0 clamp(8px, 0.8vw, 12px) 4px;
     z-index: 1;
+    white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -611,10 +612,57 @@ body.nav-open {
     margin-bottom: 32px;
 }
 
-.filter-controls {
+.timeline-tablist {
+    position: relative;
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 4px;
+    width: max-content;
+    max-width: 100%;
+    margin-inline: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.timeline-tablist::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    height: 2px;
+    width: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    pointer-events: none;
+    transform: translate(0, 0);
+    transition: transform var(--motion) var(--ease), width var(--motion) var(--ease);
+}
+
+.timeline-tab {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    min-height: var(--touch);
+    padding: 8px 14px 10px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color var(--motion) var(--ease);
+}
+
+.timeline-tab:hover,
+.timeline-tab[aria-selected="true"] {
+    color: var(--text-main);
 }
 
 .expand-all-btn {
@@ -635,23 +683,71 @@ body.nav-open {
     color: var(--text-main);
 }
 
-.filter-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    min-height: var(--touch);
-    padding: 8px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    font-size: 0.9rem;
-    transition: color var(--motion) var(--ease), border-color var(--motion) var(--ease);
+.timeline-panels {
+    position: relative;
+    touch-action: pan-y;
+    overflow: hidden;
 }
 
-.filter-btn:hover,
-.filter-btn.active {
-    border-color: var(--text-main);
-    color: var(--text-main);
+.timeline-panels.is-dragging {
+    user-select: none;
+}
+
+.timeline-panel {
+    min-width: 0;
+}
+
+.timeline-panel-inner {
+    padding: var(--stack-gap) var(--card-pad);
+}
+
+.timeline-panel.is-drag-layer,
+.timeline-panel.is-drag-layer.is-active:not(.is-from-left):not(.is-from-right) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    transition: none;
+    will-change: transform;
+}
+
+.timeline-panel.is-settling,
+.timeline-panel.is-settling.is-active:not(.is-from-left):not(.is-from-right) {
+    transition: transform var(--motion) var(--ease);
+}
+
+.timeline-panel.is-from-right,
+.timeline-panel.is-from-left {
+    opacity: 0;
+}
+
+.timeline-panel.is-from-right {
+    transform: translateX(14px);
+}
+
+.timeline-panel.is-from-left {
+    transform: translateX(-14px);
+}
+
+.timeline-panel.is-active:not(.is-from-left):not(.is-from-right) {
+    opacity: 1;
+    transform: none;
+    transition: opacity var(--motion) var(--ease), transform var(--motion) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-panel,
+    .timeline-panel.is-settling,
+    .tab-indicator {
+        transition: none;
+    }
+
+    .timeline-panel.is-from-right,
+    .timeline-panel.is-from-left {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 /* --- Stack list (timeline + other projects) --- */
@@ -1357,6 +1453,131 @@ body.nav-open {
     text-transform: uppercase;
 }
 
+.recommendations-carousel {
+    width: 100%;
+}
+
+.recommendations-mosaic {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--stack-gap);
+    align-items: stretch;
+}
+
+.recommendation-card {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+}
+
+.recommendation-quote {
+    margin: 0;
+    max-width: 36ch;
+    font-style: normal;
+    font-weight: 500;
+    font-size: clamp(1.22rem, 1.12rem + 0.5vw, 1.5rem);
+    line-height: 1.38;
+    letter-spacing: -0.018em;
+    color: var(--text-main);
+}
+
+.recommendation-quote p {
+    margin: 0;
+    text-wrap: balance;
+}
+
+.recommendation-mark {
+    display: block;
+    margin: 0 0 0.04em -0.08em;
+    font-family: inherit;
+    font-size: clamp(1.85rem, 1.55rem + 1.1vw, 2.5rem);
+    font-weight: 500;
+    line-height: 0.55;
+    color: color-mix(in srgb, var(--accent) 80%, var(--text-muted));
+    pointer-events: none;
+    user-select: none;
+}
+
+.recommendation-attribution {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0;
+}
+
+.recommendation-name {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: var(--text-main);
+}
+
+.recommendation-role,
+.recommendation-org {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+@media (min-width: 768px) {
+    .recommendations-mosaic {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .recommendation-card--wide {
+        grid-column: span 2;
+    }
+
+    .recommendation-card--small .recommendation-quote {
+        max-width: none;
+        font-size: clamp(1.05rem, 0.98rem + 0.25vw, 1.2rem);
+    }
+
+    .recommendation-card--small .recommendation-mark {
+        font-size: 1.65em;
+    }
+
+    .recommendation-card--small .recommendation-name {
+        font-size: 0.88rem;
+    }
+
+    .recommendation-card--small .recommendation-role,
+    .recommendation-card--small .recommendation-org {
+        font-size: 0.75rem;
+    }
+}
+
+@media (min-width: 1100px) {
+    .recommendations-mosaic {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .recommendation-card--wide {
+        grid-column: span 7;
+    }
+
+    .recommendation-card--medium {
+        grid-column: span 5;
+    }
+
+    .recommendation-card--small {
+        grid-column: span 4;
+    }
+}
+
 /* --- Project Detail Pages --- */
 .back-button {
     align-self: flex-start;
@@ -1955,6 +2176,19 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
 @media (max-width: 768px) {
     .section-alt {
         animation: none;
+    }
+
+    .timeline-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .timeline-tablist {
+        margin-inline: auto;
+    }
+
+    .expand-all-btn {
+        align-self: center;
     }
 
     .nav-toggle {
