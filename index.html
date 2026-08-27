@@ -303,15 +303,19 @@
                 </button>
             </div>
             <form id="contact-form" novalidate>
+                <div class="contact-honeypot" aria-hidden="true">
+                    <label for="contact-website">Website</label>
+                    <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+                </div>
                 <div class="contact-row">
                     <div class="contact-field">
                         <label for="contact-name">Name <span class="contact-required" aria-hidden="true">*</span></label>
-                        <input id="contact-name" name="name" type="text" autocomplete="name" required>
+                        <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="100" required>
                         <p id="contact-name-error" class="contact-field-error" hidden></p>
                     </div>
                     <div class="contact-field">
                         <label for="contact-email">Email <span class="contact-required" aria-hidden="true">*</span></label>
-                        <input id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" required>
+                        <input id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required>
                         <p id="contact-email-error" class="contact-field-error" hidden></p>
                     </div>
                 </div>
@@ -320,11 +324,11 @@
                     <div class="contact-phone-row">
                         <div class="contact-field contact-field--code">
                             <label class="visually-hidden" for="contact-country">Country code</label>
-                            <input id="contact-country" name="country" type="text" inputmode="tel" autocomplete="tel-country-code" list="contact-country-codes" maxlength="6" value="+" spellcheck="false">
+                            <input id="contact-country" name="country" type="text" inputmode="tel" autocomplete="tel-country-code" list="contact-country-codes" maxlength="8" value="+" spellcheck="false">
                         </div>
                         <div class="contact-field contact-field--number">
                             <label class="visually-hidden" for="contact-phone">Phone number</label>
-                            <input id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="Number">
+                            <input id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="32" placeholder="Number">
                         </div>
                     </div>
                     <datalist id="contact-country-codes">
@@ -337,13 +341,16 @@
                 </fieldset>
                 <div class="contact-field">
                     <label for="contact-message">Message <span class="contact-required" aria-hidden="true">*</span></label>
-                    <textarea id="contact-message" name="message" rows="3" required></textarea>
+                    <textarea id="contact-message" name="message" rows="3" maxlength="4000" required></textarea>
                     <p id="contact-message-error" class="contact-field-error" hidden></p>
                 </div>
+                <div id="contact-turnstile" class="contact-turnstile"></div>
+                <p id="contact-status" class="contact-status" role="status" aria-live="polite" hidden></p>
+                <a id="contact-mailto" class="contact-mailto" hidden>Email me directly</a>
                 <div class="contact-actions">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="contact-submit">
                         <svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-                        Send message
+                        <span data-contact-submit-label>Send message</span>
                     </button>
                 </div>
             </form>

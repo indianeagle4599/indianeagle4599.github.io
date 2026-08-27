@@ -9,6 +9,15 @@ const THEME_ICONS = {
     dark: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path></svg>'
 };
 const SITE_ORIGIN = 'https://hiteshgoyal.me';
+const CONTACT_ENDPOINT_PROD = 'https://portfolio-contact.hiteshgoyal-business.workers.dev';
+const CONTACT_ENDPOINT_LOCAL = 'http://127.0.0.1:8787'; // local Worker stubs Resend; live inbox test is https://hiteshgoyal.me only
+const CONTACT_TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+const CONTACT_TURNSTILE_SITEKEY_PROD = '0x4AAAAAAEdudRMuypS6qFDx';
+const CONTACT_TURNSTILE_SITEKEY_TEST = '1x00000000000000000000AA';
+const CONTACT_TURNSTILE_LOAD_ERROR = "Security check couldn't load. Please refresh and try again.";
+const CONTACT_PHONE_ERROR = 'Enter a valid phone number.';
+const CONTACT_COUNTRY_RE = /^\+\d{1,4}$/;
+const CONTACT_PHONE_LOCAL_RE = /^[0-9 ()\-.]+$/;
 const PROJECT_SLUG_RE = /^[a-z0-9-]+$/i;
 const SAFE_HREF_RE = /^(https?:|mailto:|tel:|#|\/|\.\/|\.\.\/)/i;
 const CERT_KIND_LABELS = {
@@ -58,6 +67,66 @@ let timelineDrag = null;
 let themeTransitionTimer = 0;
 let contactDestination = '';
 let themeMediaQuery = null;
+let turnstileLoader = null;
+
+function isLocalContactHost(host) {
+    return host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0';
+}
+
+function contactTurnstileSitekey() {
+    return isLocalContactHost(location.hostname)
+        ? CONTACT_TURNSTILE_SITEKEY_TEST
+        : CONTACT_TURNSTILE_SITEKEY_PROD;
+}
+
+function contactEndpoint(form) {
+    const override = String(form.getAttribute('data-contact-endpoint') || '').trim();
+    if (override) return override.replace(/\/$/, '');
+    if (isLocalContactHost(location.hostname)) return CONTACT_ENDPOINT_LOCAL;
+    return CONTACT_ENDPOINT_PROD.replace(/\/$/, '');
+}
+
+function contactCountryEmpty(raw) {
+    const value = String(raw || '').trim();
+    return !value || value === '+';
+}
+
+function phonePairOk(countryRaw, numberRaw) {
+    const country = String(countryRaw || '').trim();
+    const number = String(numberRaw || '').trim();
+    const countryEmpty = contactCountryEmpty(country);
+    const numberEmpty = !number;
+    if (countryEmpty && numberEmpty) return true;
+    if (countryEmpty !== numberEmpty) return false;
+    if (!CONTACT_COUNTRY_RE.test(country)) return false;
+    if (!CONTACT_PHONE_LOCAL_RE.test(number)) return false;
+    const local = number.replace(/[ ()\-.]/g, '');
+    const total = country.length - 1 + local.length;
+    return total >= 7 && total <= 15;
+}
+
+function newIdempotencyKey() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = [...bytes].map(item => item.toString(16).padStart(2, '0')).join('');
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+function loadTurnstileScript() {
+    if (window.turnstile) return Promise.resolve();
+    if (turnstileLoader) return turnstileLoader;
+    turnstileLoader = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = CONTACT_TURNSTILE_SRC;
+        script.async = true;
+        script.addEventListener('load', () => resolve(), { once: true });
+        script.addEventListener('error', () => reject(new Error('turnstile')), { once: true });
+        document.head.appendChild(script);
+    });
+    return turnstileLoader;
+}
 
 function placeUnderlineIndicator(container, indicator, target, { instant = false } = {}) {
     if (!container || !indicator || !target) return;
@@ -666,23 +735,25 @@ function initContactModal() {
     const countryInput = document.getElementById('contact-country');
     const phoneInput = document.getElementById('contact-phone');
     const messageInput = document.getElementById('contact-message');
+    const websiteInput = document.getElementById('contact-website');
     const nameError = document.getElementById('contact-name-error');
     const emailError = document.getElementById('contact-email-error');
     const phoneError = document.getElementById('contact-phone-error');
     const messageError = document.getElementById('contact-message-error');
-    const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const statusEl = document.getElementById('contact-status');
+    const mailtoLink = document.getElementById('contact-mailto');
+    const turnstileHost = document.getElementById('contact-turnstile');
+    if (turnstileHost) turnstileHost.setAttribute('data-sitekey', contactTurnstileSitekey());
+    const submitButton = document.getElementById('contact-submit');
+    const submitLabel = submitButton?.querySelector('[data-contact-submit-label]');
+    const idleLabel = submitLabel?.textContent || 'Send message';
+    const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
     let lastFocus = null;
-
-    const emptyCountry = (raw) => {
-        const value = String(raw || '').trim();
-        return !value || value === '+';
-    };
-
-    const formatCountry = (raw) => {
-        const value = String(raw || '').trim();
-        if (emptyCountry(value)) return '';
-        return value.startsWith('+') ? value : `+${value}`;
-    };
+    let widgetId = null;
+    let turnstileToken = '';
+    let sending = false;
+    let abortController = null;
+    let pendingKey = null;
 
     const setError = (input, errorEl, message) => {
         const invalid = Boolean(message);
@@ -698,6 +769,55 @@ function initContactModal() {
         return invalid;
     };
 
+    const setPhoneError = message => {
+        const invalid = setError(countryInput, phoneError, message);
+        if (phoneInput) {
+            phoneInput.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+            if (invalid && phoneError) phoneInput.setAttribute('aria-describedby', phoneError.id);
+            else phoneInput.removeAttribute('aria-describedby');
+        }
+        return invalid;
+    };
+
+    const setStatus = (message, state) => {
+        if (!statusEl) return;
+        statusEl.hidden = !message;
+        statusEl.textContent = message || '';
+        if (state) statusEl.dataset.state = state;
+        else delete statusEl.dataset.state;
+    };
+
+    const hideMailto = () => {
+        if (!mailtoLink) return;
+        mailtoLink.hidden = true;
+        mailtoLink.removeAttribute('href');
+    };
+
+    const showMailto = (name, email, country, numberRaw, message) => {
+        if (!mailtoLink || !contactDestination) {
+            hideMailto();
+            return;
+        }
+        const phoneLine = country && numberRaw
+            ? `${country}${numberRaw.replace(/\s+/g, '')}`
+            : 'omitted';
+        const body = `Name: ${name}\nEmail: ${email}\nPhone: ${phoneLine}\n\nMessage:\n${message}`;
+        mailtoLink.href = `mailto:${contactDestination}?body=${encodeURIComponent(body)}`;
+        mailtoLink.hidden = false;
+    };
+
+    const setSending = (on, label) => {
+        sending = on;
+        form.setAttribute('aria-busy', on ? 'true' : 'false');
+        if (submitButton) submitButton.disabled = on;
+        if (submitLabel) submitLabel.textContent = label || idleLabel;
+    };
+
+    const resetWidget = () => {
+        turnstileToken = '';
+        if (widgetId != null && window.turnstile) window.turnstile.reset(widgetId);
+    };
+
     const lockPage = (on) => {
         document.documentElement.classList.toggle('contact-modal-open', on);
         document.body.classList.toggle('contact-modal-open', on);
@@ -706,16 +826,59 @@ function initContactModal() {
     };
 
     const close = () => {
+        abortController?.abort();
+        abortController = null;
         modal.hidden = true;
         lockPage(false);
         form.reset();
         setError(nameInput, nameError, '');
         setError(emailInput, emailError, '');
-        setError(phoneInput, phoneError, '');
+        setPhoneError('');
         setError(messageInput, messageError, '');
+        setStatus('', '');
+        hideMailto();
+        setSending(false, idleLabel);
+        resetWidget();
+        pendingKey = null;
         const restore = lastFocus;
         requestAnimationFrame(() => {
             if (restore && typeof restore.focus === 'function') restore.focus();
+        });
+    };
+
+    const ensureWidget = async () => {
+        if (!turnstileHost) return;
+        const sitekey = contactTurnstileSitekey();
+        turnstileHost.setAttribute('data-sitekey', sitekey);
+        const widgetError = () => {
+            turnstileToken = '';
+            setStatus(CONTACT_TURNSTILE_LOAD_ERROR, 'error');
+        };
+        try {
+            await loadTurnstileScript();
+        } catch {
+            widgetError();
+            return;
+        }
+        if (!window.turnstile) {
+            widgetError();
+            return;
+        }
+        const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        if (widgetId != null) {
+            window.turnstile.reset(widgetId);
+            turnstileToken = '';
+            return;
+        }
+        widgetId = window.turnstile.render(turnstileHost, {
+            sitekey,
+            theme,
+            callback: value => {
+                turnstileToken = value || '';
+                if (statusEl && statusEl.textContent === CONTACT_TURNSTILE_LOAD_ERROR) setStatus('', '');
+            },
+            'expired-callback': () => { turnstileToken = ''; },
+            'error-callback': widgetError
         });
     };
 
@@ -723,6 +886,9 @@ function initContactModal() {
         lastFocus = document.activeElement;
         modal.hidden = false;
         lockPage(true);
+        setStatus('', '');
+        hideMailto();
+        ensureWidget();
         (nameInput || emailInput || dialog).focus();
     };
 
@@ -751,16 +917,15 @@ function initContactModal() {
         }
     });
 
-    form.addEventListener('submit', event => {
+    form.addEventListener('submit', async event => {
         event.preventDefault();
+        if (sending) return;
         const name = nameInput.value.trim();
         const email = emailInput.value.trim();
         const countryRaw = countryInput.value.trim();
         const numberRaw = phoneInput.value.trim();
         const message = messageInput.value.trim();
-        const country = formatCountry(countryRaw);
-        const hasCountry = Boolean(country);
-        const hasNumber = Boolean(numberRaw);
+        const country = contactCountryEmpty(countryRaw) ? '' : countryRaw;
         let blocked = false;
 
         if (!name) blocked = setError(nameInput, nameError, 'Name is required.') || blocked;
@@ -773,24 +938,82 @@ function initContactModal() {
         if (!message) blocked = setError(messageInput, messageError, 'Message is required.') || blocked;
         else setError(messageInput, messageError, '');
 
-        if (hasCountry !== hasNumber) blocked = setError(phoneInput, phoneError, 'Add both country code and number, or leave phone blank.') || blocked;
-        else setError(phoneInput, phoneError, '');
+        if (!phonePairOk(countryRaw, numberRaw)) blocked = setPhoneError(CONTACT_PHONE_ERROR) || blocked;
+        else setPhoneError('');
 
         if (blocked) {
             form.querySelector('[aria-invalid="true"]')?.focus();
             return;
         }
-        if (!contactDestination) {
-            setError(messageInput, messageError, 'Unable to send right now.');
-            return;
-        }
 
-        const phoneLine = hasCountry && hasNumber
-            ? `${country}${numberRaw.replace(/\s+/g, '')}`
-            : 'omitted';
-        const body = `Name: ${name}\nEmail: ${email}\nPhone: ${phoneLine}\n\nMessage:\n${message}`;
-        window.location.href = `mailto:${contactDestination}?body=${encodeURIComponent(body)}`;
-        close();
+        setSending(true, 'Sending…');
+        setStatus('Sending your message…', '');
+        hideMailto();
+        abortController = new AbortController();
+        const timer = setTimeout(() => abortController.abort(), 20000);
+        const idempotencyKey = pendingKey || newIdempotencyKey();
+        pendingKey = idempotencyKey;
+        try {
+            const response = await fetch(`${contactEndpoint(form)}/`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'idempotency-key': idempotencyKey
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    country,
+                    phone: numberRaw.replace(/\s+/g, ''),
+                    message,
+                    website: String(websiteInput?.value || ''),
+                    turnstileToken
+                }),
+                signal: abortController.signal
+            });
+            let payload = null;
+            try {
+                payload = await response.json();
+            } catch (error) {
+                payload = null;
+            }
+            const errorCode = payload && payload.error ? payload.error : '';
+            if (response.ok && payload && payload.ok) {
+                pendingKey = null;
+                setSending(true, 'Sent');
+                setStatus("Message sent. I'll get back to you.", 'success');
+                hideMailto();
+                resetWidget();
+                return;
+            }
+            if (errorCode === 'unverified' || response.status === 403) {
+                setSending(false, idleLabel);
+                setStatus('Please complete the verification and try again.', 'error');
+                hideMailto();
+                resetWidget();
+                return;
+            }
+            if (errorCode === 'invalid' || response.status === 400 || response.status === 415) {
+                setSending(false, idleLabel);
+                setStatus('Check the highlighted fields and try again.', 'error');
+                hideMailto();
+                resetWidget();
+                return;
+            }
+            setSending(false, idleLabel);
+            setStatus("Couldn't send from the site.", 'error');
+            showMailto(name, email, country, numberRaw, message);
+            resetWidget();
+        } catch (error) {
+            if (error && error.name === 'AbortError' && modal.hidden) return;
+            setSending(false, idleLabel);
+            setStatus("Couldn't send from the site.", 'error');
+            showMailto(name, email, country, numberRaw, message);
+            resetWidget();
+        } finally {
+            clearTimeout(timer);
+            abortController = null;
+        }
     });
 }
 

@@ -3,6 +3,7 @@
 import { spawn } from 'node:child_process';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { ROOT, delay, evaluate, openSession } from './cdp-session.mjs';
 
 const DEFAULT_BASELINE = join(ROOT, '.artifacts', 'theme-baselines');
@@ -423,9 +424,75 @@ async function runE2E(session) {
             for: node.getAttribute('for'),
             text: node.textContent.trim()
         })),
-        named: ['contact-name','contact-email','contact-phone','contact-message'].every(id => document.getElementById(id))
+        named: ['contact-name','contact-email','contact-phone','contact-message'].every(id => document.getElementById(id)),
+        honeypot: document.getElementById('contact-website')?.getAttribute('name') === 'website'
+            && document.getElementById('contact-website')?.tabIndex === -1,
+        status: document.getElementById('contact-status')?.getAttribute('role') === 'status',
+        turnstile: document.getElementById('contact-turnstile')?.getAttribute('data-sitekey') === '1x00000000000000000000AA',
+        mailto: document.getElementById('contact-mailto')?.textContent.trim() === 'Email me directly'
+            && document.getElementById('contact-mailto')?.hidden
+            && !document.getElementById('contact-mailto')?.getAttribute('href'),
+        limits: document.getElementById('contact-name')?.getAttribute('maxlength') === '100'
+            && document.getElementById('contact-email')?.getAttribute('maxlength') === '254'
+            && document.getElementById('contact-message')?.getAttribute('maxlength') === '4000'
     })`);
     results.push(check('contact-inputs-labelled', contact.named && contact.labels.length >= 4, JSON.stringify(contact.labels)));
+    results.push(check('contact-delivery-contract', contact.honeypot && contact.status && contact.turnstile && contact.limits && contact.mailto, JSON.stringify(contact)));
+
+    const phoneRules = await evaluate(client, `({
+        letters: phonePairOk('+91', 'test'),
+        malformedCountry: phonePairOk('91', '9876543210'),
+        letterCountry: phonePairOk('+abc', '9876543210'),
+        validIn: phonePairOk('+91', '98765 43210'),
+        validUs: phonePairOk('+1', '(415) 555-2671'),
+        validUk: phonePairOk('+44', '20 7946 0958'),
+        omittedPlus: phonePairOk('+', ''),
+        omittedBlank: phonePairOk('', ''),
+        onlyCountry: phonePairOk('+91', ''),
+        onlyNumber: phonePairOk('+', '9876543210'),
+        tooShort: phonePairOk('+91', '12'),
+        tooLong: phonePairOk('+91', '1234567890123456')
+    })`);
+    results.push(check('contact-phone-letters-rejected', phoneRules.letters === false, JSON.stringify(phoneRules)));
+    results.push(check('contact-phone-malformed-country-rejected', phoneRules.malformedCountry === false && phoneRules.letterCountry === false, JSON.stringify(phoneRules)));
+    results.push(check('contact-phone-valid-formatted-accepted', phoneRules.validIn && phoneRules.validUs && phoneRules.validUk, JSON.stringify(phoneRules)));
+    results.push(check('contact-phone-omitted-accepted', phoneRules.omittedPlus && phoneRules.omittedBlank, JSON.stringify(phoneRules)));
+    results.push(check('contact-phone-partial-rejected', phoneRules.onlyCountry === false && phoneRules.onlyNumber === false, JSON.stringify(phoneRules)));
+    results.push(check('contact-phone-digit-count', phoneRules.tooShort === false && phoneRules.tooLong === false, JSON.stringify(phoneRules)));
+
+    await click(client, '#about-contact');
+    await delay(80);
+    const phoneUi = await evaluate(client, `(() => {
+        const form = document.getElementById('contact-form');
+        document.getElementById('contact-name').value = 'Test';
+        document.getElementById('contact-email').value = 'a@b.co';
+        document.getElementById('contact-message').value = 'Hello there';
+        document.getElementById('contact-country').value = '+91';
+        document.getElementById('contact-phone').value = 'test';
+        form.requestSubmit();
+        const country = document.getElementById('contact-country');
+        const phone = document.getElementById('contact-phone');
+        const error = document.getElementById('contact-phone-error');
+        return {
+            message: error?.textContent || '',
+            hidden: error?.hidden,
+            countryInvalid: country?.getAttribute('aria-invalid'),
+            phoneInvalid: phone?.getAttribute('aria-invalid'),
+            countryDescribed: country?.getAttribute('aria-describedby'),
+            phoneDescribed: phone?.getAttribute('aria-describedby')
+        };
+    })()`);
+    results.push(check(
+        'contact-phone-ui-letters',
+        phoneUi.message === 'Enter a valid phone number.'
+            && phoneUi.hidden === false
+            && phoneUi.countryInvalid === 'true'
+            && phoneUi.phoneInvalid === 'true'
+            && phoneUi.countryDescribed === 'contact-phone-error'
+            && phoneUi.phoneDescribed === 'contact-phone-error',
+        JSON.stringify(phoneUi)
+    ));
+    await click(client, '[data-contact-dismiss]');
 
     await setViewportTheme(client, 'mobile', 'dark', 'dark');
     await goto(client, new URL('/', url).href, 'home');
@@ -588,6 +655,82 @@ async function runSource() {
     if (!css.includes('@keyframes blink-clock') || !css.includes('--project-gallery-max') || !js.includes('pageScrollAnchor')) {
         throw new Error('source check failed: missing blink-clock, gallery max token, or heading-anchor scroll');
     }
+    const html = await readFile(join(ROOT, 'index.html'), 'utf8');
+    const worker = await readFile(join(ROOT, 'workers', 'contact', 'src', 'index.js'), 'utf8');
+    const wrangler = await readFile(join(ROOT, 'workers', 'contact', 'wrangler.toml'), 'utf8');
+    const contactGaps = [];
+    if (!js.includes("CONTACT_ENDPOINT_PROD = 'https://portfolio-contact.hiteshgoyal-business.workers.dev'")) {
+        contactGaps.push('workers.dev-endpoint');
+    }
+    if (js.includes('api.hiteshgoyal.me') || html.includes('api.hiteshgoyal.me')) contactGaps.push('api-subdomain');
+    if (js.includes('window.location.href = `mailto:') || /location\.href\s*=\s*[`'"]mailto:/.test(js)) {
+        contactGaps.push('auto-mailto');
+    }
+    if (!html.includes('id="contact-website"') || !html.includes('id="contact-turnstile"') || !html.includes('id="contact-status"') || !html.includes('id="contact-mailto"')) {
+        contactGaps.push('contact-markup');
+    }
+    if (js.includes('RESEND_API_KEY') || js.includes('TURNSTILE_SECRET') || worker.includes('hiteshgoyal.business@gmail.com')) {
+        contactGaps.push('leaked-secret');
+    }
+    if (!worker.includes('challenges.cloudflare.com/turnstile') || !worker.includes('api.resend.com/emails')) {
+        contactGaps.push('worker-providers');
+    }
+    if (!worker.includes('CONTACT_LIMITER.limit') || worker.includes('rateHits') || !wrangler.includes('[[ratelimits]]')) {
+        contactGaps.push('native-ratelimit');
+    }
+    if (!wrangler.includes('RESEND_API_KEY') || !wrangler.includes('TURNSTILE_SECRET_KEY') || !wrangler.includes('CONTACT_TO_EMAIL')) {
+        contactGaps.push('secrets-required');
+    }
+    if (html.includes('0x4AAAAAAEdudRMuypS6qFDx')) contactGaps.push('html-prod-sitekey');
+    if (!js.includes('CONTACT_TURNSTILE_SITEKEY_TEST') || !js.includes('CONTACT_TURNSTILE_SITEKEY_PROD') || !js.includes('isLocalContactHost')) {
+        contactGaps.push('sitekey-split');
+    }
+    if (!wrangler.includes('STUB_RESEND') || !worker.includes('STUB_RESEND')) contactGaps.push('stub-resend');
+    if (worker.includes('1x0000000000000000000000000000000AA')) contactGaps.push('test-secret-in-worker');
+    if (!wrangler.includes('compatibility_date = "2026-08-27"') || !wrangler.includes('preview_urls = false') || !/\[observability\]/.test(wrangler)) {
+        contactGaps.push('worker-observability');
+    }
+    if (/console\.(log|info|warn|error)\([^)]*(fields\.|payload|turnstileToken|RESEND_API_KEY|CONTACT_TO_EMAIL)/.test(worker)) {
+        contactGaps.push('pii-log');
+    }
+    if (!js.includes('phonePairOk') || !worker.includes('phonePairOk') || !worker.includes('export function fieldsOk')) {
+        contactGaps.push('phone-validation');
+    }
+    if (!js.includes("CONTACT_COUNTRY_RE = /^\\+\\d{1,4}$/") || !worker.includes('COUNTRY_RE = /^\\+\\d{1,4}$/')) {
+        contactGaps.push('country-re');
+    }
+    if (contactGaps.length) throw new Error(`source check failed: contact=${contactGaps.join(',')}`);
+
+    const { fieldsOk } = await import(pathToFileURL(join(ROOT, 'workers', 'contact', 'src', 'index.js')).href);
+    const sample = extra => ({
+        name: 'Test',
+        email: 'a@b.co',
+        message: 'Hello there',
+        website: '',
+        turnstileToken: 'token',
+        country: '',
+        phone: '',
+        ...extra
+    });
+    const phoneWorker = [
+        ['letters', sample({ country: '+91', phone: 'test' }), false],
+        ['malformed-country', sample({ country: '91', phone: '9876543210' }), false],
+        ['letter-country', sample({ country: '+abc', phone: '9876543210' }), false],
+        ['valid-in', sample({ country: '+91', phone: '98765 43210' }), true],
+        ['valid-us', sample({ country: '+1', phone: '(415) 555-2671' }), true],
+        ['valid-uk', sample({ country: '+44', phone: '20 7946 0958' }), true],
+        ['omitted-plus', sample({ country: '+', phone: '' }), true],
+        ['omitted-blank', sample({ country: '', phone: '' }), true],
+        ['only-country', sample({ country: '+91', phone: '' }), false],
+        ['only-number', sample({ country: '+', phone: '9876543210' }), false],
+        ['too-short', sample({ country: '+91', phone: '12' }), false],
+        ['too-long', sample({ country: '+91', phone: '1234567890123456' }), false]
+    ];
+    const phoneWorkerFail = phoneWorker.filter(([name, payload, expectOk]) => Boolean(fieldsOk(payload)) !== expectOk);
+    if (phoneWorkerFail.length) {
+        throw new Error(`source check failed: worker-phone=${phoneWorkerFail.map(row => row[0]).join(',')}`);
+    }
+
     console.log('Source checks passed (JSON parse, normalized token names)');
 }
 

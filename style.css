@@ -1373,6 +1373,7 @@ body.contact-modal-open {
     flex-direction: column;
     gap: 1.25rem;
     min-height: 0;
+    position: relative;
 }
 
 .contact-row {
@@ -1481,6 +1482,61 @@ body.contact-modal-open {
 :root[data-theme="light"] .contact-actions .btn {
     appearance: none;
     font-size: 0.9rem;
+}
+
+.contact-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.contact-turnstile {
+    min-height: 0;
+}
+
+.contact-turnstile:not(:empty) {
+    min-height: 65px;
+}
+
+.contact-status {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-muted);
+}
+
+.contact-status[data-state="success"] {
+    color: var(--text-main);
+}
+
+.contact-status[data-state="error"] {
+    color: var(--danger);
+}
+
+.contact-mailto {
+    align-self: flex-start;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent-interact);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.contact-mailto:focus-visible {
+    outline: 2px solid var(--accent-interact);
+    outline-offset: 2px;
+}
+
+#contact-form[aria-busy="true"] .contact-actions .btn {
+    opacity: 0.72;
+    pointer-events: none;
 }
 
 /* --- Certificates --- */
