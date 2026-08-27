@@ -15,9 +15,28 @@ const CHEVRON_HTML = `<span class="stack-chevron" aria-hidden="true"><svg xmlns=
 const CAROUSEL_NAV_PREV_HTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>';
 const CAROUSEL_NAV_NEXT_HTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>';
 const GITHUB_MARK_HTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>';
+function strokeIcon(markup) {
+    return `<svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${markup}</svg>`;
+}
+const ACTION_ICONS = {
+    github: GITHUB_MARK_HTML,
+    demo: strokeIcon('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),
+    blog: strokeIcon('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>'),
+    website: strokeIcon('<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
+    credentials: strokeIcon('<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>'),
+    contact: strokeIcon('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>')
+};
+const LINK_KIND_BY_LABEL = {
+    github: 'github',
+    'live demo': 'demo',
+    demo: 'demo',
+    blog: 'blog',
+    website: 'website',
+    credentials: 'credentials'
+};
 const PROJECT_PAGE_CTA_LABEL = 'Learn More';
 const PROJECTS_CAROUSEL_MS = 12000;
-const CAROUSEL_TRANSITION_MS = 420;
+const CAROUSEL_TRANSITION_MS = 660;
 const CAROUSEL_SWIPE_PX = 48;
 const TIMELINE_DRAG_INTENT_PX = 10;
 const TIMELINE_DRAG_COMMIT_RATIO = 0.25;
@@ -31,6 +50,9 @@ let certificatesLoaded = false;
 let stackUid = 0;
 let timelineTabIndex = 0;
 let timelineDrag = null;
+let themeTransitionTimer = 0;
+let contactDestination = '';
+let themeMediaQuery = null;
 
 function placeUnderlineIndicator(container, indicator, target, { instant = false } = {}) {
     if (!container || !indicator || !target) return;
@@ -214,16 +236,31 @@ function getSavedTheme() {
     }
 }
 
-function getPreferredTheme() {
-    const activeTheme = document.documentElement.getAttribute('data-theme');
-    if (activeTheme === 'light' || activeTheme === 'dark') return activeTheme;
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-    return 'dark';
+function getSystemTheme() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-function setTheme(theme, persist = false) {
+function resolveTheme() {
+    return getSavedTheme() || getSystemTheme();
+}
+
+function setTheme(theme, persist = false, animate = false) {
     const nextTheme = theme === 'light' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', nextTheme);
+    const root = document.documentElement;
+    if (themeTransitionTimer) {
+        window.clearTimeout(themeTransitionTimer);
+        themeTransitionTimer = 0;
+    }
+    if (animate && !prefersReducedMotion()) {
+        root.classList.add('theme-transitioning');
+        themeTransitionTimer = window.setTimeout(() => {
+            root.classList.remove('theme-transitioning');
+            themeTransitionTimer = 0;
+        }, 360);
+    } else {
+        root.classList.remove('theme-transitioning');
+    }
+    root.setAttribute('data-theme', nextTheme);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', nextTheme === 'light' ? '#e9eef5' : '#080d18');
 
     if (persist) {
@@ -251,11 +288,20 @@ function initThemeToggle() {
     toggle.type = 'button';
     navContent.appendChild(toggle);
 
-    setTheme(getSavedTheme() || getPreferredTheme());
+    setTheme(resolveTheme());
     toggle.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-        setTheme(currentTheme === 'light' ? 'dark' : 'light', true);
+        setTheme(currentTheme === 'light' ? 'dark' : 'light', true, true);
     });
+    if (!themeMediaQuery && window.matchMedia) {
+        themeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const onSystemTheme = () => {
+            if (getSavedTheme()) return;
+            setTheme(getSystemTheme(), false, true);
+        };
+        if (themeMediaQuery.addEventListener) themeMediaQuery.addEventListener('change', onSystemTheme);
+        else themeMediaQuery.addListener(onSystemTheme);
+    }
 }
 
 function parseDateObj(dateStr) {
@@ -347,17 +393,23 @@ function actionButtonClass(primary) {
     return primary ? 'btn btn-primary btn-tiny' : 'btn btn-outline btn-tiny';
 }
 
+function resolveLinkKind(link) {
+    const kind = String(link.kind || '').toLowerCase();
+    if (ACTION_ICONS[kind]) return kind;
+    return LINK_KIND_BY_LABEL[String(link.label || '').trim().toLowerCase()] || '';
+}
+
 function renderLinks(links, options = {}) {
     return (links || [])
         .filter(link => link && safeHref(link.url) && link.label)
         .map(link => {
             const href = safeHref(link.url);
-            const kind = String(link.kind || '').toLowerCase();
+            const kind = resolveLinkKind(link);
             const classes = [actionButtonClass(kind === 'demo')];
             if (kind === 'demo' && options.liveDemoMotion) classes.push('btn-live');
             const external = /^https?:\/\//i.test(href);
             const target = external ? ' target="_blank" rel="noopener"' : '';
-            const icon = kind === 'github' ? GITHUB_MARK_HTML : '';
+            const icon = ACTION_ICONS[kind] || '';
             return `<a href="${escapeHtml(href)}"${target} class="${classes.join(' ')}">${icon}${escapeHtml(link.label)}</a>`;
         })
         .join('');
@@ -366,7 +418,7 @@ function renderLinks(links, options = {}) {
 function renderCredentialButtons(credentials) {
     return (credentials || [])
         .filter(url => typeof url === 'string' && safeHref(url))
-        .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">Credentials</a>`)
+        .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn btn-outline btn-tiny">${ACTION_ICONS.credentials}Credentials</a>`)
         .join('');
 }
 
@@ -445,7 +497,7 @@ function renderCertificateCard(cert, isCore = false) {
     const href = safeHref(cert.link);
     const link = href ? `
         <a href="${escapeHtml(href)}" target="_blank" rel="noopener" class="cert-link btn btn-outline">
-            Credentials
+            ${ACTION_ICONS.credentials}Credentials
         </a>
     ` : '';
 
@@ -568,10 +620,7 @@ function hydrateAboutSection(profile) {
         ].filter(Boolean).join(' ');
     }
 
-    const contactBtn = document.getElementById('about-contact');
-    if (contactBtn && profile.email) {
-        contactBtn.href = `mailto:${profile.email}`;
-    }
+    contactDestination = profile.email || '';
 }
 
 function setExternalHref(id, url) {
@@ -583,6 +632,146 @@ function setExternalHref(id, url) {
         el.target = '_blank';
         el.rel = 'noopener';
     }
+}
+
+function initContactModal() {
+    const modal = document.getElementById('contact-modal');
+    const trigger = document.getElementById('about-contact');
+    const form = document.getElementById('contact-form');
+    if (!modal || !trigger || !form) return;
+
+    const dialog = modal.querySelector('.contact-modal-dialog');
+    const nameInput = document.getElementById('contact-name');
+    const emailInput = document.getElementById('contact-email');
+    const countryInput = document.getElementById('contact-country');
+    const phoneInput = document.getElementById('contact-phone');
+    const messageInput = document.getElementById('contact-message');
+    const nameError = document.getElementById('contact-name-error');
+    const emailError = document.getElementById('contact-email-error');
+    const phoneError = document.getElementById('contact-phone-error');
+    const messageError = document.getElementById('contact-message-error');
+    const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    let lastFocus = null;
+
+    const emptyCountry = (raw) => {
+        const value = String(raw || '').trim();
+        return !value || value === '+';
+    };
+
+    const formatCountry = (raw) => {
+        const value = String(raw || '').trim();
+        if (emptyCountry(value)) return '';
+        return value.startsWith('+') ? value : `+${value}`;
+    };
+
+    const setError = (input, errorEl, message) => {
+        const invalid = Boolean(message);
+        if (input) {
+            input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+            if (invalid && errorEl) input.setAttribute('aria-describedby', errorEl.id);
+            else input.removeAttribute('aria-describedby');
+        }
+        if (errorEl) {
+            errorEl.hidden = !invalid;
+            errorEl.textContent = message || '';
+        }
+        return invalid;
+    };
+
+    const lockPage = (on) => {
+        document.documentElement.classList.toggle('contact-modal-open', on);
+        document.body.classList.toggle('contact-modal-open', on);
+        document.getElementById('navbar')?.toggleAttribute('inert', on);
+        document.querySelector('main')?.toggleAttribute('inert', on);
+    };
+
+    const close = () => {
+        modal.hidden = true;
+        lockPage(false);
+        form.reset();
+        setError(nameInput, nameError, '');
+        setError(emailInput, emailError, '');
+        setError(phoneInput, phoneError, '');
+        setError(messageInput, messageError, '');
+        const restore = lastFocus;
+        requestAnimationFrame(() => {
+            if (restore && typeof restore.focus === 'function') restore.focus();
+        });
+    };
+
+    const open = () => {
+        lastFocus = document.activeElement;
+        modal.hidden = false;
+        lockPage(true);
+        (nameInput || emailInput || dialog).focus();
+    };
+
+    trigger.addEventListener('click', open);
+    modal.addEventListener('click', event => {
+        if (event.target.closest('[data-contact-dismiss]')) close();
+    });
+    document.addEventListener('keydown', event => {
+        if (modal.hidden) return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            close();
+            return;
+        }
+        if (event.key !== 'Tab' || !dialog) return;
+        const items = [...dialog.querySelectorAll(focusSelector)];
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    });
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const countryRaw = countryInput.value.trim();
+        const numberRaw = phoneInput.value.trim();
+        const message = messageInput.value.trim();
+        const country = formatCountry(countryRaw);
+        const hasCountry = Boolean(country);
+        const hasNumber = Boolean(numberRaw);
+        let blocked = false;
+
+        if (!name) blocked = setError(nameInput, nameError, 'Name is required.') || blocked;
+        else setError(nameInput, nameError, '');
+
+        if (!email) blocked = setError(emailInput, emailError, 'Email is required.') || blocked;
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) blocked = setError(emailInput, emailError, 'Enter a valid email.') || blocked;
+        else setError(emailInput, emailError, '');
+
+        if (!message) blocked = setError(messageInput, messageError, 'Message is required.') || blocked;
+        else setError(messageInput, messageError, '');
+
+        if (hasCountry !== hasNumber) blocked = setError(phoneInput, phoneError, 'Add both country code and number, or leave phone blank.') || blocked;
+        else setError(phoneInput, phoneError, '');
+
+        if (blocked) {
+            form.querySelector('[aria-invalid="true"]')?.focus();
+            return;
+        }
+        if (!contactDestination) {
+            setError(messageInput, messageError, 'Unable to send right now.');
+            return;
+        }
+
+        const phoneLine = hasCountry && hasNumber
+            ? `${country}${numberRaw.replace(/\s+/g, '')}`
+            : 'omitted';
+        const body = `Name: ${name}\nEmail: ${email}\nPhone: ${phoneLine}\n\nMessage:\n${message}`;
+        window.location.href = `mailto:${contactDestination}?body=${encodeURIComponent(body)}`;
+        close();
+    });
 }
 
 async function loadProfile() {
@@ -755,17 +944,35 @@ function createSlideStrip(track, slides, { loop = false, className = 'carousel-s
     track.replaceChildren(strip);
     const cards = Array.from(strip.children);
     let physicalIndex = useLoop ? 1 : 0;
+    let dragPx = 0;
 
-    const setOffset = animate => {
+    const metrics = () => {
         const width = track.clientWidth;
-        if (!width) return;
         const gap = parseFloat(getComputedStyle(strip).columnGap) || 0;
+        return { width, gap, span: width + gap };
+    };
+
+    const restX = () => -(physicalIndex * metrics().span);
+
+    const setTransform = (x, animate, duration = CAROUSEL_TRANSITION_MS) => {
         strip.classList.toggle('is-jumping', !animate);
-        strip.style.transform = `translate3d(${-(physicalIndex * (width + gap))}px, 0, 0)`;
+        if (animate) strip.style.transitionDuration = `${duration}ms`;
+        strip.style.transform = `translate3d(${x}px, 0, 0)`;
         if (!animate) {
             strip.offsetHeight;
             strip.classList.remove('is-jumping');
+            strip.style.removeProperty('transition-duration');
         }
+    };
+
+    const travelMs = ratio => Math.round(CAROUSEL_TRANSITION_MS * Math.max(0.45, Math.min(1, ratio)));
+
+    const setOffset = animate => {
+        const { width, span } = metrics();
+        if (!width) return;
+        const duration = travelMs(span ? Math.abs(dragPx) / span : 1);
+        dragPx = 0;
+        setTransform(restX(), animate, duration);
     };
 
     const syncActive = onActive => {
@@ -781,10 +988,20 @@ function createSlideStrip(track, slides, { loop = false, className = 'carousel-s
         strip,
         cards,
         setOffset,
+        dragBy(dx) {
+            if (!metrics().width) return;
+            dragPx = dx;
+            setTransform(restX() + dx, false);
+        },
         render(index, direction, animate) {
+            const { width, span } = metrics();
+            if (!width) return false;
+            const targetIndex = (animate && direction) ? physicalIndex + direction : (useLoop ? index + 1 : index);
+            const remaining = span ? Math.abs(-(targetIndex * span) - (restX() + dragPx)) / span : 1;
             if (animate && direction) physicalIndex += direction;
             else physicalIndex = useLoop ? index + 1 : index;
-            setOffset(animate);
+            dragPx = 0;
+            setTransform(restX(), animate, travelMs(remaining));
             return animate && Boolean(direction);
         },
         settle(index, onActive) {
@@ -825,6 +1042,7 @@ function createCarouselController({
     ignoreGesture = () => false,
     ignoreKeyboard = event => Boolean(event.target.closest('video, iframe, input, textarea, select')),
     onDragChange = () => {},
+    onPointerDelta,
     onResize,
     transitionTarget,
     ariaLabel
@@ -836,6 +1054,7 @@ function createCarouselController({
     let timer = null;
     let transitionTimer = null;
     let clickTimer = null;
+    let travelGen = 0;
     let transitioning = false;
     let pointerActive = false;
     let pointerId = null;
@@ -923,12 +1142,33 @@ function createCarouselController({
         if (canAutoplay()) start();
         else pauseCycle();
     };
-    const finishTransition = () => {
+    const clearTravelTimer = () => {
         if (transitionTimer !== null) window.clearTimeout(transitionTimer);
         transitionTimer = null;
+    };
+    const finishTransition = (gen = travelGen) => {
+        if (gen !== travelGen) return;
+        clearTravelTimer();
         if (!transitioning) return;
         transitioning = false;
+        root.removeAttribute('aria-busy');
         settle?.(activeIndex);
+        if (canAutoplay() && timer === null) start();
+    };
+    const finishActiveTransition = () => {
+        if (!transitioning) return false;
+        travelGen += 1;
+        clearTravelTimer();
+        transitioning = false;
+        settle?.(activeIndex);
+        return true;
+    };
+    const markTravel = () => {
+        transitioning = true;
+        root.setAttribute('aria-busy', 'true');
+        const gen = ++travelGen;
+        clearTravelTimer();
+        transitionTimer = window.setTimeout(() => finishTransition(gen), CAROUSEL_TRANSITION_MS + 80);
     };
     const syncControls = () => {
         if (previous) previous.disabled = !manualWrap && activeIndex === 0;
@@ -964,14 +1204,18 @@ function createCarouselController({
             }
             remainingMs = PROJECTS_CAROUSEL_MS;
             moveTo(activeIndex + 1, { direction: 1, wrap: true });
-            start();
         }, delay);
         syncProgress(true);
     };
     const moveTo = (index, { direction, manual = false, wrap = manualWrap } = {}) => {
-        if (count < 2 || transitioning) return false;
+        if (count < 2) return false;
+        if (transitioning) {
+            if (!manual) return false;
+            finishActiveTransition();
+        }
         const nextIndex = normalizeIndex(index, wrap);
         if (nextIndex === activeIndex) {
+            root.removeAttribute('aria-busy');
             if (manual) start();
             return false;
         }
@@ -983,13 +1227,14 @@ function createCarouselController({
         activeIndex = nextIndex;
         const animated = !prefersReducedMotion() && Boolean(movement);
         const rendered = render(activeIndex, movement, animated);
-        transitioning = animated && rendered !== false;
+        const shouldTravel = animated && rendered !== false;
         syncControls();
         syncProgress(false);
-        if (transitioning) {
-            transitionTimer = window.setTimeout(finishTransition, CAROUSEL_TRANSITION_MS + 80);
-        } else {
+        if (shouldTravel) markTravel();
+        else {
+            root.removeAttribute('aria-busy');
             settle?.(activeIndex);
+            if (canAutoplay() && timer === null) start();
         }
         if (manual) start();
         return true;
@@ -1006,11 +1251,12 @@ function createCarouselController({
     });
     root.addEventListener('keydown', event => {
         if (ignoreKeyboard(event)) return;
-        if (event.key === 'ArrowLeft' && (manualWrap || activeIndex > 0)) {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        if (event.key === 'ArrowLeft' && (manualWrap || activeIndex > 0 || transitioning)) {
             event.preventDefault();
             moveBy(-1);
         }
-        if (event.key === 'ArrowRight' && (manualWrap || activeIndex < count - 1)) {
+        if (event.key === 'ArrowRight' && (manualWrap || activeIndex < count - 1 || transitioning)) {
             event.preventDefault();
             moveBy(1);
         }
@@ -1049,10 +1295,16 @@ function createCarouselController({
                 applyPause(PAUSE.pointer, false);
                 return;
             }
+            if (Math.abs(dx) > 6) {
+                onPointerDelta?.(0, true);
+                markTravel();
+            }
             applyPause(PAUSE.pointer, false);
         };
         gestureTarget.addEventListener('pointerdown', event => {
             if (!event.isPrimary || event.button !== 0 || pointerId !== null || ignoreGesture(event)) return;
+            if (transitioning) finishActiveTransition();
+            root.removeAttribute('aria-busy');
             pointerActive = true;
             applyPause(PAUSE.pointer, true);
             suppressClick = false;
@@ -1063,11 +1315,12 @@ function createCarouselController({
             captureTarget.setPointerCapture(pointerId);
         }, listenerOptions);
         gestureTarget.addEventListener('pointermove', event => {
-            if (event.pointerId !== pointerId) return;
+            if (event.pointerId !== pointerId || transitioning) return;
             const dx = event.clientX - startX;
             const dy = event.clientY - startY;
             if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
                 onDragChange(true);
+                onPointerDelta?.(dx, false);
                 if (event.cancelable) event.preventDefault();
             }
         }, listenerOptions);
@@ -1106,7 +1359,7 @@ function createCarouselController({
     }
     if (transitionTarget) {
         transitionTarget.addEventListener('transitionend', event => {
-            if (event.target === transitionTarget && event.propertyName === 'transform') finishTransition();
+            if (event.target === transitionTarget && event.propertyName === 'transform') finishTransition(travelGen);
         }, listenerOptions);
     }
     let observer = null;
@@ -1126,7 +1379,9 @@ function createCarouselController({
 
     const api = {
         finishTransition,
+        finishActiveTransition,
         getIndex: () => activeIndex,
+        isBusy: () => transitioning,
         goTo: (index, direction) => moveTo(index, { direction, manual: true }),
         isAutoplaying: () => timer !== null,
         remainingMs: remainingNow,
@@ -1142,13 +1397,16 @@ function createCarouselController({
         restart: start,
         destroy() {
             if (root._carouselController === api) delete root._carouselController;
+            travelGen += 1;
+            transitioning = false;
             pauseCycle();
-            if (transitionTimer !== null) window.clearTimeout(transitionTimer);
+            clearTravelTimer();
             if (clickTimer !== null) window.clearTimeout(clickTimer);
             observer?.disconnect();
             abortController.abort();
             stopProgressAnimation();
             root.removeAttribute('data-autoplay-progress');
+            root.removeAttribute('aria-busy');
         }
     };
     root._carouselController = api;
@@ -1275,6 +1533,10 @@ function createCarouselView({
         onDragChange: dragging => {
             track.classList.toggle('is-dragging', dragging);
             onDragChange?.(dragging);
+        },
+        onPointerDelta: (dx, animate) => {
+            if (animate) motion.setOffset(true);
+            else motion.dragBy(dx);
         },
         transitionTarget: motion.strip,
         onResize: () => motion.setOffset(false),
@@ -2614,6 +2876,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animateLogo();
     initScrollHint();
     initNavHighlight();
+    initContactModal();
     initExpandAll();
     Promise.all([loadProfile(), loadProjects(), loadTimeline(), loadRecommendations()]).then(restoreScrollPosition);
 });

@@ -27,10 +27,10 @@
             try {
                 stored = localStorage.getItem('portfolio-theme');
             } catch (error) {}
-            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             const theme = stored === 'light' || stored === 'dark'
                 ? stored
-                : prefersLight ? 'light' : 'dark';
+                : prefersDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#e9eef5' : '#080d18');
         }());

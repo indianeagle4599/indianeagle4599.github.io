@@ -39,10 +39,10 @@
             try {
                 stored = localStorage.getItem('portfolio-theme');
             } catch (error) {}
-            const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             const theme = stored === 'light' || stored === 'dark'
                 ? stored
-                : prefersLight ? 'light' : 'dark';
+                : prefersDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#e9eef5' : '#080d18');
         }());
@@ -131,7 +131,7 @@
             <p id="introduction-summary"></p>
             <div class="introduction-actions">
                 <a id="introduction-resume" href="#" target="_blank" rel="noopener" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#111827" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path
                             d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
                     </svg>
@@ -183,7 +183,10 @@
             </div>
             <div class="about-footer">
                 <p id="about-availability" class="about-availability"></p>
-                <a id="about-contact" class="btn btn-primary" href="#home">Contact</a>
+                <button type="button" id="about-contact" class="btn btn-outline" aria-haspopup="dialog" aria-controls="contact-modal">
+                    <svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                    Get in touch
+                </button>
             </div>
         </div>
     </section>
@@ -257,6 +260,66 @@
         </div>
     </section>
     </main>
+
+    <div id="contact-modal" class="contact-modal" hidden>
+        <div class="contact-modal-backdrop" data-contact-dismiss></div>
+        <div class="contact-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title" aria-describedby="contact-modal-lede" tabindex="-1">
+            <div class="contact-modal-header">
+                <div class="contact-modal-heading">
+                    <h2 id="contact-modal-title">Get in touch</h2>
+                    <p id="contact-modal-lede" class="contact-modal-lede">Share a few details and I'll get back to you.</p>
+                </div>
+                <button type="button" class="contact-modal-close" data-contact-dismiss aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <form id="contact-form" novalidate>
+                <div class="contact-row">
+                    <div class="contact-field">
+                        <label for="contact-name">Name <span class="contact-required" aria-hidden="true">*</span></label>
+                        <input id="contact-name" name="name" type="text" autocomplete="name" required>
+                        <p id="contact-name-error" class="contact-field-error" hidden></p>
+                    </div>
+                    <div class="contact-field">
+                        <label for="contact-email">Email <span class="contact-required" aria-hidden="true">*</span></label>
+                        <input id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" required>
+                        <p id="contact-email-error" class="contact-field-error" hidden></p>
+                    </div>
+                </div>
+                <fieldset class="contact-phone">
+                    <legend>Phone</legend>
+                    <div class="contact-phone-row">
+                        <div class="contact-field contact-field--code">
+                            <label class="visually-hidden" for="contact-country">Country code</label>
+                            <input id="contact-country" name="country" type="text" inputmode="tel" autocomplete="tel-country-code" list="contact-country-codes" maxlength="6" value="+" spellcheck="false">
+                        </div>
+                        <div class="contact-field contact-field--number">
+                            <label class="visually-hidden" for="contact-phone">Phone number</label>
+                            <input id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="Number">
+                        </div>
+                    </div>
+                    <datalist id="contact-country-codes">
+                        <option value="+91"></option>
+                        <option value="+65"></option>
+                        <option value="+1"></option>
+                        <option value="+44"></option>
+                    </datalist>
+                    <p id="contact-phone-error" class="contact-field-error" hidden></p>
+                </fieldset>
+                <div class="contact-field">
+                    <label for="contact-message">Message <span class="contact-required" aria-hidden="true">*</span></label>
+                    <textarea id="contact-message" name="message" rows="3" required></textarea>
+                    <p id="contact-message-error" class="contact-field-error" hidden></p>
+                </div>
+                <div class="contact-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                        Send message
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="scripts/main.js"></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
