@@ -1,92 +1,33 @@
 [
     {
-        "type": "project",
-        "title": "Aftersight: Media Search Engine",
-        "slug": "media-search-engine",
-        "logo": "./assets/aftersight-logo.png",
-        "startDate": "15/02/2026",
-        "endDate": "30/04/2026",
-        "description": "Paused in April 2026. A multimodal media retrieval pipeline indexing image/video assets via VLM-generated descriptions, OCR, and metadata across semantic and lexical retrieval surfaces.",
-        "media": {
-            "github": "https://github.com/indianeagle4599/Media-Search-Engine",
-            "medium": "https://medium.com/@hitesh-goyal/from-caption-search-to-rich-media-retrieval-dbefd81c3823"
-        },
-        "points": [
-            "Building a multimodal media retrieval pipeline that indexes image/video assets, extracts metadata, and generates VLM-based descriptions for downstream search.",
-            "Designed MongoDB + ChromaDB retrieval architecture with weighted multi-collection ranking across narrative content, OCR text, and metadata fields.",
-            "Leveraged structured metadata and LLM-generated descriptions to enhance search relevance and enable complex queries."
+        "type": "work",
+        "entity": "Amplify Dental AI",
+        "logo": "./assets/amplify-logo.png",
+        "startDate": "01/05/2026",
+        "endDate": "Present",
+        "links": [
+            {
+                "label": "Website",
+                "url": "https://amplifydental.ai/"
+            }
+        ],
+        "roles": [
+            {
+                "title": "Applied AI Engineer (Collaborator, Part-Time)",
+                "points": [
+                    "Designed a representative benchmark suite, standardizing 6 public datasets (far speech, ambient noise, accents, mic variation) into one ingest format so evaluation reflects real-world conditions, not clean-audio benchmarks.",
+                    "Built a plug-and-play interface unifying multiple transcription backends under one manifest, with WER/CER/RTF scoring that enabled evaluation before any domain-specific data was available.",
+                    "Introduced a local-first benchmarking mode that catches code-level errors without cloud spin-up, saving 1+ hr/week per dev of idle wait — more when GPU provisioning or networks fail."
+                ]
+            }
         ],
         "tags": [
-            "Python",
-            "Streamlit",
-            "Ollama",
-            "MongoDB",
-            "ChromaDB",
-            "Gemini",
-            "Hybrid Retrieval",
-            "Vector Embeddings",
-            "VLM",
-            "Image Processing",
-            "OCR"
-        ],
-        "demos": [],
-        "writeup": ""
-    },
-    {
-        "type": "project",
-        "title": "Pixtyle",
-        "slug": "pixtyle",
-        "logo": "./assets/pixtyle-logo.png",
-        "startDate": "01/09/2024",
-        "endDate": "On and Off",
-        "description": "Pixel Stylizer Toolkit for transforming photos and videos into stylized, flat-color wallpapers using advanced computer vision techniques.",
-        "media": {
-            "github": "https://github.com/indianeagle4599/Pixtyle"
-        },
-        "points": [
-            "Developed multiple stylization transforms including K-means clustering, enhanced clustering, Fourier-based animation, and edge enhancement for creating cartoon-like effects.",
-            "Implemented GPU-accelerated processing with PyTorch and NumPy backends, supporting both image and video inputs with temporal smoothing for stable animations.",
-            "Built a modular architecture with extensible transform classes, configuration-driven pipelines, and optional super-resolution upscaling using TensorFlow.",
-            "Refactored and stabilized the codebase, adding comprehensive image processing utilities and batch processing capabilities for folders and videos."
-        ],
-        "tags": [
-            "Python",
-            "PyTorch",
-            "Computer Vision",
-            "Image Processing",
-            "Video Processing"
-        ],
-        "demos": [],
-        "writeup": ""
-    },
-    {
-        "type": "project",
-        "title": "AI Generated Image Classifier",
-        "slug": "ai-generated-image-classifier",
-        "startDate": "20/02/2025",
-        "endDate": "31/03/2025",
-        "description": "MLOps pipeline for training and monitoring deep learning models to detect AI-generated vs human-generated images, with comprehensive experiment tracking and hyperparameter optimization.",
-        "media": {
-            "github": "https://github.com/indianeagle4599/ai-generated-image-classifier"
-        },
-        "points": [
-            "Developed deep learning models for binary classification of AI-generated vs human-generated images using various architectures and feature engineering techniques.",
-            "Implemented comprehensive model training pipeline with hyperparameter tuning, data augmentation, and evaluation metrics for Kaggle competition performance.",
-            "Explored multiple feature engineering approaches including Fast Fourier Transform based methods and traditional computer vision techniques.",
-            "Built modular codebase with experiment tracking, dataset organization, and model evaluation scripts for systematic development and testing."
-        ],
-        "tags": [
-            "Python",
-            "Deep Learning",
-            "Computer Vision",
-            "Kaggle",
-            "Image Classification",
-            "MLOps",
-            "Hyperparameter Tuning",
-            "Model Monitoring"
-        ],
-        "demos": [],
-        "writeup": ""
+            "ASR",
+            "Evaluation",
+            "Whisper",
+            "Speech",
+            "Benchmarking"
+        ]
     },
     {
         "type": "work",
@@ -99,12 +40,12 @@
         ],
         "roles": [
             {
-                "title": "Graduate AI Engineering Intern",
+                "title": "Machine Learning Engineer (Intern)",
                 "points": [
-                    "Achieved a 50x runtime reduction in cancer-target discovery by implementing PyTorch-GPU vectorization and re-engineering data augmentation logic.",
-                    "Tripled feature deployment throughput on HPC clusters by architecting a config-driven SLURM orchestration tool for interactive GPU sessions.",
-                    "Orchestrated Generative AI deployment (BoltzGen) on AWS EC2 using DL AMIs for stable protein binder inference.",
-                    "90% reduction in deck-creation time (2 hrs to 10 mins) through a custom interactive visualization system with persistent dashboards."
+                    "Engineered a recommendation pipeline integrating multi-omics data (gene expression, DepMap) to cluster therapeutic targets and statistically validate drug candidates.",
+                    "Achieved a 50× runtime reduction in cancer-target discovery via PyTorch GPU vectorization and re-engineered augmentation logic.",
+                    "Developed a config-driven, data-agnostic analytics dashboard with cached queries and reproducible charts, cutting ad-hoc analysis turnaround from 2–3 days to minutes.",
+                    "Built SLURM-to-VS Code remote-kernel tooling to replace the legacy Jupyter interface, and ran generative protein-binder discovery (BoltzGen) on self-provisioned AWS EC2 GPU instances."
                 ]
             }
         ],
@@ -123,12 +64,12 @@
         "endDate": "30/06/2024",
         "roles": [
             {
-                "title": "AI Engineer (Full Time)",
+                "title": "Computer Vision Engineer (Full-Time)",
                 "points": [
-                    "Secured a new client by engineering a real-time CV/clustering anomaly detection pipeline for pollution monitoring.",
-                    "Achieved 90% recall and 80% precision in content moderation using a DP-inspired temporal smoothing algorithm; parallelized it with Celery for distributed queuing.",
-                    "Enabled lag-free ad placement at 30+ FPS with stream-agnostic inference logic; boosted object tracking throughput by 20x via batching.",
-                    "Achieved 78.1% mAP on industrial defect segmentation; outperformed task-specific baselines on unseen data using a curated 30k-image dataset."
+                    "Secured a new client by engineering a real-time CPU-only anomaly detection pipeline for pollution monitoring using image processing, clustering, and segmentation.",
+                    "Achieved 90% recall and 80% precision in content moderation using temporal smoothing; containerized and parallelized the pipeline with Celery and RabbitMQ-based orchestration.",
+                    "Enabled lag-free ad placement at 30+ FPS with stream-agnostic inference logic; improved tracking throughput by 20× via batching and low-latency pipeline design.",
+                    "Fine-tuned YOLO-based PPE detection models for company-specific safety gear, hardening them against edge cases and false positives surfaced in manual review."
                 ]
             }
         ],
@@ -150,10 +91,10 @@
         ],
         "roles": [
             {
-                "title": "Student and Intern (Deep Learning and Computer Vision)",
+                "title": "Visiting Student (Intern)",
                 "points": [
-                    "Secured an A+ grade in a rigorous Deep Learning boot-camp at the National University of Singapore.",
-                    "Guided a six-person team in developing helmet, vest detection models to ensure construction worker safety and attained an accuracy of 65% despite resource constraints in under a week."
+                    "Excelled at a rigorous Deep Learning bootcamp at NUS (A+ grade), guiding a 6-person team on construction-site safety detection models.",
+                    "Trained object detection models from scratch, delivering a working prototype in under a week under tight compute and time limits."
                 ]
             }
         ],
@@ -175,10 +116,10 @@
         ],
         "roles": [
             {
-                "title": "AI Intern (Research & Development)",
+                "title": "AI Researcher (Intern)",
                 "points": [
-                    "Led R&D for 5 peers on frame-rate conversion; exceeded speed and quality KPIs by 1.5x.",
-                    "27.9 PSNR achieved on 448x256 video sequences; managed research milestones and senior technical presentations."
+                    "Led R&D for a team of 5 on AI-powered frame-rate conversion (frame interpolation) for smartphone video quality.",
+                    "Achieved 27.9 PSNR on 448×256 sequences while exceeding speed and quality KPIs by 1.5×."
                 ]
             }
         ],
@@ -187,48 +128,6 @@
             "Deep Learning",
             "R&D"
         ]
-    },
-    {
-        "type": "project",
-        "title": "LazyResume: OCR & LLM Document Parsing",
-        "slug": "lazy-resume",
-        "startDate": "01/05/2025",
-        "endDate": "31/05/2025",
-        "description": "A resume optimisation tool that improves parse accuracy and alignment between resumes and job descriptions.",
-        "points": [
-            "Engineered a pipeline using Vision-based OCR and LLMs; designed to bridge the recruiter-candidate gap by automating unstructured data parsing into structured JSON.",
-            "Improved parseability of complex layouts by 20% via custom evaluation hooks for resume-to-JD alignment."
-        ],
-        "tags": [
-            "OCR",
-            "FastAPI",
-            "Parser Optimization"
-        ],
-        "demos": [],
-        "writeup": ""
-    },
-    {
-        "type": "project",
-        "title": "Fuzzy Hybrid Model for Stock Trading",
-        "slug": "fuzzy-hybrid-stock-trading",
-        "startDate": "01/09/2024",
-        "endDate": "30/09/2024",
-        "description": "Algorithmic trading bot combining fuzzy logic and neural networks to generate buy/sell signals from domain-specific financial market features.",
-        "media": {
-            "github": "https://github.com/tristan-till/ai6124-project/tree/main"
-        },
-        "points": [
-            "Applied domain-based optimization to standard stock trading models, tailoring feature extraction to financial market indicators.",
-            "Reduced feature dimensionality by 5x while improving model performance by approximately 20%.",
-            "Optimized data pipelines to improve loading and training speed by 10x."
-        ],
-        "tags": [
-            "Python",
-            "Scikit-Learn",
-            "NumPy"
-        ],
-        "demos": [],
-        "writeup": ""
     },
     {
         "type": "education",
@@ -257,87 +156,6 @@
             "Computer Vision",
             "Mathematics"
         ]
-    },
-    {
-        "type": "project",
-        "title": "Ask Krishna",
-        "slug": "ask-krishna",
-        "logo": "./assets/ask-krishna-logo.svg",
-        "startDate": "01/05/2026",
-        "endDate": "Present",
-        "description": "A quiet Bhagavad Gita reflection tool in the browser — surfaces a mantra, a pause, and five passages in response to whatever is on your mind. Fully static, no server, no tracking.",
-        "media": {
-            "github": "https://github.com/indianeagle4599/ask-krishna",
-            "demo": "https://hiteshgoyal.me/ask-krishna/"
-        },
-        "points": [
-            "Built as a personal, local-first static site using vanilla JS and localStorage — no build step, no dependencies.",
-            "Multilingual support with i18n across Gita passages.",
-            "Deployed on GitHub Pages; runs entirely in the browser."
-        ],
-        "tags": [
-            "JavaScript",
-            "Vanilla JS",
-            "Static Site",
-            "i18n",
-            "Local-first"
-        ],
-        "demos": [],
-        "writeup": ""
-    },
-    {
-        "type": "project",
-        "title": "Flodoro",
-        "slug": "flodoro",
-        "logo": "./assets/flodoro-logo.png",
-        "startDate": "01/07/2024",
-        "endDate": "On and Off",
-        "description": "A local-first Pomodoro timer and task manager built as a gift for a family member — configurable sessions, ambient audio playlists, theme controls, and full history tracking. Runs as a static HTML page.",
-        "media": {
-            "github": "https://github.com/indianeagle4599/pomodoro-app",
-            "demo": "https://hiteshgoyal.me/flodoro/"
-        },
-        "points": [
-            "Serverless and local-first — all data persisted in localStorage, no backend.",
-            "Configurable work/break sessions, notification settings, and ambient audio playlist manager.",
-            "Supports multiple themes and dark mode; originally ran on Windows as a static HTML file, now deployed on GitHub Pages."
-        ],
-        "tags": [
-            "JavaScript",
-            "Vanilla JS",
-            "CSS",
-            "localStorage",
-            "Productivity"
-        ],
-        "demos": [],
-        "writeup": ""
-    },
-    {
-        "type": "project",
-        "title": "OS Toolkit",
-        "slug": "os-toolkit",
-        "logo": "./assets/os-toolkit-logo-blink.gif",
-        "startDate": "01/01/2024",
-        "endDate": "On and Off",
-        "description": "A Python-first CLI toolkit for filesystem analysis, safe file transfer, migration planning, and developer workflow automation. An ongoing personal utility project.",
-        "media": {
-            "github": "https://github.com/indianeagle4599/os-toolkit"
-        },
-        "points": [
-            "Multithreaded and multiprocessed file reading and transfer for fast filesystem operations across large directories.",
-            "Covers disk analysis, safe migration planning, and developer workflow automation.",
-            "Designed as a forever project — incrementally extended with new OS utilities as needs arise."
-        ],
-        "tags": [
-            "Python",
-            "CLI",
-            "Multithreading",
-            "Multiprocessing",
-            "Automation",
-            "Filesystem"
-        ],
-        "demos": [],
-        "writeup": ""
     },
     {
         "type": "education",

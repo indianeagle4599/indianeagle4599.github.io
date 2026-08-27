@@ -1,13 +1,12 @@
 {
     "name": "Hitesh Goyal",
     "title": "Applied AI Engineer | Vision · NLP · Systems",
-    "location": "Singapore",
+    "location": "Bangalore, India",
     "summary": "Building production-grade AI systems across computer vision, language, and generative models — wherever the problem is hardest.",
     "resume_url": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Resume.pdf",
     "email": "hiteshgoyal.business@gmail.com",
-    "contact_cta": "Let's build reliable AI platforms together",
     "about": {
-        "bio": "AI Engineer with a track record of delivering across domains — computer vision at Tata Elxsi, GPU-accelerated biotech at Hummingbird Bioscience, speech recognition research at VIT, and generative AI pipelines. I deliberately pick up new problem spaces and find where techniques transfer.",
+        "bio": "Applied AI Engineer with a track record across domains — speech evaluation for a US med-tech startup, GPU-accelerated biotech at Hummingbird Bioscience, computer vision at Tata Elxsi, and speech recognition research at VIT. I deliberately pick up new problem spaces and find where techniques transfer.",
         "highlights": [
             "Building ML systems across vision, speech, language, and generative AI",
             "Optimising models and pipelines for real-world performance constraints",
@@ -26,7 +25,7 @@
             "MongoDB",
             "ChromaDB"
         ],
-        "availability": "Currently based in Singapore. Open to AI engineering roles across vision, language, and generative systems — anywhere in the world."
+        "availability": "Immediately available"
     },
     "socials": {
         "github": "https://github.com/indianeagle4599",

@@ -13,7 +13,7 @@
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="application-name" content="Hitesh Goyal Portfolio">
-    <meta name="theme-color" content="#0d1117">
+    <meta name="theme-color" content="#080d18">
     <link rel="canonical" href="https://hiteshgoyal.me/">
     <link rel="author" href="https://www.linkedin.com/in/hitesh-goyal-5732bb208/">
     <link rel="icon" type="image/svg+xml" href="assets/hg-logo.svg">
@@ -44,13 +44,10 @@
                 ? stored
                 : prefersLight ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', theme);
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f6f8fa' : '#0d1117');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#e9eef5' : '#080d18');
         }());
     </script>
     <link rel="stylesheet" href="style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Inter:wght@300;400;700&display=swap"
-        rel="stylesheet">
 
     <script type="application/ld+json">
     {
@@ -58,7 +55,7 @@
         "@type": "ProfilePage",
         "name": "Hitesh Goyal | Applied AI Engineer",
         "url": "https://hiteshgoyal.me/",
-        "description": "Portfolio profile for Hitesh Goyal, an Applied AI Engineer in Singapore building production AI systems across computer vision, NLP, generative AI, speech, and multimodal retrieval.",
+        "description": "Portfolio profile for Hitesh Goyal, an Applied AI Engineer in Bangalore, India building production AI systems across computer vision, NLP, generative AI, speech, and multimodal retrieval.",
         "inLanguage": "en",
         "mainEntity": {
             "@type": "Person",
@@ -70,14 +67,15 @@
             "description": "Applied AI Engineer building production-grade systems across computer vision, language, generative AI, speech, and multimodal search.",
             "address": {
                 "@type": "PostalAddress",
-                "addressLocality": "Singapore"
+                "addressLocality": "Bangalore",
+                "addressCountry": "IN"
             },
             "hasOccupation": {
                 "@type": "Occupation",
                 "name": "Applied AI Engineer",
                 "occupationLocation": {
-                    "@type": "Country",
-                    "name": "Singapore"
+                    "@type": "City",
+                    "name": "Bangalore, India"
                 },
                 "skills": "Python, PyTorch, Computer Vision, Natural Language Processing, Generative AI, Speech Recognition, Multimodal Retrieval, MLOps, FastAPI, Docker, MongoDB, ChromaDB"
             },
@@ -110,33 +108,35 @@
     <nav id="navbar" aria-label="Primary">
         <div class="nav-content">
             <span id="nav-logo" class="logo">HG</span>
-            <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+            <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            <div class="nav-links">
+            <div id="nav-links" class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
+                <a href="#projects">Projects</a>
                 <a href="#timeline">Timeline</a>
             </div>
         </div>
     </nav>
 
+    <main>
     <header id="home" class="section">
-        <div class="hero-content fade-in">
-            <h1 id="hero-name">Hitesh Goyal</h1>
-            <h2 id="hero-title" class="terminal-text">> <span class="cursor">_</span></h2>
-            <p id="hero-summary"></p>
-            <div class="hero-actions">
-                <a id="hero-resume" href="#" target="_blank" class="btn btn-primary">
+        <div class="introduction-content fade-in">
+            <h1 id="introduction-name">Hitesh Goyal</h1>
+            <h2 id="introduction-title" class="terminal-text">> <span class="cursor">_</span></h2>
+            <p id="introduction-summary"></p>
+            <div class="introduction-actions">
+                <a id="introduction-resume" href="#" target="_blank" rel="noopener" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#111827" viewBox="0 0 24 24">
                         <path
                             d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
                     </svg>
                     Resume
                 </a>
-                <a id="hero-github" href="#" target="_blank" class="btn btn-outline">
+                <a id="introduction-github" href="#" target="_blank" rel="noopener" class="btn btn-outline">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                         viewBox="0 0 24 24">
                         <path
@@ -144,7 +144,7 @@
                     </svg>
                     GitHub
                 </a>
-                <a id="hero-linkedin" href="#" target="_blank" class="btn btn-outline">
+                <a id="introduction-linkedin" href="#" target="_blank" rel="noopener" class="btn btn-outline">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                         viewBox="0 0 24 24">
                         <path
@@ -154,12 +154,12 @@
                 </a>
             </div>
         </div>
-        <div class="scroll-hint">
+        <button type="button" class="scroll-hint" aria-label="Scroll to About">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
-        </div>
+        </button>
     </header>
 
     <section id="about" class="section section-alt">
@@ -187,22 +187,47 @@
         </div>
     </section>
 
-    <section id="timeline" class="section">
+    <section id="projects" class="section">
+        <div class="section-header fade-in">
+            <p class="section-eyebrow">PROJECTS</p>
+            <h2 class="section-title">Showcase</h2>
+        </div>
+        <div class="projects-carousel fade-in" role="region" aria-roledescription="carousel" aria-label="Showcase">
+            <div class="carousel-stage">
+                <div id="projects-track" class="projects-track"></div>
+            </div>
+            <div class="carousel-controls">
+                <button type="button" class="carousel-nav carousel-nav--prev" id="projects-prev" aria-label="Previous slide" aria-controls="projects-track">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div id="projects-dots" class="carousel-dots"></div>
+                <button type="button" class="carousel-nav carousel-nav--next" id="projects-next" aria-label="Next slide" aria-controls="projects-track">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </div>
+        <div id="other-projects" class="other-projects fade-in" hidden>
+            <h3 class="other-projects-title">Other projects</h3>
+            <div id="other-projects-list" class="stack-list"></div>
+        </div>
+    </section>
+
+    <section id="timeline" class="section section-alt">
         <h2 class="section-title fade-in">Timeline</h2>
 
         <div class="timeline-toolbar fade-in">
-            <div class="filter-controls" role="tablist" aria-label="Timeline filter">
-                <button class="filter-btn active" data-filter="project" aria-pressed="true">Projects</button>
-                <button class="filter-btn" data-filter="work" aria-pressed="false">Work</button>
+            <div class="filter-controls" role="group" aria-label="Timeline filter">
+                <button class="filter-btn active" data-filter="work" aria-pressed="true">Work</button>
                 <button class="filter-btn" data-filter="education" aria-pressed="false">Education</button>
                 <button class="filter-btn" data-filter="certificates" aria-pressed="false">Certificates</button>
             </div>
-            <button type="button" id="expand-all" class="expand-all-btn">Expand all</button>
+            <button type="button" id="expand-all" class="expand-all-btn" aria-controls="timeline-grid">Expand all</button>
         </div>
 
-        <div id="timeline-grid" class="timeline-container">
+        <div id="timeline-grid" class="timeline-container stack-list">
         </div>
     </section>
+    </main>
 
     <script src="scripts/main.js"></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"

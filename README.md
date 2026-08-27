@@ -3,27 +3,33 @@
   <samp>Hitesh Goyal – Portfolio</samp>
 </h1>
 
-A single-page, data-driven portfolio that spotlights my AI engineering experience, timeline, and curated credentials.
+A data-driven static portfolio for AI engineering experience, projects, timeline, and credentials. The homepage is JSON-rendered; dedicated project pages share `data/projects.json` through a query-string shell.
 
 ## Highlights
-- Pulls profile, timeline, and certificates from JSON so content changes stay Git-only.
-- Minimal, GPU-inspired UI built with semantic HTML, custom CSS, and dusting of motion for scroll cues.
-- Responsive timeline filters (tap again to reset) plus a dedicated About section fed directly from the profile data.
+- Profile, projects, timeline, and certificates load from JSON.
+- Semantic HTML with a shared layout boundary in CSS custom properties.
+- Timeline filters are a labelled button group (Work / Education / Certificates).
 
 ## Stack
-- Vanilla HTML + CSS for layout, typography, and subtle gradients.
-- Lightweight ES modules in `scripts/main.js` for lifecycle (profile, timeline, certificates) and UI interactions.
-- Data stored under `data/` (`profile.json`, `timeline.json`, `certificates.json`) for easy authoring.
+- Vanilla HTML + CSS. No bundler and no npm dependencies.
+- One classic script, `scripts/main.js`, for data loading and UI.
+- Content lives under `data/` (`profile.json`, `projects.json`, `timeline.json`, `certificates.json`).
 
 ## Run Locally
 1. Serve the root folder with any static server (e.g. `python3 -m http.server 8000`).
 2. Visit `http://localhost:8000`.
 3. Update JSON files to refresh content without touching markup.
 
+HTML metadata, `sitemap.xml`, and `llms.txt` are static exceptions: crawlers that do not run JavaScript will not see per-project titles generated at runtime.
+
 ## Customising
-- **Hero/About:** Edit `data/profile.json` – change summary, highlights, CTA text, socials.
-- **Timeline:** Extend `data/timeline.json` with new `work`, `education`, or `project` entries.
-- **Certificates:** Add more cards by editing `data/certificates.json`.
+- **Introduction/About:** Edit `data/profile.json`.
+- **Projects:** Edit `data/projects.json` (cards, writeups, media, and `featured`).
+- **Timeline:** Extend `data/timeline.json` with `work` or `education` entries.
+- **Certificates:** Edit `data/certificates.json`.
+
+## Screenshots
+`node tools/capture-screenshots.mjs --preset all --theme both --motion both` writes PNGs under ignored `.artifacts/screenshots-spacing/{theme}/{motion}/{viewport}/`. Use `--preset quick` for a shorter desktop/mobile pass.
 
 ## Contact
 - Email: [hiteshgoyal.business@gmail.com](mailto:hiteshgoyal.business@gmail.com)

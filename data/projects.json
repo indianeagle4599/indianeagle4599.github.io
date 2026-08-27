@@ -1,0 +1,235 @@
+[
+    {
+        "slug": "ask-krishna",
+        "title": "Ask Krishna",
+        "logo": "./assets/ask-krishna-logo.svg",
+        "featured": true,
+        "summary": "A quiet Bhagavad Gita reflection experience. Hold a question in your mind, turn through five pages, and let the Gita answer — no chatbot, prompt box, server, or tracking.",
+        "highlights": [
+            "Designed for internal reflection: your question stays in your mind while each page reveals a passage from the Gita.",
+            "Built as a personal, local-first static site using vanilla JS and localStorage — no build step, no dependencies.",
+            "Multilingual support with i18n across Gita passages.",
+            "Deployed on GitHub Pages; runs entirely in the browser."
+        ],
+        "tags": [
+            "JavaScript",
+            "Vanilla JS",
+            "Static Site",
+            "i18n",
+            "Local-first"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/indianeagle4599/ask-krishna",
+                "kind": "github"
+            },
+            {
+                "label": "Live Demo",
+                "url": "https://hiteshgoyal.me/ask-krishna/",
+                "kind": "demo"
+            }
+        ],
+        "writeup": "## What it is\n\nAsk Krishna is a personal, local-first reflection experience. There is no chatbot and no question box: you hold your question in your mind, turn through five pages, and let passages from the Bhagavad Gita answer in their own way. The question is never entered, recorded, or sent anywhere.\n\n## How it is built\n\n- Vanilla HTML, CSS, and JavaScript — no build step and no npm dependencies.\n- State lives in `localStorage` so preferences stay private and offline-friendly.\n- i18n covers Gita passages across languages.\n- Deployed as a static GitHub Pages site at [hiteshgoyal.me/ask-krishna](https://hiteshgoyal.me/ask-krishna/).\n\n## Why it exists\n\nIt is a gift-to-self project: a quiet interface for internal reflection that lets the Gita speak without turning the experience into a conversation with software.",
+        "media": []
+    },
+    {
+        "slug": "media-search-engine",
+        "title": "Aftersight: Media Search Engine",
+        "logo": "./assets/aftersight-logo.png",
+        "featured": true,
+        "summary": "A multimodal media retrieval pipeline indexing image/video assets via VLM-generated descriptions, OCR, and metadata across semantic and lexical retrieval surfaces.",
+        "highlights": [
+            "Building a multimodal media retrieval pipeline that indexes image/video assets, extracts metadata, and generates VLM-based descriptions for downstream search.",
+            "Designed MongoDB + ChromaDB retrieval architecture with weighted multi-collection ranking across narrative content, OCR text, and metadata fields.",
+            "Leveraged structured metadata and LLM-generated descriptions to enhance search relevance and enable complex queries."
+        ],
+        "tags": [
+            "Python",
+            "Streamlit",
+            "Ollama",
+            "MongoDB",
+            "ChromaDB",
+            "Gemini",
+            "Hybrid Retrieval",
+            "Vector Embeddings",
+            "VLM",
+            "Image Processing",
+            "OCR"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/indianeagle4599/Media-Search-Engine",
+                "kind": "github"
+            },
+            {
+                "label": "Blog",
+                "url": "https://medium.com/@hitesh-goyal/from-caption-search-to-rich-media-retrieval-dbefd81c3823",
+                "kind": "blog"
+            }
+        ],
+        "writeup": "## What it is\n\nAftersight indexes image and video assets so they can be searched by meaning, on-screen text, and structured metadata — not just filenames.\n\n## Approach\n\n- VLM-generated descriptions plus OCR and metadata feed both semantic and lexical retrieval surfaces.\n- MongoDB + ChromaDB with weighted multi-collection ranking across narrative content, OCR text, and metadata fields.\n- Streamlit UI for exploring the retrieval pipeline locally, with Ollama and Gemini in the generation/embedding path.",
+        "media": []
+    },
+    {
+        "slug": "pixtyle",
+        "title": "Pixtyle",
+        "logo": "./assets/pixtyle-logo.png",
+        "featured": true,
+        "summary": "Pixel Stylizer Toolkit for transforming photos and videos into stylized, flat-color wallpapers using advanced computer vision techniques.",
+        "highlights": [
+            "Developed multiple stylization transforms including K-means clustering, enhanced clustering, Fourier-based animation, and edge enhancement for creating cartoon-like effects.",
+            "Implemented GPU-accelerated processing with PyTorch and NumPy backends, supporting both image and video inputs with temporal smoothing for stable animations.",
+            "Built a modular architecture with extensible transform classes, configuration-driven pipelines, and optional super-resolution upscaling using TensorFlow."
+        ],
+        "tags": [
+            "Python",
+            "PyTorch",
+            "Computer Vision",
+            "Image Processing",
+            "Video Processing"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/indianeagle4599/Pixtyle",
+                "kind": "github"
+            }
+        ],
+        "writeup": "## What it is\n\nPixtyle is a pixel stylizer toolkit: photos and videos in, flat-color / cartoon-like wallpapers out.\n\n## Approach\n\n- Multiple stylization transforms: K-means clustering, enhanced clustering, Fourier-based animation, and edge enhancement.\n- GPU-accelerated processing with PyTorch and NumPy backends; video paths include temporal smoothing so animations stay stable.\n- Modular transform classes and configuration-driven pipelines, with optional TensorFlow super-resolution upscaling.\n- Batch processing for folders and videos.\n\nThis is an on-and-off personal toolkit rather than a shipped product.",
+        "media": []
+    },
+    {
+        "slug": "flodoro",
+        "title": "Flodoro",
+        "logo": "./assets/flodoro-logo.png",
+        "featured": true,
+        "summary": "A local-first Pomodoro timer and task manager built as a gift for a family member — configurable sessions, ambient audio playlists, theme controls, and full history tracking. Runs as a static HTML page.",
+        "highlights": [
+            "Serverless and local-first — all data persisted in localStorage, no backend.",
+            "Configurable work/break sessions, notification settings, and ambient audio playlist manager.",
+            "Supports multiple themes and dark mode; originally ran on Windows as a static HTML file, now deployed on GitHub Pages."
+        ],
+        "tags": [
+            "JavaScript",
+            "Vanilla JS",
+            "CSS",
+            "localStorage",
+            "Productivity"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/indianeagle4599/pomodoro-app",
+                "kind": "github"
+            },
+            {
+                "label": "Live Demo",
+                "url": "https://hiteshgoyal.me/flodoro/",
+                "kind": "demo"
+            }
+        ],
+        "writeup": "## What it is\n\nFlodoro is a Pomodoro timer and task manager that runs entirely in the browser. It was built as a gift: configurable work and break sessions, ambient audio, themes, and history — without an account or backend.\n\n## How it is built\n\n- Static HTML, CSS, and vanilla JavaScript.\n- All data (tasks, history, settings, playlists) persists in `localStorage`.\n- Configurable work / short-break / long-break lengths, notification settings, and a local playlist manager.\n- Multiple theme presets and dark mode.\n- Originally opened as a local HTML file on Windows; now also deployed at [hiteshgoyal.me/flodoro](https://hiteshgoyal.me/flodoro/).\n\n## Design constraint\n\nStay serverless. If a feature needs a server, it does not belong in Flodoro.",
+        "media": []
+    },
+    {
+        "slug": "os-toolkit",
+        "title": "OS Toolkit",
+        "logo": "./assets/os-toolkit-logo-blink.gif",
+        "logoTone": "on-dark",
+        "summary": "A Python-first CLI toolkit for filesystem analysis, safe file transfer, migration planning, and developer workflow automation. An ongoing personal utility project.",
+        "highlights": [
+            "Multithreaded and multiprocessed file reading and transfer for fast filesystem operations across large directories.",
+            "Covers disk analysis, safe migration planning, and developer workflow automation.",
+            "Designed as a forever project — incrementally extended with new OS utilities as needs arise."
+        ],
+        "tags": [
+            "Python",
+            "CLI",
+            "Multithreading",
+            "Multiprocessing",
+            "Automation",
+            "Filesystem"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/indianeagle4599/os-toolkit",
+                "kind": "github"
+            }
+        ],
+        "writeup": "## What it is\n\nOS Toolkit is a Python CLI I keep extending for my own machines: filesystem analysis, safe file transfer, migration planning, and small developer-workflow automations.\n\n## Approach\n\n- Multithreaded and multiprocessed file reading/transfer for large directory trees.\n- Emphasis on *safe* migrations — plan first, copy second.\n- Treated as a forever project: new utilities land when a real need shows up.\n\nNo hosted demo; the GitHub repo is the product.",
+        "media": []
+    },
+    {
+        "slug": "lazy-resume",
+        "title": "LazyResume: OCR & LLM Document Parsing",
+        "summary": "A resume optimisation tool that improves parse accuracy and alignment between resumes and job descriptions.",
+        "highlights": [
+            "Engineered a pipeline using Vision-based OCR and LLMs; designed to bridge the recruiter-candidate gap by automating unstructured data parsing into structured JSON.",
+            "Improved parseability of complex layouts by 20% via custom evaluation hooks for resume-to-JD alignment."
+        ],
+        "tags": [
+            "OCR",
+            "FastAPI",
+            "Parser Optimization"
+        ],
+        "links": [],
+        "writeup": "## What it is\n\nLazyResume is a resume-optimisation pipeline: take messy resume layouts, parse them into structured JSON, and score alignment against a job description.\n\n## Approach\n\n- Vision-based OCR plus LLMs to turn unstructured documents into structured fields.\n- Custom evaluation hooks for resume-to-JD alignment.\n- About a 20% improvement in parseability on complex layouts under those hooks.\n- FastAPI service wrapping the parser.\n\nNo public demo yet.",
+        "media": []
+    },
+    {
+        "slug": "fuzzy-hybrid-stock-trading",
+        "title": "Fuzzy Hybrid Model for Stock Trading",
+        "summary": "Algorithmic trading bot combining fuzzy logic and neural networks to generate buy/sell signals from domain-specific financial market features.",
+        "highlights": [
+            "Applied domain-based optimization to standard stock trading models, tailoring feature extraction to financial market indicators.",
+            "Reduced feature dimensionality by 5x while improving model performance by approximately 20%.",
+            "Optimized data pipelines to improve loading and training speed by 10x."
+        ],
+        "tags": [
+            "Python",
+            "Scikit-Learn",
+            "NumPy"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/tristan-till/ai6124-project/tree/main",
+                "kind": "github"
+            }
+        ],
+        "writeup": "## What it is\n\nCourse project: a hybrid fuzzy-logic + neural-network trading model that emits buy/sell signals from domain-specific market features.\n\n## Results\n\n- Feature extraction tailored to financial indicators instead of a generic tabular baseline.\n- Feature dimensionality reduced by about 5x while model performance improved by roughly 20%.\n- Data-loading and training pipelines sped up by about 10x.\n\nRepository is a shared course project on GitHub.",
+        "media": []
+    },
+    {
+        "slug": "ai-generated-image-classifier",
+        "title": "AI Generated Image Classifier",
+        "summary": "MLOps pipeline for training and monitoring deep learning models to detect AI-generated vs human-generated images, with comprehensive experiment tracking and hyperparameter optimization.",
+        "highlights": [
+            "Developed deep learning models for binary classification of AI-generated vs human-generated images using various architectures and feature engineering techniques.",
+            "Implemented comprehensive model training pipeline with hyperparameter tuning, data augmentation, and evaluation metrics for Kaggle competition performance.",
+            "Explored multiple feature engineering approaches including Fast Fourier Transform based methods and traditional computer vision techniques."
+        ],
+        "tags": [
+            "Python",
+            "Deep Learning",
+            "Computer Vision",
+            "Kaggle",
+            "Image Classification",
+            "MLOps",
+            "Hyperparameter Tuning",
+            "Model Monitoring"
+        ],
+        "links": [
+            {
+                "label": "GitHub",
+                "url": "https://github.com/indianeagle4599/ai-generated-image-classifier",
+                "kind": "github"
+            }
+        ],
+        "writeup": "## What it is\n\nA binary classifier and training pipeline for telling AI-generated images apart from human-captured ones, aimed at Kaggle-style evaluation rather than a production API.\n\n## Approach\n\n- Multiple architectures and feature-engineering paths, including FFT-based methods alongside classical computer vision features.\n- Training loop with hyperparameter tuning, data augmentation, and evaluation metrics.\n- Modular experiment tracking, dataset organization, and evaluation scripts so runs stay comparable.\n\nCode and experiment layout live on GitHub.",
+        "media": []
+    }
+]
