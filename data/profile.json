@@ -6,11 +6,11 @@
     "resume_url": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Resume.pdf",
     "email": "hiteshgoyal.business@gmail.com",
     "about": {
-        "bio": "Applied AI Engineer with a track record across domains — speech evaluation for a US med-tech startup, GPU-accelerated biotech at Hummingbird Bioscience, computer vision at Tata Elxsi, and speech recognition research at VIT. I deliberately pick up new problem spaces and find where techniques transfer.",
+        "bio": "I start with the data: what it represents, how it should be prepared, and what the problem actually needs. From there, I choose the method that fits and carry it through to a working system.",
         "highlights": [
-            "Building ML systems across vision, speech, language, and generative AI",
-            "Optimising models and pipelines for real-world performance constraints",
-            "Taking research-grade ideas to working, measurable implementations"
+            "I have applied that approach across speech, computer vision, biotech, and multimodal retrieval, using anything from classical methods and deep learning to generative models when the problem calls for it.",
+            "I work across the full path from data preparation and experimentation to evaluation, deployment, databases, and usable interfaces.",
+            "I optimise for real constraints such as latency, compute, data quality, and measurable performance."
         ],
         "focus": [
             "Computer vision and multimodal systems",
@@ -24,8 +24,7 @@
             "Docker",
             "MongoDB",
             "ChromaDB"
-        ],
-        "availability": "Immediately available"
+        ]
     },
     "socials": {
         "github": "https://github.com/indianeagle4599",

@@ -1528,6 +1528,14 @@ body.contact-modal-open {
     margin-top: 12px;
 }
 
+.project-license {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    display: inline;
+    align-self: center;
+}
+
 .node-tags {
     margin-top: 12px;
 }

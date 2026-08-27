@@ -383,6 +383,12 @@ function renderTags(tags) {
     return (tags || []).map(tag => `<span class="tech-tag">${escapeHtml(tag)}</span>`).join('');
 }
 
+function projectDisplayTags(project) {
+    return (Array.isArray(project.displayTags) && project.displayTags.length)
+        ? project.displayTags
+        : (project.tags || []);
+}
+
 function hasDemoLink(links) {
     return (links || []).some(link => String(link.kind || '').toLowerCase() === 'demo'
         && safeHref(link.url)
@@ -562,8 +568,18 @@ function normalizeProject(project) {
         summary: project.summary || '',
         highlights: project.highlights || [],
         tags: project.tags || [],
+        displayTags: Array.isArray(project.displayTags) ? project.displayTags : [],
         links: project.links || [],
+        license: typeof project.license === 'string' ? project.license.trim() : '',
         writeup: project.writeup || '',
+        writeupMid: project.writeupMid || '',
+        writeupAfter: project.writeupAfter || '',
+        detailOrder: (project.detailOrder === 'writeup-results' || project.detailOrder === 'writeup-media' || project.detailOrder === 'writeup-split-media')
+            ? project.detailOrder
+            : '',
+        mediaSplitAfter: Number.isInteger(project.mediaSplitAfter) && project.mediaSplitAfter > 0
+            ? project.mediaSplitAfter
+            : 0,
         media: {
             ...(Object.prototype.hasOwnProperty.call(media, 'title') ? { title: media.title } : {}),
             ...(Object.prototype.hasOwnProperty.call(media, 'caption') ? { caption: media.caption } : {}),
@@ -894,7 +910,7 @@ function renderProjectCard(project) {
             </div>
             ${project.summary ? `<p class="project-card-desc">${escapeHtml(project.summary)}</p>` : ''}
             ${highlightsHTML}
-            <div class="node-tags">${renderTags(project.tags)}</div>
+            <div class="node-tags">${renderTags(projectDisplayTags(project))}</div>
             <div class="node-links-bar">${renderLinks(project.links, { liveDemoMotion: true })}${detailsBtn}</div>
         </article>
     `;
@@ -908,7 +924,7 @@ function renderOtherProject(project) {
         : '';
     const detailsHref = `./projects/?slug=${encodeURIComponent(project.slug)}`;
     const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}">${PROJECT_PAGE_CTA_LABEL}</a>`;
-    const footerHTML = renderStackFooter(renderTags(project.tags), renderLinks(project.links) + pageLink);
+    const footerHTML = renderStackFooter(renderTags(projectDisplayTags(project)), renderLinks(project.links) + pageLink);
     const hasBody = Boolean(highlightsHTML);
     const panelId = hasBody ? `stack-panel-${++stackUid}` : '';
     const hitOpen = hasBody
@@ -1749,8 +1765,6 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
 
     leaves.forEach((leaf, index) => {
         leaf.element.dataset.mediaIndex = String(index);
-        const image = leaf.element.querySelector('img[data-src]');
-        if (image && !image.hasAttribute('src')) image.src = image.dataset.src;
     });
 
     const updateCopy = activeIndex => {
@@ -1956,18 +1970,24 @@ function renderProjectMediaBlock(block, media, projectTitle, blockIndex) {
     }
 }
 
-function renderProjectMedia(project) {
-    const section = document.getElementById('project-media');
-    const grid = document.getElementById('project-media-grid');
+function renderProjectMediaInto(project, {
+    sectionId = 'project-media',
+    gridId = 'project-media-grid',
+    start = 0,
+    end = Infinity,
+    blockIndexOffset = 0
+} = {}) {
+    const section = document.getElementById(sectionId);
+    const grid = document.getElementById(gridId);
     if (!section || !grid) return false;
 
     grid.querySelectorAll('.project-media-gallery, .project-media-comparison-group').forEach(root => {
         root._carouselController?.destroy();
     });
 
-    const blocks = projectMediaBlocks(project);
+    const blocks = projectMediaBlocks(project).slice(start, end);
     const renderedBlocks = blocks
-        .map((block, index) => renderProjectMediaBlock(block, project.media, project.title, index))
+        .map((block, index) => renderProjectMediaBlock(block, project.media, project.title, blockIndexOffset + index))
         .filter(Boolean);
     grid.replaceChildren(...renderedBlocks);
     const hasLeadGalleryPair = renderedBlocks.length === 2
@@ -1985,6 +2005,23 @@ function renderProjectMedia(project) {
         });
     }
     return renderedBlocks.length > 0;
+}
+
+function renderProjectMedia(project) {
+    const split = project.detailOrder === 'writeup-split-media' ? project.mediaSplitAfter : 0;
+    if (split) {
+        const first = renderProjectMediaInto(project, { end: split });
+        const rest = renderProjectMediaInto(project, {
+            sectionId: 'project-media-after',
+            gridId: 'project-media-after-grid',
+            start: split,
+            blockIndexOffset: split
+        });
+        return first || rest;
+    }
+    const afterSection = document.getElementById('project-media-after');
+    if (afterSection) afterSection.hidden = true;
+    return renderProjectMediaInto(project);
 }
 
 function normalizeProjectResultRow(row, columnCount) {
@@ -2133,7 +2170,12 @@ function updateProjectSeo(project, slug) {
 
 function renderProjectActionBar(project, element) {
     if (!element) return;
-    element.innerHTML = renderLinks(project.links);
+    const linksHTML = renderLinks(project.links);
+    const license = typeof project.license === 'string' ? project.license.trim() : '';
+    const licenseHTML = license
+        ? `<span class="project-license">${escapeHtml(license)}</span>`
+        : '';
+    element.innerHTML = linksHTML + licenseHTML;
     element.hidden = !element.innerHTML;
 }
 
@@ -2160,7 +2202,7 @@ function renderProjectIntroduction(project) {
 
     const tagsEl = document.getElementById('project-tags');
     if (tagsEl) {
-        tagsEl.innerHTML = renderTags(project.tags);
+        tagsEl.innerHTML = renderTags(projectDisplayTags(project));
         tagsEl.hidden = !tagsEl.innerHTML;
     }
 
@@ -2228,17 +2270,50 @@ async function initProjectPage() {
     renderProjectIntroduction(project);
 
     const hasWriteup = Boolean(project.writeup.trim());
+    const hasWriteupMid = Boolean(project.writeupMid.trim());
+    const hasWriteupAfter = Boolean(project.writeupAfter.trim());
     const hasMedia = renderProjectMedia(project);
     const hasResults = renderProjectResults(project);
     const writeupSection = document.getElementById('project-writeup-section');
+    const writeupMidSection = document.getElementById('project-writeup-mid-section');
+    const resultsSection = document.getElementById('project-results');
+    const mediaSection = document.getElementById('project-media');
+    const mediaAfterSection = document.getElementById('project-media-after');
+    if (project.detailOrder === 'writeup-results' && writeupSection && resultsSection) {
+        resultsSection.before(writeupSection);
+    }
+    if ((project.detailOrder === 'writeup-media' || project.detailOrder === 'writeup-split-media') && writeupSection && mediaSection) {
+        mediaSection.before(writeupSection);
+    }
+    if (project.detailOrder === 'writeup-split-media' && mediaSection && writeupMidSection && mediaAfterSection) {
+        mediaSection.after(writeupMidSection);
+        writeupMidSection.after(mediaAfterSection);
+        const writeupAfterSection = document.getElementById('project-writeup-after-section');
+        if (writeupAfterSection) mediaAfterSection.after(writeupAfterSection);
+    }
     if (hasWriteup) {
         document.getElementById('project-writeup').innerHTML = renderMarkdown(project.writeup);
         writeupSection.hidden = false;
     } else if (writeupSection) {
         writeupSection.hidden = true;
     }
+    const writeupMid = document.getElementById('project-writeup-mid');
+    if (hasWriteupMid && writeupMidSection && writeupMid) {
+        writeupMid.innerHTML = renderMarkdown(project.writeupMid);
+        writeupMidSection.hidden = false;
+    } else if (writeupMidSection) {
+        writeupMidSection.hidden = true;
+    }
+    const writeupAfterSection = document.getElementById('project-writeup-after-section');
+    const writeupAfter = document.getElementById('project-writeup-after');
+    if (hasWriteupAfter && writeupAfterSection && writeupAfter) {
+        writeupAfter.innerHTML = renderMarkdown(project.writeupAfter);
+        writeupAfterSection.hidden = false;
+    } else if (writeupAfterSection) {
+        writeupAfterSection.hidden = true;
+    }
 
-    if (!hasWriteup && !hasMedia && !hasResults) {
+    if (!hasWriteup && !hasWriteupMid && !hasWriteupAfter && !hasMedia && !hasResults) {
         document.getElementById('project-coming-soon').hidden = false;
     }
 }
