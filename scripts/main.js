@@ -1,4 +1,9 @@
 const THEME_STORAGE_KEY = 'portfolio-theme';
+/* Keep equal to --bg-page in style.css. Head scripts cannot read that variable before paint. */
+const THEME_PAGE_COLOR = {
+    light: '#e9eef5',
+    dark: '#080d18'
+};
 const THEME_ICONS = {
     light: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m17.07-7.07-1.41 1.41M6.34 17.66l-1.41 1.41m14.14 0-1.41-1.41M6.34 6.34 4.93 4.93"></path></svg>',
     dark: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path></svg>'
@@ -261,7 +266,8 @@ function setTheme(theme, persist = false, animate = false) {
         root.classList.remove('theme-transitioning');
     }
     root.setAttribute('data-theme', nextTheme);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', nextTheme === 'light' ? '#e9eef5' : '#080d18');
+    const themeColor = getComputedStyle(root).getPropertyValue('--bg-page').trim() || THEME_PAGE_COLOR[nextTheme];
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColor);
 
     if (persist) {
         try {

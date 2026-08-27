@@ -44,6 +44,7 @@
                 ? stored
                 : prefersDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
+            /* Keep #e9eef5 / #080d18 equal to --bg-page in style.css. */
             document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#e9eef5' : '#080d18');
         }());
     </script>
