@@ -1461,6 +1461,10 @@ function createCarouselController({
         if (active.closest('.carousel-controls')) return false;
         return true;
     };
+    const hoverPauseFrom = node => {
+        const element = node && node.nodeType === 1 ? node : node?.parentElement;
+        return Boolean(element?.closest?.('.carousel-slide') && root.contains(element));
+    };
     const canAutoplay = () => count > 1 && !prefersReducedMotion() && pauseFlags === 0;
     const applyPause = (flag, on) => {
         const next = on ? pauseFlags | flag : pauseFlags & ~flag;
@@ -1591,13 +1595,17 @@ function createCarouselController({
             moveBy(1);
         }
     }, listenerOptions);
-    root.addEventListener('pointerenter', event => {
+    root.addEventListener('pointerover', event => {
         if (event.pointerType === 'touch') return;
-        applyPause(PAUSE.hover, true);
+        if (hoverPauseFrom(event.target) && !hoverPauseFrom(event.relatedTarget)) {
+            applyPause(PAUSE.hover, true);
+        }
     }, listenerOptions);
-    root.addEventListener('pointerleave', event => {
+    root.addEventListener('pointerout', event => {
         if (event.pointerType === 'touch') return;
-        applyPause(PAUSE.hover, false);
+        if (hoverPauseFrom(event.target) && !hoverPauseFrom(event.relatedTarget)) {
+            applyPause(PAUSE.hover, false);
+        }
     }, listenerOptions);
     const syncFocusPause = () => applyPause(PAUSE.focus, focusPausesAutoplay());
     root.addEventListener('focusin', syncFocusPause, listenerOptions);

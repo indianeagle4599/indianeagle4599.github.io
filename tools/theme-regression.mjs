@@ -157,6 +157,28 @@ async function click(client, selector) {
     await freeze(client);
 }
 
+async function enableCarouselMotion(client) {
+    await client.send('Emulation.setEmulatedMedia', {
+        features: [
+            { name: 'prefers-color-scheme', value: 'dark' },
+            { name: 'prefers-reduced-motion', value: 'no-preference' }
+        ],
+        media: 'screen'
+    });
+    await evaluate(client, `document.getElementById('theme-regression-freeze')?.remove()`);
+}
+
+async function restoreFrozenMotion(client) {
+    await client.send('Emulation.setEmulatedMedia', {
+        features: [
+            { name: 'prefers-color-scheme', value: 'dark' },
+            { name: 'prefers-reduced-motion', value: 'reduce' }
+        ],
+        media: 'screen'
+    });
+    await freeze(client);
+}
+
 async function screenshot(client, file) {
     await mkdir(resolve(file, '..'), { recursive: true });
     const shot = await client.send('Page.captureScreenshot', {
@@ -507,7 +529,9 @@ async function runE2E(session) {
     ));
     results.push(check(
         'about-experience-line',
-        placement.aboutBio.startsWith('Building production-grade AI systems across computer vision, language, and generative models — wherever the problem is hardest.')
+        placement.aboutBio === 'I start with the data: what it represents, how it should be prepared, and what the problem actually needs. From there, I choose the method that fits and carry it through to a working, production-grade system.'
+            && !placement.aboutBio.includes('Building production-grade AI systems across computer vision')
+            && !placement.aboutBio.includes('wherever the problem is hardest')
             && !placement.aboutBio.includes('Over 3 years building AI systems'),
         JSON.stringify({ aboutBio: placement.aboutBio.slice(0, 200) })
     ));
@@ -690,6 +714,49 @@ async function runE2E(session) {
         carouselConsts.transition && carouselConsts.settle >= 2 && carouselConsts.loading,
         JSON.stringify(carouselConsts)
     ));
+
+    await enableCarouselMotion(client);
+    await evaluate(client, `document.querySelector('.projects-carousel')?.scrollIntoView({ block: 'center' })`);
+    await delay(120);
+    await evaluate(client, `document.querySelector('.projects-carousel')?._carouselController?.restart()`);
+    await delay(40);
+    const pauseScope = await evaluate(client, `(() => {
+        const fire = (target, type, related) => {
+            target.dispatchEvent(new PointerEvent(type, {
+                bubbles: true,
+                pointerType: 'mouse',
+                relatedTarget: related || null
+            }));
+        };
+        const root = document.querySelector('.projects-carousel');
+        const api = root?._carouselController;
+        const card = document.querySelector('[data-e2e-hover]') || root?.querySelector('.project-card');
+        const shell = root?.querySelector('.carousel-controls');
+        if (!api || !card || !shell) return { found: false };
+        api.restart();
+        const playingBefore = api.isAutoplaying();
+        fire(shell, 'pointerover', null);
+        const shellHover = { hover: api.pauseReasons().hover, playing: api.isAutoplaying() };
+        fire(card, 'pointerover', shell);
+        const cardHover = { hover: api.pauseReasons().hover, playing: api.isAutoplaying() };
+        fire(card, 'pointerout', shell);
+        fire(shell, 'pointerover', card);
+        const afterLeave = { hover: api.pauseReasons().hover, playing: api.isAutoplaying() };
+        return { found: true, playingBefore, shellHover, cardHover, afterLeave };
+    })()`);
+    results.push(check(
+        'showcase-hover-pause-card-only',
+        pauseScope.found
+            && pauseScope.playingBefore === true
+            && pauseScope.shellHover.hover === false
+            && pauseScope.shellHover.playing === true
+            && pauseScope.cardHover.hover === true
+            && pauseScope.cardHover.playing === false
+            && pauseScope.afterLeave.hover === false
+            && pauseScope.afterLeave.playing === true,
+        JSON.stringify(pauseScope)
+    ));
+    await restoreFrozenMotion(client);
 
     const pulseCss = await evaluate(client, `(async () => {
         const text = await (await fetch('style.css')).text();
@@ -917,6 +984,62 @@ async function runE2E(session) {
         title: document.getElementById('project-title')?.textContent.trim()
     })`);
     results.push(check('project-ask-krishna-loads', /ask krishna/i.test(project.title || '') && project.summary > 20, JSON.stringify({ title: project.title, summary: project.summary })));
+    await enableCarouselMotion(client);
+    await evaluate(client, `document.querySelector('.project-media-gallery')?.scrollIntoView({ block: 'center' })`);
+    await delay(120);
+    const mediaPause = await evaluate(client, `(() => {
+        const fire = (target, type, related) => {
+            target.dispatchEvent(new PointerEvent(type, {
+                bubbles: true,
+                pointerType: 'mouse',
+                relatedTarget: related || null
+            }));
+        };
+        const roots = [...document.querySelectorAll('.project-media-gallery, .project-media-comparison-group')]
+            .filter(root => {
+                if (!root._carouselController) return false;
+                const box = root.getBoundingClientRect();
+                return box.height > 40 && box.top < window.innerHeight && box.bottom > 0;
+            });
+        return roots.map(root => {
+            const api = root._carouselController;
+            const slide = root.querySelector('.carousel-slide');
+            const shell = root.querySelector('.carousel-controls');
+            if (!api || !slide || !shell) return { root: root.className, found: false };
+            api.restart();
+            const playingBefore = api.isAutoplaying();
+            fire(shell, 'pointerover', null);
+            const shellHover = { hover: api.pauseReasons().hover, playing: api.isAutoplaying() };
+            fire(slide, 'pointerover', shell);
+            const contentHover = { hover: api.pauseReasons().hover, playing: api.isAutoplaying() };
+            fire(slide, 'pointerout', shell);
+            fire(shell, 'pointerover', slide);
+            const afterLeave = { hover: api.pauseReasons().hover, playing: api.isAutoplaying() };
+            return {
+                root: root.className,
+                found: true,
+                playingBefore,
+                shellHover,
+                contentHover,
+                afterLeave
+            };
+        });
+    })()`);
+    results.push(check(
+        'media-carousel-hover-pause-content-only',
+        Array.isArray(mediaPause)
+            && mediaPause.length > 0
+            && mediaPause.every(item => item.found
+                && item.playingBefore === true
+                && item.shellHover.hover === false
+                && item.shellHover.playing === true
+                && item.contentHover.hover === true
+                && item.contentHover.playing === false
+                && item.afterLeave.hover === false
+                && item.afterLeave.playing === true),
+        JSON.stringify(mediaPause)
+    ));
+    await restoreFrozenMotion(client);
     const askTags = await evaluate(client, `(() => {
         const tags = [...document.querySelectorAll('#project-tags .tech-tag')].map(el => ({
             text: (el.textContent || '').replace(/\\s+/g, ' ').trim(),
@@ -1146,8 +1269,11 @@ async function runSource() {
     if (!js.includes('image.dataset.src') || !js.includes("video.preload = 'none'")) {
         contactGaps.push('carousel-loading-unchanged');
     }
+    if (!js.includes('hoverPauseFrom') || !js.includes("closest?.('.carousel-slide')") || js.includes("addEventListener('pointerenter'")) {
+        contactGaps.push('carousel-hover-pause-scope');
+    }
     const experienceLine = 'Over 3 years building AI systems across research, internships, and industry.';
-    const positioningLine = 'Building production-grade AI systems across computer vision, language, and generative models — wherever the problem is hardest.';
+    const positioningLine = 'I start with the data: what it represents, how it should be prepared, and what the problem actually needs. From there, I choose the method that fits and carry it through to a working, production-grade system.';
     const availabilityLine = 'Open to Freelance and Full-time positions';
     const aboutHtml = html.slice(html.indexOf('id="about"'));
     const profileData = JSON.parse(await readFile(join(ROOT, 'data', 'profile.json'), 'utf8'));
@@ -1157,7 +1283,10 @@ async function runSource() {
     if (profileData.summary !== experienceLine || profileData.summary.includes('Building production-grade')) {
         contactGaps.push('experience-on-landing');
     }
-    if (!profileData.about?.bio?.startsWith(positioningLine) || profileData.about.bio.includes(experienceLine)) {
+    if (profileData.about?.bio !== positioningLine
+        || profileData.about.bio.includes(experienceLine)
+        || profileData.about.bio.includes('wherever the problem is hardest')
+        || profileData.about.bio.includes('Building production-grade AI systems across computer vision')) {
         contactGaps.push('positioning-in-about');
     }
     if ((JSON.stringify(profileData).split(experienceLine).length - 1) !== 1 || (JSON.stringify(profileData).split(positioningLine).length - 1) !== 1) {
