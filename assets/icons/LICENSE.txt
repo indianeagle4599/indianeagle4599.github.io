@@ -1,0 +1,11 @@
+Simple Icons
+CC0 1.0 Universal
+https://github.com/simple-icons/simple-icons
+
+Lucide Icons
+ISC License
+Copyright (c) Lucide Icons and Contributors
+https://github.com/lucide-icons/lucide
+
+Some Lucide icons are derived from Feather and remain MIT:
+Copyright (c) 2013-present Cole Bemis

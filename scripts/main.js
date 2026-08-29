@@ -48,8 +48,73 @@ const LINK_KIND_BY_LABEL = {
     website: 'website',
     credentials: 'credentials'
 };
+/* Tag icons: Simple Icons (CC0) for brands; Lucide (ISC) for concepts. CSS mask paints currentColor. */
+const TAG_ICONS = {
+    Python: 'python',
+    PyTorch: 'pytorch',
+    JavaScript: 'javascript',
+    CSS: 'css3',
+    MongoDB: 'mongodb',
+    Docker: 'docker',
+    FastAPI: 'fastapi',
+    Streamlit: 'streamlit',
+    'React Native': 'react',
+    Gemini: 'googlegemini',
+    Celery: 'celery',
+    Kaggle: 'kaggle',
+    'AWS EC2': 'amazonec2',
+    Ollama: 'ollama',
+    'Vanilla JS': 'javascript',
+    ASR: 'lu-audio-lines',
+    Whisper: 'lu-audio-lines',
+    Speech: 'lu-audio-lines',
+    'Speech Recognition': 'lu-audio-lines',
+    'Speech and audio ML': 'lu-audio-lines',
+    'Computer Vision': 'lu-scan-eye',
+    'Computer vision and multimodal systems': 'lu-layers',
+    'Deep Learning': 'lu-brain-circuit',
+    'Machine Learning': 'lu-brain',
+    'Generative AI': 'lu-sparkles',
+    'Generative AI pipelines': 'lu-sparkles',
+    'Hybrid Retrieval': 'lu-scan-search',
+    'Local-first': 'lu-hard-drive',
+    'Static Site': 'lu-file-code',
+    'R&D': 'lu-flask-conical',
+    'Video Processing': 'lu-video',
+    ChromaDB: 'lu-database',
+    LLM: 'lu-bot',
+    VLM: 'lu-image',
+    NLP: 'lu-message-square-text',
+    i18n: 'lu-languages',
+    CLI: 'lu-terminal',
+    Filesystem: 'lu-folder-tree',
+    'Document Processing': 'lu-file-text',
+    Productivity: 'lu-list-checks',
+    Benchmarking: 'lu-gauge',
+    Evaluation: 'lu-clipboard-check',
+    'Distributed Systems': 'lu-network',
+    SLURM: 'lu-server',
+    Mathematics: 'lu-sigma',
+    Programming: 'lu-code',
+    'Object Detection': 'lu-scan',
+    'Object Detection and Segmentation': 'lu-scan',
+    'Fuzzy Logic': 'lu-blend',
+    'Model Training': 'lu-refresh-cw',
+    'Model Monitoring': 'lu-activity',
+    'Feature Engineering': 'lu-wrench',
+    'Hyperparameter Tuning': 'lu-sliders-horizontal',
+    'Image Classification': 'lu-image',
+    'Image Processing': 'lu-aperture',
+    OCR: 'lu-scan-text',
+    Automation: 'lu-workflow',
+    MLOps: 'lu-cog',
+    Multiprocessing: 'lu-cpu',
+    Multithreading: 'lu-split',
+    'Vector Embeddings': 'lu-waypoints',
+    localStorage: 'lu-save'
+};
 const PROJECT_PAGE_CTA_LABEL = 'Learn More';
-const PROJECTS_CAROUSEL_MS = 12000;
+const PROJECTS_CAROUSEL_MS = 8400;
 const CAROUSEL_TRANSITION_MS = 660;
 const CAROUSEL_SWIPE_PX = 48;
 const TIMELINE_DRAG_INTENT_PX = 10;
@@ -453,8 +518,18 @@ function renderStackFooter(tagsHTML, linksHTML) {
     return `<div class="stack-footer">${tags}${links}</div>`;
 }
 
+function tagIconHtml(label) {
+    const slug = TAG_ICONS[label];
+    if (!slug) return '';
+    return `<span class="tag-icon tag-icon--${slug}" aria-hidden="true"></span>`;
+}
+
+function renderTagChip(tag, className) {
+    return `<span class="${className}">${tagIconHtml(tag)}<span class="tag-text">${escapeHtml(tag)}</span></span>`;
+}
+
 function renderTags(tags) {
-    return (tags || []).map(tag => `<span class="tech-tag">${escapeHtml(tag)}</span>`).join('');
+    return (tags || []).map(tag => renderTagChip(tag, 'tech-tag')).join('');
 }
 
 function projectDisplayTags(project) {
@@ -685,7 +760,7 @@ function hydrateAboutSection(profile) {
         (aboutData.focus || []).forEach(item => {
             const chip = document.createElement('span');
             chip.className = 'about-chip';
-            chip.textContent = item;
+            chip.innerHTML = `${tagIconHtml(item)}<span class="tag-text">${escapeHtml(item)}</span>`;
             focusEl.appendChild(chip);
         });
     }
@@ -696,7 +771,7 @@ function hydrateAboutSection(profile) {
         (aboutData.stack || []).forEach(item => {
             const chip = document.createElement('span');
             chip.className = 'about-chip';
-            chip.textContent = item;
+            chip.innerHTML = `${tagIconHtml(item)}<span class="tag-text">${escapeHtml(item)}</span>`;
             stackEl.appendChild(chip);
         });
     }
@@ -725,9 +800,9 @@ function setExternalHref(id, url) {
 
 function initContactModal() {
     const modal = document.getElementById('contact-modal');
-    const trigger = document.getElementById('about-contact');
     const form = document.getElementById('contact-form');
-    if (!modal || !trigger || !form) return;
+    const triggers = [...document.querySelectorAll('[data-contact-open]')];
+    if (!modal || !form || !triggers.length) return;
 
     const dialog = modal.querySelector('.contact-modal-dialog');
     const nameInput = document.getElementById('contact-name');
@@ -882,8 +957,19 @@ function initContactModal() {
         });
     };
 
-    const open = () => {
-        lastFocus = document.activeElement;
+    const openFrom = opener => {
+        const navLinks = document.querySelector('.nav-links');
+        const fromMobileNav = Boolean(
+            opener
+            && navLinks
+            && navLinks.contains(opener)
+            && navLinks.classList.contains('open')
+            && !isDesktopNav()
+        );
+        if (fromMobileNav) closeMobileNavMenu(false);
+        lastFocus = fromMobileNav
+            ? (document.getElementById('nav-toggle') || opener)
+            : opener;
         modal.hidden = false;
         lockPage(true);
         setStatus('', '');
@@ -892,7 +978,9 @@ function initContactModal() {
         (nameInput || emailInput || dialog).focus();
     };
 
-    trigger.addEventListener('click', open);
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', () => openFrom(trigger));
+    });
     modal.addEventListener('click', event => {
         if (event.target.closest('[data-contact-dismiss]')) close();
     });
@@ -1025,7 +1113,6 @@ async function loadProfile() {
         const summaryEl = document.getElementById('introduction-summary');
         if (nameEl) nameEl.textContent = profile.name;
         if (summaryEl) summaryEl.textContent = profile.summary || '';
-        setExternalHref('introduction-resume', profile.resume_url);
         setExternalHref('introduction-github', profile.socials && profile.socials.github);
         setExternalHref('introduction-linkedin', profile.socials && profile.socials.linkedin);
         renderIntroductionTitle(profile.title || '');
@@ -3188,6 +3275,8 @@ function isDesktopNav() {
     return window.matchMedia('(min-width: 769px)').matches;
 }
 
+let closeMobileNavMenu = () => {};
+
 function initMobileNav() {
     const toggle = document.getElementById('nav-toggle');
     const navLinks = document.querySelector('.nav-links');
@@ -3213,6 +3302,7 @@ function initMobileNav() {
         setOpen(false);
         if (restoreFocus && wasOpen) toggle.focus();
     };
+    closeMobileNavMenu = closeMenu;
     setOpen(false);
 
     toggle.addEventListener('click', () => {

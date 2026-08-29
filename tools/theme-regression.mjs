@@ -52,6 +52,19 @@ Modes:
 Visual baselines are gitignored. Do not commit them unless storage is approved.`);
 }
 
+function pulseThemeOpacities(css) {
+    const dark = css.match(/\.introduction-availability \{[\s\S]*?\}/)?.[0] || '';
+    const light = css.match(/:root\[data-theme="light"\] \.introduction-availability \{[\s\S]*?\}/)?.[0] || '';
+    const read = (block, token) => Number((block.match(new RegExp(`--status-pulse-${token}:\\s*([\\d.]+)`)) || [])[1] || 0);
+    return {
+        startOpacity: read(dark, 'rest'),
+        midOpacity: read(dark, 'peak'),
+        endOpacity: read(dark, 'rest'),
+        lightRest: read(light, 'rest'),
+        lightPeak: read(light, 'peak')
+    };
+}
+
 const injectedScripts = new WeakMap();
 
 async function emulate(client, { theme, viewport, storedTheme }) {
@@ -101,6 +114,8 @@ async function freeze(client) {
 async function waitFor(client, kind) {
     const condition = kind === 'home'
         ? `document.querySelector('#introduction-summary')?.textContent.trim()
+            && document.querySelector('#about-bio')?.textContent.trim()
+            && !document.querySelector('#about-bio')?.textContent.includes('Loading bio')
             && document.querySelector('.project-card')
             && document.querySelector('.timeline-node')
             && document.getElementById('theme-toggle')`
@@ -185,7 +200,7 @@ async function captureMatrix(session, outputDir) {
 
             if (viewportName === 'desktop') {
                 await evaluate(client, 'window.scrollTo(0, 0)');
-                await click(client, '#about-contact');
+                await click(client, '#introduction-contact');
                 await delay(80);
                 await freeze(client);
                 await screenshot(client, join(folder, 'contact-modal.png'));
@@ -439,6 +454,367 @@ async function runE2E(session) {
     results.push(check('contact-inputs-labelled', contact.named && contact.labels.length >= 4, JSON.stringify(contact.labels)));
     results.push(check('contact-delivery-contract', contact.honeypot && contact.status && contact.turnstile && contact.limits && contact.mailto, JSON.stringify(contact)));
 
+    const placement = await evaluate(client, `(() => {
+        const prevTheme = document.documentElement.getAttribute('data-theme');
+        const availabilityEl = document.getElementById('introduction-availability');
+        const dot = document.querySelector('.availability-dot');
+        const actions = [...(document.querySelector('.introduction-actions')?.children || [])].map(el => el.id);
+        const rgb = (value) => value.replace(/\\s+/g, '');
+        document.documentElement.setAttribute('data-theme', 'light');
+        void availabilityEl?.offsetHeight;
+        const lightText = availabilityEl ? getComputedStyle(availabilityEl).color : '';
+        const lightDot = dot ? getComputedStyle(dot).backgroundColor : '';
+        document.documentElement.setAttribute('data-theme', 'dark');
+        void availabilityEl?.offsetHeight;
+        const darkText = availabilityEl ? getComputedStyle(availabilityEl).color : '';
+        const darkDot = dot ? getComputedStyle(dot).backgroundColor : '';
+        if (prevTheme) document.documentElement.setAttribute('data-theme', prevTheme);
+        else document.documentElement.removeAttribute('data-theme');
+        return {
+            landing: Boolean(document.getElementById('introduction-contact')),
+            landingLabel: (document.getElementById('introduction-contact')?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            nav: Boolean(document.getElementById('nav-contact')),
+            navLabel: (document.getElementById('nav-contact')?.textContent || '').trim(),
+            about: Boolean(document.getElementById('about-contact')),
+            resume: Boolean(document.getElementById('introduction-resume')),
+            aboutCta: Boolean(document.querySelector('#about [data-contact-open]')),
+            experienceEl: Boolean(document.getElementById('introduction-experience')),
+            summary: (document.getElementById('introduction-summary')?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            availability: (availabilityEl?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            aboutText: (document.querySelector('#about')?.textContent || ''),
+            aboutBio: (document.getElementById('about-bio')?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            github: Boolean(document.getElementById('introduction-github')),
+            linkedin: Boolean(document.getElementById('introduction-linkedin')),
+            actions,
+            dotHidden: dot?.getAttribute('aria-hidden') === 'true',
+            pulseAfter: dot ? getComputedStyle(dot, '::after').display : '',
+            pulseAfterAnim: dot ? getComputedStyle(dot, '::after').animationName : '',
+            lightText: rgb(lightText),
+            lightDot: rgb(lightDot),
+            darkText: rgb(darkText),
+            darkDot: rgb(darkDot)
+        };
+    })()`);
+    results.push(check('landing-contact-cta', placement.landing && placement.landingLabel === 'Check availability' && !placement.resume, JSON.stringify(placement)));
+    results.push(check('about-contact-removed', !placement.about && !placement.aboutCta, JSON.stringify(placement)));
+    results.push(check('nav-contact-present', placement.nav && placement.navLabel === 'Contact', JSON.stringify({ nav: placement.nav, navLabel: placement.navLabel })));
+    results.push(check(
+        'landing-experience-line',
+        !placement.experienceEl
+            && placement.summary === 'Over 3 years building AI systems across research, internships, and industry.'
+            && !placement.summary.includes('Building production-grade AI systems'),
+        JSON.stringify({ summary: placement.summary, experienceEl: placement.experienceEl })
+    ));
+    results.push(check(
+        'about-experience-line',
+        placement.aboutBio.startsWith('Building production-grade AI systems across computer vision, language, and generative models — wherever the problem is hardest.')
+            && !placement.aboutBio.includes('Over 3 years building AI systems'),
+        JSON.stringify({ aboutBio: placement.aboutBio.slice(0, 200) })
+    ));
+    results.push(check(
+        'landing-availability-line',
+        placement.availability === 'Open to Freelance and Full-time positions'
+            && !placement.aboutText.includes('Open to Freelance and Full-time positions')
+            && placement.github && placement.linkedin,
+        JSON.stringify({ availability: placement.availability, github: placement.github, linkedin: placement.linkedin })
+    ));
+    results.push(check(
+        'landing-cta-row-order',
+        placement.actions[0] === 'introduction-contact'
+            && placement.actions[1] === 'introduction-github'
+            && placement.actions[2] === 'introduction-linkedin',
+        JSON.stringify({ actions: placement.actions })
+    ));
+    const tagIcons = await evaluate(client, `(() => {
+        const chips = (root, sel) => [...(root?.querySelectorAll(sel) || [])];
+        const inspect = (el) => ({
+            text: (el?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            icon: Boolean(el?.querySelector('.tag-icon')),
+            decorative: [...(el?.querySelectorAll('.tag-icon') || [])].every(icon => icon.getAttribute('aria-hidden') === 'true')
+        });
+        const byText = (nodes, label) => nodes.find(node => (node.textContent || '').replace(/\\s+/g, ' ').trim() === label);
+        const tech = chips(document, '.tech-tag');
+        const focus = chips(document.getElementById('about-focus'), '.about-chip');
+        const stack = chips(document.getElementById('about-stack'), '.about-chip');
+        const pythonTech = inspect(byText(tech, 'Python'));
+        const visionTech = inspect(byText(tech, 'Computer Vision'));
+        const whisper = inspect(byText(tech, 'Whisper'));
+        const pythonStack = inspect(byText(stack, 'Python'));
+        const chroma = inspect(byText(stack, 'ChromaDB'));
+        const focusMissing = focus.filter(chip => chip.querySelectorAll('.tag-icon').length !== 1);
+        const uncovered = [...tech, ...focus, ...stack].filter(chip => chip.querySelectorAll('.tag-icon').length !== 1);
+        const heights = tech.map(el => Number(el.getBoundingClientRect().height.toFixed(2)));
+        const pythonH = byText(tech, 'Python')?.getBoundingClientRect().height || 0;
+        const visionH = byText(tech, 'Computer Vision')?.getBoundingClientRect().height || 0;
+        const iconStyle = getComputedStyle(document.querySelector('.tag-icon'));
+        const allIcons = [...document.querySelectorAll('.tag-icon')];
+        return {
+            pythonTech,
+            visionTech,
+            whisper,
+            pythonStack,
+            chroma,
+            focusCount: focus.length,
+            focusCovered: focus.length >= 3 && focusMissing.length === 0,
+            uncovered: uncovered.map(chip => (chip.textContent || '').replace(/\\s+/g, ' ').trim()),
+            pythonH,
+            visionH,
+            heightDelta: Math.abs(pythonH - visionH),
+            flexShrink: iconStyle.flexShrink,
+            flex: iconStyle.flex,
+            iconW: iconStyle.width,
+            iconH: iconStyle.height,
+            allDecorative: allIcons.length > 0 && allIcons.every(icon => icon.getAttribute('aria-hidden') === 'true'),
+            remote: [...document.querySelectorAll('img, script, link')].some(el => /simpleicons|lucide-static|unpkg\\.com\\/(?:simple-icons|lucide)|jsdelivr\\.net\\/npm\\/(?:simple-icons|lucide)/i.test(el.src || el.href || ''))
+        };
+    })()`);
+    results.push(check(
+        'tag-icons-technology',
+        tagIcons.pythonTech.icon && tagIcons.pythonTech.text === 'Python'
+            && tagIcons.pythonStack.icon && tagIcons.pythonStack.text === 'Python',
+        JSON.stringify({ pythonTech: tagIcons.pythonTech, pythonStack: tagIcons.pythonStack })
+    ));
+    results.push(check(
+        'tag-icons-conceptual',
+        tagIcons.visionTech.icon && tagIcons.visionTech.text === 'Computer Vision'
+            && tagIcons.whisper.icon && tagIcons.whisper.text === 'Whisper'
+            && tagIcons.chroma.icon && tagIcons.chroma.text === 'ChromaDB'
+            && tagIcons.focusCovered,
+        JSON.stringify({
+            visionTech: tagIcons.visionTech,
+            whisper: tagIcons.whisper,
+            chroma: tagIcons.chroma,
+            focusCount: tagIcons.focusCount,
+            focusCovered: tagIcons.focusCovered
+        })
+    ));
+    results.push(check(
+        'tag-icons-coverage',
+        Array.isArray(tagIcons.uncovered) && tagIcons.uncovered.length === 0,
+        JSON.stringify({ uncovered: tagIcons.uncovered })
+    ));
+    results.push(check(
+        'tag-icons-geometry',
+        tagIcons.heightDelta <= 1
+            && tagIcons.flexShrink === '0'
+            && tagIcons.iconW === '13px'
+            && tagIcons.iconH === '13px'
+            && /0\s+0\s+13px/.test(tagIcons.flex),
+        JSON.stringify({
+            pythonH: tagIcons.pythonH,
+            visionH: tagIcons.visionH,
+            heightDelta: tagIcons.heightDelta,
+            flexShrink: tagIcons.flexShrink,
+            flex: tagIcons.flex,
+            iconW: tagIcons.iconW,
+            iconH: tagIcons.iconH
+        })
+    ));
+    results.push(check(
+        'tag-icons-decorative',
+        tagIcons.allDecorative && !tagIcons.remote,
+        JSON.stringify({ allDecorative: tagIcons.allDecorative, remote: tagIcons.remote })
+    ));
+    results.push(check(
+        'availability-apple-green',
+        placement.lightDot === 'rgb(52,199,89)'
+            && placement.lightText === 'rgb(31,122,55)'
+            && placement.darkDot === 'rgb(48,209,88)'
+            && placement.darkText === 'rgb(43,180,77)',
+        JSON.stringify({
+            lightDot: placement.lightDot,
+            lightText: placement.lightText,
+            darkDot: placement.darkDot,
+            darkText: placement.darkText
+        })
+    ));
+    results.push(check(
+        'availability-dot-reduced-motion',
+        placement.dotHidden && placement.pulseAfter === 'none',
+        JSON.stringify({
+            dotHidden: placement.dotHidden,
+            pulseAfter: placement.pulseAfter,
+            pulseAfterAnim: placement.pulseAfterAnim
+        })
+    ));
+
+    await click(client, '#introduction-contact');
+    await delay(80);
+    const landingOpen = await evaluate(client, `({
+        hidden: document.getElementById('contact-modal')?.hidden,
+        active: document.activeElement?.id
+    })`);
+    results.push(check('landing-contact-opens-modal', landingOpen.hidden === false && landingOpen.active === 'contact-name', JSON.stringify(landingOpen)));
+    await evaluate(client, `document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))`);
+    await delay(80);
+    const landingRestore = await evaluate(client, `({
+        hidden: document.getElementById('contact-modal')?.hidden,
+        active: document.activeElement?.id
+    })`);
+    results.push(check('landing-contact-focus-restore', landingRestore.hidden === true && landingRestore.active === 'introduction-contact', JSON.stringify(landingRestore)));
+
+    const hashBeforeNavContact = await evaluate(client, 'location.hash');
+    await click(client, '#nav-contact');
+    await delay(80);
+    const navOpen = await evaluate(client, `({
+        hidden: document.getElementById('contact-modal')?.hidden,
+        active: document.activeElement?.id,
+        hash: location.hash
+    })`);
+    results.push(check('nav-contact-opens-modal', navOpen.hidden === false && navOpen.hash === hashBeforeNavContact, JSON.stringify({ ...navOpen, hashBeforeNavContact })));
+    await click(client, '.contact-modal-close');
+    await delay(80);
+    const navRestore = await evaluate(client, `({
+        hidden: document.getElementById('contact-modal')?.hidden,
+        active: document.activeElement?.id
+    })`);
+    results.push(check('nav-contact-focus-restore', navRestore.hidden === true && navRestore.active === 'nav-contact', JSON.stringify(navRestore)));
+
+    const carouselConsts = await evaluate(client, `(async () => {
+        const text = await (await fetch('scripts/main.js')).text();
+        return {
+            delay: /const PROJECTS_CAROUSEL_MS = 8400;/.test(text),
+            transition: /const CAROUSEL_TRANSITION_MS = 660;/.test(text),
+            settle: (text.match(/CAROUSEL_TRANSITION_MS \\+ 80/g) || []).length,
+            loading: /dataset\\.src/.test(text) && /preload = 'none'/.test(text),
+            oldDelay: /PROJECTS_CAROUSEL_MS = 12000/.test(text)
+        };
+    })()`);
+    results.push(check(
+        'carousel-autoplay-interval',
+        carouselConsts.delay && !carouselConsts.oldDelay,
+        JSON.stringify(carouselConsts)
+    ));
+    results.push(check(
+        'carousel-transition-settle-unchanged',
+        carouselConsts.transition && carouselConsts.settle >= 2 && carouselConsts.loading,
+        JSON.stringify(carouselConsts)
+    ));
+
+    const pulseCss = await evaluate(client, `(async () => {
+        const text = await (await fetch('style.css')).text();
+        const pulseAnim = text.match(/\\.availability-dot::after \\{[\\s\\S]*?radial-gradient[\\s\\S]*?availability-pulse\\s+([\\d.]+)s\\s+([^\\s;]+)/);
+        const kfStart = text.indexOf('@keyframes availability-pulse');
+        const kf = kfStart === -1 ? '' : text.slice(kfStart, kfStart + 420);
+        const startScale = Number((kf.match(/\\b0%,\\s*100% \\{[\\s\\S]*?scale\\(([\\d.]+)\\)/) || [])[1] || 0);
+        const midScale = Number((kf.match(/\\b50% \\{[\\s\\S]*?scale\\(([\\d.]+)\\)/) || [])[1] || 0);
+        const dark = text.match(/\\.introduction-availability \\{[\\s\\S]*?\\}/)?.[0] || '';
+        const light = text.match(/:root\\[data-theme="light"\\] \\.introduction-availability \\{[\\s\\S]*?\\}/)?.[0] || '';
+        const startOpacity = Number((dark.match(/--status-pulse-rest:\\s*([\\d.]+)/) || [])[1] || 0);
+        const midOpacity = Number((dark.match(/--status-pulse-peak:\\s*([\\d.]+)/) || [])[1] || 0);
+        const lightRest = Number((light.match(/--status-pulse-rest:\\s*([\\d.]+)/) || [])[1] || 0);
+        const lightPeak = Number((light.match(/--status-pulse-peak:\\s*([\\d.]+)/) || [])[1] || 0);
+        return {
+            noBefore: !text.includes('.availability-dot::before'),
+            pulseFilled: Boolean(pulseAnim) && !/border\\s*:/.test(pulseAnim[0]),
+            usesPulseVars: kf.includes('var(--status-pulse-rest)') && kf.includes('var(--status-pulse-peak)'),
+            startScale,
+            midScale,
+            endScale: startScale,
+            startOpacity,
+            midOpacity,
+            lightRest,
+            lightPeak,
+            duration: Number(pulseAnim?.[1] || 0),
+            ease: pulseAnim?.[2] || '',
+            pingLike: midOpacity === 0 || startOpacity === 0,
+            oneWay: false
+        };
+    })()`);
+    results.push(check(
+        'availability-pulse-structure',
+        pulseCss.noBefore
+            && pulseCss.pulseFilled
+            && pulseCss.startScale === 1
+            && pulseCss.midScale >= 2.5
+            && pulseCss.midScale <= 3
+            && pulseCss.usesPulseVars
+            && pulseCss.startOpacity >= 0.7
+            && pulseCss.midOpacity >= 0.45
+            && pulseCss.midOpacity <= 0.75
+            && pulseCss.lightRest > pulseCss.startOpacity
+            && pulseCss.lightPeak > pulseCss.midOpacity
+            && pulseCss.duration >= 1.5
+            && pulseCss.duration <= 1.8
+            && pulseCss.ease === 'ease-in-out'
+            && !pulseCss.pingLike,
+        JSON.stringify(pulseCss)
+    ));
+
+    await client.send('Emulation.setEmulatedMedia', {
+        features: [
+            { name: 'prefers-color-scheme', value: 'dark' },
+            { name: 'prefers-reduced-motion', value: 'no-preference' }
+        ],
+        media: 'screen'
+    });
+    await evaluate(client, `document.getElementById('theme-regression-freeze')?.remove()`);
+    await delay(80);
+    const pulseMotion = await evaluate(client, `(() => {
+        const parseScale = (transform) => {
+            if (!transform || transform === 'none') return 1;
+            const matrix = transform.match(/matrix\\(([^)]+)\\)/);
+            if (matrix) {
+                const parts = matrix[1].split(',').map(Number);
+                return Math.hypot(parts[0], parts[1]);
+            }
+            const scale = transform.match(/scale\\(([^)]+)\\)/);
+            return scale ? Number(scale[1].split(',')[0]) : NaN;
+        };
+        const dot = document.querySelector('.availability-dot');
+        const animations = [
+            ...(dot?.getAnimations?.() || []),
+            ...document.getAnimations()
+        ];
+        const anim = animations.find(item => {
+            const effect = item.effect;
+            return (effect && effect.pseudoElement === '::after')
+                || item.animationName === 'availability-pulse';
+        });
+        if (!anim || !anim.effect) {
+            return { found: false, display: dot ? getComputedStyle(dot, '::after').display : '' };
+        }
+        anim.pause();
+        const duration = Number(anim.effect.getComputedTiming().duration) || Number(anim.effect.getTiming().duration) || 1600;
+        const sample = (progress) => {
+            anim.currentTime = duration * progress;
+            const styles = getComputedStyle(dot, '::after');
+            return {
+                scale: Number(parseScale(styles.transform).toFixed(3)),
+                opacity: Number.parseFloat(styles.opacity)
+            };
+        };
+        const p0 = sample(0);
+        const p25 = sample(0.25);
+        const p50 = sample(0.5);
+        const p75 = sample(0.75);
+        const p100 = sample(1);
+        anim.cancel();
+        return { found: true, duration, p0, p25, p50, p75, p100 };
+    })()`);
+    results.push(check(
+        'availability-pulse-expands-and-contracts',
+        pulseMotion.found
+            && Math.abs(pulseMotion.p0.scale - 1) <= 0.08
+            && pulseMotion.p25.scale > pulseMotion.p0.scale + 0.15
+            && pulseMotion.p50.scale >= 2.45
+            && pulseMotion.p50.scale > pulseMotion.p25.scale
+            && pulseMotion.p75.scale < pulseMotion.p50.scale - 0.15
+            && pulseMotion.p75.scale > pulseMotion.p0.scale + 0.15
+            && Math.abs(pulseMotion.p100.scale - 1) <= 0.08
+            && [pulseMotion.p0, pulseMotion.p25, pulseMotion.p50, pulseMotion.p75, pulseMotion.p100].every(point => point.opacity > 0.2)
+            && pulseMotion.p50.opacity >= 0.45,
+        JSON.stringify(pulseMotion)
+    ));
+    await client.send('Emulation.setEmulatedMedia', {
+        features: [
+            { name: 'prefers-color-scheme', value: 'dark' },
+            { name: 'prefers-reduced-motion', value: 'reduce' }
+        ],
+        media: 'screen'
+    });
+    await freeze(client);
+
     const phoneRules = await evaluate(client, `({
         letters: phonePairOk('+91', 'test'),
         malformedCountry: phonePairOk('91', '9876543210'),
@@ -460,7 +836,7 @@ async function runE2E(session) {
     results.push(check('contact-phone-partial-rejected', phoneRules.onlyCountry === false && phoneRules.onlyNumber === false, JSON.stringify(phoneRules)));
     results.push(check('contact-phone-digit-count', phoneRules.tooShort === false && phoneRules.tooLong === false, JSON.stringify(phoneRules)));
 
-    await click(client, '#about-contact');
+    await click(client, '#introduction-contact');
     await delay(80);
     const phoneUi = await evaluate(client, `(() => {
         const form = document.getElementById('contact-form');
@@ -504,6 +880,28 @@ async function runE2E(session) {
     results.push(check('mobile-nav-opens', mobileNav.expanded === 'true' && mobileNav.open, JSON.stringify(mobileNav)));
     const mobileOverflow = await evaluate(client, 'document.documentElement.scrollWidth > document.documentElement.clientWidth + 1');
     results.push(check('mobile-no-overflow', !mobileOverflow, `overflow=${mobileOverflow}`));
+    await click(client, '#nav-contact');
+    await delay(80);
+    const mobileContact = await evaluate(client, `({
+        modalHidden: document.getElementById('contact-modal')?.hidden,
+        navOpen: document.body.classList.contains('nav-open'),
+        expanded: document.getElementById('nav-toggle')?.getAttribute('aria-expanded'),
+        active: document.activeElement?.id
+    })`);
+    results.push(check(
+        'mobile-nav-contact-opens-modal',
+        mobileContact.modalHidden === false && mobileContact.navOpen === false && mobileContact.expanded === 'false',
+        JSON.stringify(mobileContact)
+    ));
+    await click(client, '.contact-modal-close');
+    await delay(80);
+    const mobileRestore = await evaluate(client, `({
+        hidden: document.getElementById('contact-modal')?.hidden,
+        active: document.activeElement?.id
+    })`);
+    results.push(check('mobile-nav-contact-focus-restore', mobileRestore.hidden === true && mobileRestore.active === 'nav-toggle', JSON.stringify(mobileRestore)));
+    await click(client, '#nav-toggle');
+    await delay(80);
     await click(client, '.nav-links a[href="#projects"]');
     await delay(80);
     const mobileProjects = await navGeom('projects');
@@ -519,6 +917,26 @@ async function runE2E(session) {
         title: document.getElementById('project-title')?.textContent.trim()
     })`);
     results.push(check('project-ask-krishna-loads', /ask krishna/i.test(project.title || '') && project.summary > 20, JSON.stringify({ title: project.title, summary: project.summary })));
+    const askTags = await evaluate(client, `(() => {
+        const tags = [...document.querySelectorAll('#project-tags .tech-tag')].map(el => ({
+            text: (el.textContent || '').replace(/\\s+/g, ' ').trim(),
+            icon: Boolean(el.querySelector('.tag-icon'))
+        }));
+        return {
+            tags,
+            conceptualOnly: tags.length > 0 && tags.every(tag => !tag.icon),
+            labels: tags.map(tag => tag.text)
+        };
+    })()`);
+    results.push(check(
+        'tag-icons-project-conceptual',
+        askTags.labels.includes('Local-first')
+            && askTags.labels.includes('Static Site')
+            && !askTags.labels.includes('JavaScript')
+            && askTags.tags.length > 0
+            && askTags.tags.every(tag => tag.icon && tag.text),
+        JSON.stringify(askTags)
+    ));
     results.push(check('project-canonical', /\/projects\/\?slug=ask-krishna$/.test(project.canonical || ''), project.canonical));
     results.push(check('project-gallery-label', /previous|next|show/i.test(project.galleryNext), project.galleryNext || 'missing gallery next label'));
     results.push(check('project-no-overflow', !project.overflowX, `overflowX=${project.overflowX}`));
@@ -566,6 +984,22 @@ async function runE2E(session) {
         title: document.getElementById('project-title')?.textContent.trim()
     })`);
     results.push(check('project-os-toolkit-results', /os toolkit/i.test(table.title || '') && table.rows > 0 && table.ours > 0 && table.best > 0, JSON.stringify(table)));
+    const osTags = await evaluate(client, `(() => {
+        const tags = [...document.querySelectorAll('#project-tags .tech-tag')].map(el => ({
+            text: (el.textContent || '').replace(/\\s+/g, ' ').trim(),
+            icon: Boolean(el.querySelector('.tag-icon')),
+            decorative: [...el.querySelectorAll('.tag-icon')].every(icon => icon.getAttribute('aria-hidden') === 'true')
+        }));
+        const python = tags.find(tag => tag.text === 'Python');
+        const filesystem = tags.find(tag => tag.text === 'Filesystem');
+        return { python, filesystem, labels: tags.map(tag => tag.text) };
+    })()`);
+    results.push(check(
+        'tag-icons-project-technology',
+        osTags.python?.icon && osTags.python?.text === 'Python' && osTags.python?.decorative
+            && osTags.filesystem?.icon && osTags.filesystem.text === 'Filesystem' && osTags.filesystem.decorative,
+        JSON.stringify(osTags)
+    ));
 
     await setViewportTheme(client, 'desktop', 'light', null);
     await goto(client, new URL('/', url).href, 'home');
@@ -699,7 +1133,143 @@ async function runSource() {
     if (!js.includes("CONTACT_COUNTRY_RE = /^\\+\\d{1,4}$/") || !worker.includes('COUNTRY_RE = /^\\+\\d{1,4}$/')) {
         contactGaps.push('country-re');
     }
+    if (html.includes('id="about-contact"') || html.includes('id="introduction-resume"')) contactGaps.push('legacy-contact-resume-cta');
+    if (!html.includes('id="introduction-contact"') || !html.includes('id="nav-contact"') || !html.includes('data-contact-open')) {
+        contactGaps.push('landing-nav-contact');
+    }
+    if (!js.includes('const PROJECTS_CAROUSEL_MS = 8400') || js.includes('PROJECTS_CAROUSEL_MS = 12000')) {
+        contactGaps.push('carousel-autoplay-ms');
+    }
+    if (!js.includes('const CAROUSEL_TRANSITION_MS = 660') || (js.match(/CAROUSEL_TRANSITION_MS \+ 80/g) || []).length < 2) {
+        contactGaps.push('carousel-transition-settle');
+    }
+    if (!js.includes('image.dataset.src') || !js.includes("video.preload = 'none'")) {
+        contactGaps.push('carousel-loading-unchanged');
+    }
+    const experienceLine = 'Over 3 years building AI systems across research, internships, and industry.';
+    const positioningLine = 'Building production-grade AI systems across computer vision, language, and generative models — wherever the problem is hardest.';
+    const availabilityLine = 'Open to Freelance and Full-time positions';
+    const aboutHtml = html.slice(html.indexOf('id="about"'));
+    const profileData = JSON.parse(await readFile(join(ROOT, 'data', 'profile.json'), 'utf8'));
+    if (html.includes(experienceLine) || html.includes(positioningLine)) {
+        contactGaps.push('copy-in-html');
+    }
+    if (profileData.summary !== experienceLine || profileData.summary.includes('Building production-grade')) {
+        contactGaps.push('experience-on-landing');
+    }
+    if (!profileData.about?.bio?.startsWith(positioningLine) || profileData.about.bio.includes(experienceLine)) {
+        contactGaps.push('positioning-in-about');
+    }
+    if ((JSON.stringify(profileData).split(experienceLine).length - 1) !== 1 || (JSON.stringify(profileData).split(positioningLine).length - 1) !== 1) {
+        contactGaps.push('copy-duplicate');
+    }
+    if (!html.includes('id="introduction-summary"') || html.includes('id="introduction-positioning"') || html.includes('id="introduction-experience"') || html.includes('introduction-offer')) {
+        contactGaps.push('experience-in-intro');
+    }
+    if (css.includes('.introduction-experience') || css.includes('.introduction-offer')) {
+        contactGaps.push('experience-meta-styles');
+    }
+    if (js.includes('introduction-positioning') || !/getElementById\('introduction-summary'\)/.test(js)) {
+        contactGaps.push('summary-source');
+    }
+    if ((html.split(availabilityLine).length - 1) !== 1 || aboutHtml.includes(availabilityLine)) {
+        contactGaps.push('availability-line');
+    }
+    if (!html.includes('Check availability') || !html.includes('id="nav-contact"') || !/>Contact</.test(html)) {
+        contactGaps.push('check-availability-vs-nav-contact');
+    }
+    const landingButton = html.match(/id="introduction-contact"[\s\S]*?<\/button>/);
+    if (!landingButton || !landingButton[0].includes('Check availability') || landingButton[0].includes('Get in touch')) {
+        contactGaps.push('landing-cta-label');
+    }
+    const actionsBlock = html.match(/class="introduction-actions"[\s\S]*?<\/div>/);
+    if (!actionsBlock || !/id="introduction-contact"[\s\S]*id="introduction-github"[\s\S]*id="introduction-linkedin"/.test(actionsBlock[0])) {
+        contactGaps.push('landing-cta-row-order');
+    }
+    if (!css.includes('#34C759') || !css.includes('#1f7a37') || !css.includes('#30D158') || !css.includes('#2BB44D') || css.includes('#7dae8a') || css.includes('#2d6a46')) {
+        contactGaps.push('availability-apple-green');
+    }
+    if (!html.includes('aria-hidden="true"') || css.includes('.availability-dot::before') || !css.includes('.availability-dot::after') || !css.includes('@keyframes availability-pulse')) {
+        contactGaps.push('availability-dot');
+    }
+    if (!/prefers-reduced-motion: reduce[\s\S]*\.availability-dot::after[\s\S]*display:\s*none/.test(css)) {
+        contactGaps.push('availability-reduced-motion');
+    }
+    const pulseAnim = css.match(/\.availability-dot::after \{[\s\S]*?radial-gradient[\s\S]*?availability-pulse\s+([\d.]+)s\s+([^\s;]+)/);
+    const kfStart = css.indexOf('@keyframes availability-pulse');
+    const kf = kfStart === -1 ? '' : css.slice(kfStart, kfStart + 420);
+    const startScale = Number((kf.match(/\b0%,\s*100% \{[\s\S]*?scale\(([\d.]+)\)/) || kf.match(/\b0% \{[\s\S]*?scale\(([\d.]+)\)/) || [])[1] || 0);
+    const midScale = Number((kf.match(/\b50% \{[\s\S]*?scale\(([\d.]+)\)/) || [])[1] || 0);
+    const endScale = Number((kf.match(/\b100% \{[\s\S]*?scale\(([\d.]+)\)/) || kf.match(/\b0%,\s*100% \{[\s\S]*?scale\(([\d.]+)\)/) || [])[1] || 0);
+    const { startOpacity, midOpacity, endOpacity, lightRest, lightPeak } = pulseThemeOpacities(css);
+    const pulseDuration = Number(pulseAnim?.[1] || 0);
+    const pulseEase = pulseAnim?.[2] || '';
+    const pingLike = /75%\s*,\s*100%[\s\S]{0,80}opacity:\s*0;/.test(kf) || endOpacity === 0 || midOpacity === 0;
+    if (
+        !pulseAnim
+        || /border\s*:/.test(pulseAnim[0])
+        || startScale !== 1
+        || endScale !== 1
+        || midScale < 2.5
+        || midScale > 3
+        || startOpacity < 0.7
+        || endOpacity < 0.7
+        || midOpacity < 0.45
+        || midOpacity > 0.75
+        || lightRest <= startOpacity
+        || lightPeak <= midOpacity
+        || !kf.includes('var(--status-pulse-rest)')
+        || !kf.includes('var(--status-pulse-peak)')
+        || pulseDuration < 1.5
+        || pulseDuration > 1.8
+        || pulseEase === 'ease-out'
+        || pingLike
+        || kf.includes('1.18')
+        || kf.includes('1.72')
+    ) {
+        contactGaps.push('availability-bidirectional-pulse');
+    }
+    if (css.includes('blink-clock') && /availability[\s\S]{0,80}blink-clock/.test(css)) {
+        contactGaps.push('availability-blink-reuse');
+    }
     if (contactGaps.length) throw new Error(`source check failed: contact=${contactGaps.join(',')}`);
+
+    const tagIconMap = js.match(/const TAG_ICONS = \{[\s\S]*?\n\};/)?.[0] || '';
+    const tagIconGaps = [];
+    const requiredTagIcons = ['Python', 'PyTorch', 'JavaScript', 'CSS', 'MongoDB', 'Docker', 'FastAPI', 'Streamlit', 'React Native', 'Gemini', 'Celery', 'Kaggle', 'AWS EC2', 'Ollama'];
+    if (!tagIconMap || !js.includes('function tagIconHtml') || !css.includes('.tag-icon') || !css.includes('flex-shrink: 0')) tagIconGaps.push('tag-icon-map');
+    for (const label of requiredTagIcons) {
+        if (!tagIconMap.includes(label)) tagIconGaps.push(`missing-${label}`);
+    }
+    const jsonTagLists = [
+        ...JSON.parse(await readFile(join(ROOT, 'data', 'projects.json'), 'utf8')).flatMap(project => [...(project.tags || []), ...(project.displayTags || [])]),
+        ...JSON.parse(await readFile(join(ROOT, 'data', 'timeline.json'), 'utf8')).flatMap(node => node.tags || []),
+        ...(profileData.about?.focus || []),
+        ...(profileData.about?.stack || [])
+    ];
+    const uniqueTags = [...new Set(jsonTagLists)];
+    for (const label of uniqueTags) {
+        const mapped = tagIconMap.includes(`'${label}'`) || tagIconMap.includes(`${label}:`);
+        if (!mapped) tagIconGaps.push(`unmapped-${label}`);
+    }
+    const slugs = [...new Set([...tagIconMap.matchAll(/:\s*'([^']+)'/g)].map(match => match[1]))];
+    for (const slug of slugs) {
+        try {
+            const svg = await readFile(join(ROOT, 'assets', 'icons', `${slug}.svg`), 'utf8');
+            if (!svg.includes('<svg') || !svg.includes('viewBox="0 0 24 24"')) tagIconGaps.push(`svg-${slug}`);
+            if (!css.includes(`.tag-icon--${slug}`)) tagIconGaps.push(`css-${slug}`);
+        } catch (error) {
+            tagIconGaps.push(`missing-file-${slug}`);
+        }
+    }
+    const iconSurfaces = html + js + css;
+    if (/cdn\.simpleicons|unpkg\.com\/(?:simple-icons|lucide)|jsdelivr\.net\/npm\/(?:simple-icons|lucide)/i.test(iconSurfaces)) {
+        tagIconGaps.push('remote-icon-dependency');
+    }
+    if (!/getElementById\('about-focus'\)[\s\S]*tagIconHtml\(item\)/.test(js)) {
+        tagIconGaps.push('focus-icons');
+    }
+    if (tagIconGaps.length) throw new Error(`source check failed: tag-icons=${tagIconGaps.join(',')}`);
 
     const { fieldsOk } = await import(pathToFileURL(join(ROOT, 'workers', 'contact', 'src', 'index.js')).href);
     const sample = extra => ({

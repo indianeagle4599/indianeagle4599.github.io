@@ -302,6 +302,11 @@ html.theme-transitioning .btn-outline {
         opacity: 1;
     }
 
+    .availability-dot::after {
+        display: none;
+        animation: none;
+    }
+
     .projects-carousel .project-card:hover,
     .projects-carousel .project-card:focus-within,
     .projects-carousel .project-card:active,
@@ -374,10 +379,75 @@ p {
 #introduction-summary {
     max-width: var(--prose-width);
     margin-top: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.15rem;
     font-size: clamp(1.05rem, 1.5vw, 1.15rem);
     line-height: 1.7;
     color: var(--text-muted);
+}
+
+.introduction-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    --status-available: #30D158;
+    --status-available-text: #2BB44D;
+    --status-pulse-rest: 0.81;
+    --status-pulse-peak: 0.52;
+    color: var(--status-available-text);
+}
+
+:root[data-theme="light"] .introduction-availability {
+    --status-available: #34C759;
+    --status-available-text: #1f7a37;
+    --status-pulse-rest: 0.85;
+    --status-pulse-peak: 0.55;
+}
+
+.availability-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    overflow: visible;
+    border-radius: 50%;
+    background: var(--status-available);
+}
+
+.availability-dot::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    pointer-events: none;
+    transform-origin: center;
+    background: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--status-available) 100%, transparent) 0%,
+        color-mix(in srgb, var(--status-available) 70%, transparent) 45%,
+        color-mix(in srgb, var(--status-available) 28%, transparent) 72%,
+        transparent 100%
+    );
+    filter: blur(0.5px);
+    animation: availability-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes availability-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: var(--status-pulse-rest);
+    }
+    50% {
+        transform: scale(2.8);
+        opacity: var(--status-pulse-peak);
+    }
 }
 
 
@@ -466,7 +536,8 @@ body.nav-open {
     transform: translateY(-6px) rotate(-45deg);
 }
 
-.nav-links a {
+.nav-links a,
+.nav-links .nav-contact {
     color: var(--text-main);
     text-decoration: none;
     font-size: 0.95rem;
@@ -480,6 +551,14 @@ body.nav-open {
     padding: 0 clamp(8px, 0.8vw, 12px) 4px;
     z-index: 1;
     white-space: nowrap;
+}
+
+.nav-links .nav-contact {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
 }
 
 .nav-links a.active {
@@ -639,7 +718,7 @@ body.nav-open {
 .introduction-actions {
     display: flex;
     gap: var(--stack-gap);
-    margin-top: 2rem;
+    margin-top: 1.15rem;
     flex-wrap: wrap;
 }
 
@@ -765,9 +844,12 @@ body.nav-open {
 
 /* --- Tech Tags --- */
 .tech-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-family: var(--font-mono);
     font-size: 0.75rem;
+    line-height: 13px;
     color: var(--text-muted);
     background: color-mix(in srgb, var(--text-main) 5%, transparent);
     border: 1px solid var(--border);
@@ -1233,13 +1315,92 @@ body.nav-open {
 }
 
 .about-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 6px 14px;
     font-size: 0.85rem;
+    line-height: 13px;
     color: var(--text-main);
     background: color-mix(in srgb, var(--text-main) 4%, transparent);
 }
+
+.tag-text {
+    line-height: 13px;
+}
+
+/* Tag icons: Simple Icons (CC0) + Lucide (ISC), painted with currentColor. */
+.tag-icon {
+    display: block;
+    box-sizing: border-box;
+    width: 13px;
+    height: 13px;
+    flex: 0 0 13px;
+    flex-shrink: 0;
+    margin: 0;
+    pointer-events: none;
+    transform: none;
+    background-color: currentColor;
+    -webkit-mask: var(--tag-mask) center / contain no-repeat;
+    mask: var(--tag-mask) center / contain no-repeat;
+}
+
+.tag-icon--python { --tag-mask: url("assets/icons/python.svg"); }
+.tag-icon--pytorch { --tag-mask: url("assets/icons/pytorch.svg"); }
+.tag-icon--javascript { --tag-mask: url("assets/icons/javascript.svg"); }
+.tag-icon--css3 { --tag-mask: url("assets/icons/css3.svg"); }
+.tag-icon--mongodb { --tag-mask: url("assets/icons/mongodb.svg"); }
+.tag-icon--docker { --tag-mask: url("assets/icons/docker.svg"); }
+.tag-icon--fastapi { --tag-mask: url("assets/icons/fastapi.svg"); }
+.tag-icon--streamlit { --tag-mask: url("assets/icons/streamlit.svg"); }
+.tag-icon--react { --tag-mask: url("assets/icons/react.svg"); }
+.tag-icon--googlegemini { --tag-mask: url("assets/icons/googlegemini.svg"); }
+.tag-icon--celery { --tag-mask: url("assets/icons/celery.svg"); }
+.tag-icon--kaggle { --tag-mask: url("assets/icons/kaggle.svg"); }
+.tag-icon--amazonec2 { --tag-mask: url("assets/icons/amazonec2.svg"); }
+.tag-icon--ollama { --tag-mask: url("assets/icons/ollama.svg"); }
+.tag-icon--lu-audio-lines { --tag-mask: url("assets/icons/lu-audio-lines.svg"); }
+.tag-icon--lu-scan-eye { --tag-mask: url("assets/icons/lu-scan-eye.svg"); }
+.tag-icon--lu-layers { --tag-mask: url("assets/icons/lu-layers.svg"); }
+.tag-icon--lu-brain-circuit { --tag-mask: url("assets/icons/lu-brain-circuit.svg"); }
+.tag-icon--lu-brain { --tag-mask: url("assets/icons/lu-brain.svg"); }
+.tag-icon--lu-sparkles { --tag-mask: url("assets/icons/lu-sparkles.svg"); }
+.tag-icon--lu-scan-search { --tag-mask: url("assets/icons/lu-scan-search.svg"); }
+.tag-icon--lu-hard-drive { --tag-mask: url("assets/icons/lu-hard-drive.svg"); }
+.tag-icon--lu-file-code { --tag-mask: url("assets/icons/lu-file-code.svg"); }
+.tag-icon--lu-flask-conical { --tag-mask: url("assets/icons/lu-flask-conical.svg"); }
+.tag-icon--lu-video { --tag-mask: url("assets/icons/lu-video.svg"); }
+.tag-icon--lu-database { --tag-mask: url("assets/icons/lu-database.svg"); }
+.tag-icon--lu-bot { --tag-mask: url("assets/icons/lu-bot.svg"); }
+.tag-icon--lu-image { --tag-mask: url("assets/icons/lu-image.svg"); }
+.tag-icon--lu-message-square-text { --tag-mask: url("assets/icons/lu-message-square-text.svg"); }
+.tag-icon--lu-languages { --tag-mask: url("assets/icons/lu-languages.svg"); }
+.tag-icon--lu-terminal { --tag-mask: url("assets/icons/lu-terminal.svg"); }
+.tag-icon--lu-folder-tree { --tag-mask: url("assets/icons/lu-folder-tree.svg"); }
+.tag-icon--lu-file-text { --tag-mask: url("assets/icons/lu-file-text.svg"); }
+.tag-icon--lu-list-checks { --tag-mask: url("assets/icons/lu-list-checks.svg"); }
+.tag-icon--lu-gauge { --tag-mask: url("assets/icons/lu-gauge.svg"); }
+.tag-icon--lu-clipboard-check { --tag-mask: url("assets/icons/lu-clipboard-check.svg"); }
+.tag-icon--lu-network { --tag-mask: url("assets/icons/lu-network.svg"); }
+.tag-icon--lu-server { --tag-mask: url("assets/icons/lu-server.svg"); }
+.tag-icon--lu-sigma { --tag-mask: url("assets/icons/lu-sigma.svg"); }
+.tag-icon--lu-code { --tag-mask: url("assets/icons/lu-code.svg"); }
+.tag-icon--lu-scan { --tag-mask: url("assets/icons/lu-scan.svg"); }
+.tag-icon--lu-blend { --tag-mask: url("assets/icons/lu-blend.svg"); }
+.tag-icon--lu-refresh-cw { --tag-mask: url("assets/icons/lu-refresh-cw.svg"); }
+.tag-icon--lu-activity { --tag-mask: url("assets/icons/lu-activity.svg"); }
+.tag-icon--lu-wrench { --tag-mask: url("assets/icons/lu-wrench.svg"); }
+.tag-icon--lu-sliders-horizontal { --tag-mask: url("assets/icons/lu-sliders-horizontal.svg"); }
+.tag-icon--lu-aperture { --tag-mask: url("assets/icons/lu-aperture.svg"); }
+.tag-icon--lu-scan-text { --tag-mask: url("assets/icons/lu-scan-text.svg"); }
+.tag-icon--lu-workflow { --tag-mask: url("assets/icons/lu-workflow.svg"); }
+.tag-icon--lu-cog { --tag-mask: url("assets/icons/lu-cog.svg"); }
+.tag-icon--lu-cpu { --tag-mask: url("assets/icons/lu-cpu.svg"); }
+.tag-icon--lu-split { --tag-mask: url("assets/icons/lu-split.svg"); }
+.tag-icon--lu-waypoints { --tag-mask: url("assets/icons/lu-waypoints.svg"); }
+.tag-icon--lu-save { --tag-mask: url("assets/icons/lu-save.svg"); }
 
 .about-footer {
     display: flex;
@@ -1255,11 +1416,6 @@ body.nav-open {
     flex: 1 1 12rem;
     color: var(--text-muted);
     font-size: 0.95rem;
-}
-
-.about-footer .btn {
-    flex: 0 0 auto;
-    margin-left: auto;
 }
 
 html.contact-modal-open,
@@ -2767,7 +2923,8 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
         transform: translateX(0);
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-links .nav-contact {
         margin-left: 0;
         min-width: 0;
         min-height: var(--touch);
@@ -2797,10 +2954,6 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
     .about-footer {
         flex-direction: column;
         align-items: flex-start;
-    }
-
-    .about-footer .btn {
-        margin-left: 0;
     }
 
     .contact-modal-header {
