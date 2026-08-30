@@ -240,6 +240,15 @@ html {
     animation: blink-clock 1s step-end infinite;
 }
 
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+html.lenis [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
 body:not(.project-page) {
     padding-bottom: calc(var(--nav-height) + var(--nav-scroll-gap));
 }
@@ -1213,8 +1222,8 @@ body.nav-open {
 /* --- Scroll Animations --- */
 .fade-in {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    transform: translateY(14px);
+    transition: opacity 500ms var(--ease-spatial), transform 500ms var(--ease-spatial);
 }
 
 .fade-in.visible {

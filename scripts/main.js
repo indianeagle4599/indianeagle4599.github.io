@@ -898,6 +898,7 @@ function initContactModal() {
         document.body.classList.toggle('contact-modal-open', on);
         document.getElementById('navbar')?.toggleAttribute('inert', on);
         document.querySelector('main')?.toggleAttribute('inert', on);
+        setPageScrollStopped(on);
     };
 
     const close = () => {
@@ -3065,11 +3066,20 @@ function animateLogo() {
     setTimeout(typeSmile, 1500);
 }
 
+const FADE_MS = 500;
+const FADE_STAGGER_MS = 70;
 const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            fadeObserver.unobserve(entry.target);
+    const shown = entries.filter(entry => entry.isIntersecting).map(entry => entry.target);
+    shown.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    shown.forEach((el, i) => {
+        const delay = i * FADE_STAGGER_MS;
+        if (delay) el.style.transitionDelay = `${delay}ms`;
+        el.classList.add('visible');
+        fadeObserver.unobserve(el);
+        if (delay) {
+            window.setTimeout(() => {
+                el.style.transitionDelay = '';
+            }, delay + FADE_MS);
         }
     });
 }, { threshold: 0.1 });
@@ -3082,8 +3092,49 @@ function initScrollAnimations() {
     document.querySelectorAll('.fade-in:not(.cert-card):not(.visible)').forEach(el => fadeObserver.observe(el));
 }
 
+let pageLenis = null;
 let pageScrollFrame = 0;
 let pageScrollUnbind = null;
+
+function pageScrollSmoothAllowed() {
+    return typeof Lenis === 'function'
+        && !prefersReducedMotion()
+        && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+}
+
+function destroyPageLenis() {
+    if (!pageLenis) return;
+    pageLenis.destroy();
+    pageLenis = null;
+}
+
+function initSmoothScroll() {
+    const sync = () => {
+        if (!pageScrollSmoothAllowed()) {
+            destroyPageLenis();
+            return;
+        }
+        if (pageLenis) return;
+        pageLenis = new Lenis({
+            autoRaf: true,
+            lerp: 0.08,
+            smoothWheel: true,
+            syncTouch: false,
+            anchors: false,
+            allowNestedScroll: true,
+            stopInertiaOnNavigate: true
+        });
+    };
+    sync();
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', sync);
+    window.matchMedia('(hover: hover) and (pointer: fine)').addEventListener('change', sync);
+}
+
+function setPageScrollStopped(stopped) {
+    if (!pageLenis) return;
+    if (stopped) pageLenis.stop();
+    else pageLenis.start();
+}
 
 function stopPageScroll() {
     if (pageScrollFrame) cancelAnimationFrame(pageScrollFrame);
@@ -3113,6 +3164,16 @@ function pageScrollTargetY(el) {
 function scrollPageTo(el, { instant = false } = {}) {
     const dest = pageScrollTargetY(el);
     stopPageScroll();
+    if (pageLenis) {
+        pageLenis.resize();
+        const now = pageLenis.scroll;
+        if (instant || prefersReducedMotion() || Math.abs(dest - now) < 1) {
+            pageLenis.scrollTo(dest, { immediate: true });
+            return;
+        }
+        pageLenis.scrollTo(dest);
+        return;
+    }
     if (instant || prefersReducedMotion() || Math.abs(dest - window.scrollY) < 1) {
         window.scrollTo(0, dest);
         return;
@@ -3346,12 +3407,14 @@ function initExpandAll() {
 }
 
 function restoreScrollPosition() {
+    pageLenis?.resize();
     const id = window.location.hash.slice(1);
     const target = id ? document.getElementById(id) : null;
     if (target) scrollPageTo(target, { instant: true });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSmoothScroll();
     initMobileNav();
     initThemeToggle();
     if (document.body.classList.contains('project-page')) {
