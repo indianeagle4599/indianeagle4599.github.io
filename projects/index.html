@@ -39,6 +39,12 @@
             document.documentElement.setAttribute('data-theme', theme);
             /* Keep #f4f4f2 / #121212 equal to --bg-page in style.css. */
             document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f4f4f2' : '#121212');
+            try {
+                if (sessionStorage.getItem('portfolio-page-motion') === '1') {
+                    document.documentElement.classList.add('is-page-entering');
+                    sessionStorage.removeItem('portfolio-page-motion');
+                }
+            } catch (error) {}
         }());
     </script>
     <link rel="stylesheet" href="../style.css">

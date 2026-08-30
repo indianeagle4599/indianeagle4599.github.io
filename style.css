@@ -98,6 +98,7 @@
     --motion: 0.3s;
     --motion-fast: 160ms;
     --motion-press: 100ms;
+    --motion-spatial: 500ms;
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     --content-width: 1120px;
@@ -112,7 +113,7 @@
     --card-pad: 24px;
     --stack-gap: 16px;
     --touch: 44px;
-    --carousel-duration: 660ms;
+    --carousel-duration: 820ms;
     --carousel-gap: 24px;
     --project-media-max-height: min(600px, calc(100vh - var(--nav-height) - 14.5rem));
 }
@@ -249,6 +250,24 @@ html.lenis [data-lenis-prevent] {
     overscroll-behavior: contain;
 }
 
+html.is-page-leaving {
+    pointer-events: none;
+}
+
+html.is-page-leaving,
+html.is-page-entering {
+    opacity: 0;
+}
+
+html.is-page-leaving,
+html.is-page-entering.is-page-ready {
+    transition: opacity var(--motion-spatial) var(--ease-spatial);
+}
+
+html.is-page-entering.is-page-ready {
+    opacity: 1;
+}
+
 body:not(.project-page) {
     padding-bottom: calc(var(--nav-height) + var(--nav-scroll-gap));
 }
@@ -256,6 +275,76 @@ body:not(.project-page) {
 :focus-visible {
     outline: 2px solid var(--accent-interact);
     outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+        navigation: auto;
+    }
+
+    #nav-logo {
+        view-transition-name: nav-logo;
+    }
+
+    #theme-toggle {
+        view-transition-name: nav-theme;
+    }
+
+    ::view-transition-group(root),
+    ::view-transition-group(nav-logo),
+    ::view-transition-group(nav-theme) {
+        animation-duration: var(--motion-spatial);
+        animation-timing-function: var(--ease-spatial);
+    }
+
+    ::view-transition-group(nav-logo),
+    ::view-transition-group(nav-theme),
+    ::view-transition-group(nav-links) {
+        z-index: 100;
+    }
+
+    ::view-transition-old(root) {
+        mix-blend-mode: normal;
+        animation: page-leave var(--motion-spatial) var(--ease-spatial) both;
+    }
+
+    ::view-transition-new(root) {
+        mix-blend-mode: normal;
+        animation: page-enter var(--motion-spatial) var(--ease-spatial) both;
+    }
+}
+
+@media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+    .nav-links {
+        view-transition-name: nav-links;
+    }
+
+    ::view-transition-group(nav-links) {
+        overflow: clip;
+        animation-duration: var(--motion-spatial);
+        animation-timing-function: var(--ease-spatial);
+    }
+
+    ::view-transition-old(nav-links),
+    ::view-transition-new(nav-links) {
+        mix-blend-mode: normal;
+        height: 100%;
+        inline-size: auto;
+        object-fit: none;
+        object-position: left center;
+    }
+}
+
+@keyframes page-leave {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes page-enter {
+    from {
+        opacity: 0;
+    }
 }
 
 html.theme-transitioning {
@@ -303,6 +392,13 @@ html.theme-transitioning .btn-outline {
 
     html {
         animation: none;
+    }
+
+    html.is-page-leaving,
+    html.is-page-entering,
+    html.is-page-entering.is-page-ready {
+        opacity: 1;
+        transition: none;
     }
 
     .cursor,
@@ -537,7 +633,7 @@ body.nav-open {
     background: var(--text-main);
     display: block;
     transform-origin: center;
-    transition: background var(--motion) var(--ease), opacity var(--motion) var(--ease), transform var(--motion) var(--ease);
+    transition: background var(--motion-spatial) var(--ease-spatial), opacity var(--motion-spatial) var(--ease-spatial), transform var(--motion-spatial) var(--ease-spatial);
 }
 
 .nav-toggle[aria-expanded="true"] span:nth-child(1) {
@@ -577,6 +673,28 @@ body.nav-open {
     cursor: pointer;
 }
 
+@media (min-width: 769px) {
+    .nav-extra {
+        overflow: hidden;
+        max-width: 11rem;
+        transition:
+            opacity var(--motion-spatial) var(--ease-spatial),
+            max-width var(--motion-spatial) var(--ease-spatial),
+            min-width var(--motion-spatial) var(--ease-spatial),
+            padding var(--motion-spatial) var(--ease-spatial);
+    }
+
+    html.is-page-leaving .nav-extra,
+    html.is-page-entering:not(.is-page-ready) .nav-extra {
+        opacity: 0;
+        max-width: 0;
+        min-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+        pointer-events: none;
+    }
+}
+
 .nav-links a.active {
     color: var(--text-main);
     font-weight: 600;
@@ -593,7 +711,7 @@ body.nav-open {
     background: var(--accent-interact);
     pointer-events: none;
     transform: translate(0, 0);
-    transition: transform var(--motion) var(--ease), width var(--motion) var(--ease);
+    transition: transform var(--motion-spatial) var(--ease-spatial), width var(--motion-spatial) var(--ease-spatial);
 }
 
 .nav-indicator--instant {
@@ -909,7 +1027,7 @@ body.nav-open {
     background: var(--accent-interact);
     pointer-events: none;
     transform: translate(0, 0);
-    transition: transform var(--motion) var(--ease), width var(--motion) var(--ease);
+    transition: transform var(--motion-spatial) var(--ease-spatial), width var(--motion-spatial) var(--ease-spatial);
 }
 
 .timeline-tab {
@@ -994,7 +1112,7 @@ body.nav-open {
 
 .timeline-panel.is-settling,
 .timeline-panel.is-settling.is-active:not(.is-from-left):not(.is-from-right) {
-    transition: transform var(--motion) var(--ease);
+    transition: transform var(--motion-spatial) var(--ease-spatial);
 }
 
 .timeline-panel.is-from-right,
@@ -1013,13 +1131,14 @@ body.nav-open {
 .timeline-panel.is-active:not(.is-from-left):not(.is-from-right) {
     opacity: 1;
     transform: none;
-    transition: opacity var(--motion) var(--ease), transform var(--motion) var(--ease);
+    transition: opacity var(--motion-spatial) var(--ease-spatial), transform var(--motion-spatial) var(--ease-spatial);
 }
 
 @media (prefers-reduced-motion: reduce) {
     .timeline-panel,
     .timeline-panel.is-settling,
-    .tab-indicator {
+    .tab-indicator,
+    .nav-indicator {
         transition: none;
     }
 
@@ -1062,6 +1181,10 @@ body.nav-open {
     background: color-mix(in srgb, var(--text-main) 2.5%, var(--bg-surface));
 }
 
+.stack-item:has(button.stack-hit) {
+    cursor: pointer;
+}
+
 .stack-hit {
     display: block;
     width: 100%;
@@ -1096,7 +1219,7 @@ body.nav-open {
 
 .stack-chevron svg {
     display: block;
-    transition: transform var(--motion) var(--ease);
+    transition: transform var(--motion-spatial) var(--ease-spatial);
 }
 
 .stack-item[data-expanded="true"] .stack-chevron svg {
@@ -1111,10 +1234,15 @@ body.nav-open {
     font-size: 0.95rem;
 }
 
-.stack-item[data-expanded="false"] .stack-summary {
+.stack-summary {
+    line-height: 1.65;
+}
+
+.stack-summary.is-clamped {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
 }
 
@@ -1126,23 +1254,17 @@ body.nav-open {
 }
 
 .stack-body {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows var(--motion) var(--ease);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height var(--motion-spatial) var(--ease-spatial);
 }
 
-.stack-item[data-expanded="true"] .stack-body {
-    grid-template-rows: 1fr;
+.stack-body:has(.stack-summary) {
+    max-height: calc(0.95rem * 1.65 * 2);
 }
 
 .stack-body-inner {
-    overflow: hidden;
-    min-height: 0;
-    padding: 0 var(--card-pad) 0;
-}
-
-.stack-item[data-expanded="true"] .stack-body-inner {
-    padding-bottom: 12px;
+    padding: 0 var(--card-pad) 12px;
 }
 
 .stack-footer {
@@ -1152,7 +1274,7 @@ body.nav-open {
     margin-top: auto;
     padding: 24px var(--card-pad) 24px;
     border-top: 1px solid var(--border);
-    cursor: default;
+    cursor: inherit;
 }
 
 .stack-footer .node-tags,
@@ -1552,10 +1674,21 @@ body.contact-modal-open {
     align-items: center;
     justify-content: center;
     padding: var(--page-gutter);
+    opacity: 0;
+    transition: opacity var(--motion-spatial) var(--ease-spatial);
+}
+
+.contact-modal.is-open {
+    opacity: 1;
 }
 
 .contact-modal[hidden] {
     display: none !important;
+}
+
+.contact-modal[hidden].is-leaving {
+    display: flex !important;
+    pointer-events: none;
 }
 
 .contact-modal-backdrop {
@@ -1579,6 +1712,12 @@ body.contact-modal-open {
     border: 1px solid var(--border-strong);
     border-radius: 16px;
     box-shadow: var(--dialog-shadow);
+    transform: translateY(14px);
+    transition: transform var(--motion-spatial) var(--ease-spatial);
+}
+
+.contact-modal.is-open .contact-modal-dialog {
+    transform: none;
 }
 
 .contact-modal-header {
@@ -1945,15 +2084,29 @@ body.contact-modal-open {
     transition-duration: var(--motion-press);
 }
 
-#certificate-grid,
-#certificate-archive {
+#certificate-grid {
     display: flex;
     flex-direction: column;
     gap: 32px;
 }
 
 .cert-archive {
-    margin-top: 20px;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--motion-spatial) var(--ease-spatial);
+}
+
+.cert-archive.is-open {
+    grid-template-rows: 1fr;
+}
+
+.cert-archive-inner {
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding-top: 20px;
 }
 
 .cert-category {
@@ -3051,7 +3204,7 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
         padding-bottom: calc(var(--card-pad) + env(safe-area-inset-bottom, 0px));
         gap: 16px;
         transform: translateX(100%);
-        transition: transform var(--motion) var(--ease);
+        transition: transform var(--motion-spatial) var(--ease-spatial);
     }
 
     .theme-toggle {

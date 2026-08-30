@@ -115,8 +115,10 @@ const TAG_ICONS = {
 };
 const PROJECT_PAGE_CTA_LABEL = 'Learn More';
 const PROJECTS_CAROUSEL_MS = 8400;
-const CAROUSEL_TRANSITION_MS = 660;
+const CAROUSEL_TRANSITION_MS = 820;
 const CAROUSEL_SWIPE_PX = 48;
+const CAROUSEL_FLING_VX = 0.5;
+const MOTION_SPATIAL_MS = 500;
 const TIMELINE_DRAG_INTENT_PX = 10;
 const TIMELINE_DRAG_COMMIT_RATIO = 0.25;
 const TIMELINE_DRAG_VELOCITY = 0.55;
@@ -614,15 +616,113 @@ function renderMarkdown(src) {
     }).filter(Boolean).join('\n');
 }
 
+function stackTeaserHeight(reveal) {
+    const summary = reveal.querySelector('.stack-summary');
+    if (!summary) return 0;
+    if (summary.classList.contains('is-clamped')) {
+        return Math.round(summary.getBoundingClientRect().height);
+    }
+    const cs = getComputedStyle(summary);
+    let lh = parseFloat(cs.lineHeight);
+    if (!Number.isFinite(lh)) lh = parseFloat(cs.fontSize) * 1.65;
+    return Math.round(Math.min(summary.scrollHeight, lh * 2));
+}
+
+function clearStackReveal(reveal) {
+    if (reveal._stackTimer) {
+        window.clearTimeout(reveal._stackTimer);
+        reveal._stackTimer = 0;
+    }
+    if (reveal._onStackEnd) {
+        reveal.removeEventListener('transitionend', reveal._onStackEnd);
+        reveal._onStackEnd = null;
+    }
+}
+
+function syncCollapsedReveal(nodeEl) {
+    const reveal = nodeEl.querySelector('.stack-body');
+    if (!reveal || nodeEl.getAttribute('data-expanded') === 'true') return;
+    const summary = reveal.querySelector('.stack-summary');
+    if (summary) summary.classList.add('is-clamped');
+    const height = stackTeaserHeight(reveal);
+    if (!summary) {
+        reveal.style.maxHeight = '0px';
+        return;
+    }
+    if (!height) return;
+    reveal.style.transition = 'none';
+    reveal.style.maxHeight = `${height}px`;
+    reveal.offsetHeight;
+    reveal.style.removeProperty('transition');
+}
+
+function animateStackReveal(nodeEl, expanded) {
+    const reveal = nodeEl.querySelector('.stack-body');
+    if (!reveal) return;
+    const inner = reveal.querySelector('.stack-body-inner');
+    const summary = reveal.querySelector('.stack-summary');
+    const gen = (reveal._stackGen = (reveal._stackGen || 0) + 1);
+    clearStackReveal(reveal);
+
+    const finish = () => {
+        if (reveal._stackGen !== gen) return;
+        clearStackReveal(reveal);
+        if (expanded) reveal.style.maxHeight = 'none';
+        else {
+            if (summary) summary.classList.add('is-clamped');
+            reveal.style.maxHeight = `${stackTeaserHeight(reveal)}px`;
+        }
+    };
+
+    if (prefersReducedMotion()) {
+        if (summary) summary.classList.toggle('is-clamped', !expanded);
+        reveal.style.transition = 'none';
+        reveal.style.maxHeight = expanded ? 'none' : `${stackTeaserHeight(reveal)}px`;
+        reveal.offsetHeight;
+        reveal.style.removeProperty('transition');
+        return;
+    }
+
+    const from = reveal.getBoundingClientRect().height;
+    reveal.style.transition = 'none';
+    reveal.style.maxHeight = `${from}px`;
+    reveal.offsetHeight;
+    reveal.style.removeProperty('transition');
+    if (expanded && summary) summary.classList.remove('is-clamped');
+    const to = expanded ? (inner ? inner.scrollHeight : reveal.scrollHeight) : stackTeaserHeight(reveal);
+    reveal.style.maxHeight = `${to}px`;
+    const onEnd = event => {
+        if (event.target !== reveal || event.propertyName !== 'max-height') return;
+        finish();
+    };
+    reveal._onStackEnd = onEnd;
+    reveal.addEventListener('transitionend', onEnd);
+    reveal._stackTimer = window.setTimeout(finish, MOTION_SPATIAL_MS + 80);
+}
+
 function setNodeExpanded(nodeEl, expanded) {
-    nodeEl.setAttribute('data-expanded', String(expanded));
+    const next = Boolean(expanded);
+    if ((nodeEl.getAttribute('data-expanded') === 'true') === next) return;
+    nodeEl.setAttribute('data-expanded', String(next));
     const hit = nodeEl.querySelector('.stack-hit');
-    if (hit) hit.setAttribute('aria-expanded', String(expanded));
+    if (hit) hit.setAttribute('aria-expanded', String(next));
+    animateStackReveal(nodeEl, next);
 }
 
 function toggleNode(nodeEl) {
     setNodeExpanded(nodeEl, nodeEl.getAttribute('data-expanded') !== 'true');
     syncExpandAllButton();
+}
+
+function bindStackItem(nodeEl) {
+    const hit = nodeEl.querySelector('button.stack-hit');
+    if (!hit) return;
+    syncCollapsedReveal(nodeEl);
+    hit.addEventListener('click', () => toggleNode(nodeEl));
+    nodeEl.addEventListener('click', event => {
+        if (event.target.closest('a, button')) return;
+        toggleNode(nodeEl);
+    });
 }
 
 function visibleTimelineNodes() {
@@ -829,6 +929,13 @@ function initContactModal() {
     let sending = false;
     let abortController = null;
     let pendingKey = null;
+    let modalMotionTimer = 0;
+
+    const clearModalMotion = () => {
+        if (!modalMotionTimer) return;
+        window.clearTimeout(modalMotionTimer);
+        modalMotionTimer = 0;
+    };
 
     const setError = (input, errorEl, message) => {
         const invalid = Boolean(message);
@@ -904,7 +1011,19 @@ function initContactModal() {
     const close = () => {
         abortController?.abort();
         abortController = null;
-        modal.hidden = true;
+        clearModalMotion();
+        modal.classList.remove('is-open');
+        if (prefersReducedMotion()) {
+            modal.hidden = true;
+            modal.classList.remove('is-leaving');
+        } else {
+            modal.classList.add('is-leaving');
+            modal.hidden = true;
+            modalMotionTimer = window.setTimeout(() => {
+                modalMotionTimer = 0;
+                modal.classList.remove('is-leaving');
+            }, MOTION_SPATIAL_MS + 80);
+        }
         lockPage(false);
         form.reset();
         setError(nameInput, nameError, '');
@@ -971,12 +1090,21 @@ function initContactModal() {
         lastFocus = fromMobileNav
             ? (document.getElementById('nav-toggle') || opener)
             : opener;
+        clearModalMotion();
+        modal.classList.remove('is-leaving');
         modal.hidden = false;
         lockPage(true);
         setStatus('', '');
         hideMailto();
         ensureWidget();
         (nameInput || emailInput || dialog).focus();
+        if (prefersReducedMotion()) {
+            modal.classList.add('is-open');
+            return;
+        }
+        modal.classList.remove('is-open');
+        modal.offsetHeight;
+        modal.classList.add('is-open');
     };
 
     triggers.forEach(trigger => {
@@ -1140,7 +1268,7 @@ function renderTimelineNode(node) {
     const firstRole = roles[0] || {};
     const extraRoles = roles.slice(1);
     const summaryTitle = firstRole.title ? `<p class="sub-title">${escapeHtml(firstRole.title)}</p>` : '';
-    const summaryDesc = firstRole.description ? `<p class="stack-summary">${escapeHtml(firstRole.description)}</p>` : '';
+    const summaryDesc = firstRole.description ? `<p class="stack-summary is-clamped">${escapeHtml(firstRole.description)}</p>` : '';
     const firstPoints = firstRole.points && firstRole.points.length
         ? `<ul>${firstRole.points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>`
         : '';
@@ -1152,9 +1280,9 @@ function renderTimelineNode(node) {
         return `<div class="timeline-role">${titleHTML}${descP}${subtitleH}${bulletsU}</div>`;
     }).join('');
     const firstSubtitle = firstRole.subtitle ? `<h5 class="node-subtitle">${escapeHtml(firstRole.subtitle)}</h5>` : '';
-    const detailsInner = firstSubtitle + firstPoints + extraHTML;
+    const revealInner = `${summaryDesc}${firstSubtitle}${firstPoints}${extraHTML}`;
     const footerHTML = renderStackFooter(tagsHTML, renderCredentialButtons(node.credentials) + renderLinks(node.links));
-    const hasBody = Boolean(detailsInner.trim());
+    const hasBody = Boolean(revealInner.trim());
     const panelId = hasBody ? `stack-panel-${++stackUid}` : '';
     const hitOpen = hasBody
         ? `<button type="button" class="stack-hit" aria-expanded="false" aria-controls="${panelId}">`
@@ -1172,14 +1300,12 @@ function renderTimelineNode(node) {
                 ${hasBody ? CHEVRON_HTML : ''}
             </div>
             ${summaryTitle}
-            ${summaryDesc}
         ${hitClose}
-        ${hasBody ? `<div class="stack-body" id="${panelId}"><div class="stack-body-inner">${detailsInner}</div></div>` : ''}
+        ${hasBody ? `<div class="stack-body" id="${panelId}"><div class="stack-body-inner">${revealInner}</div></div>` : ''}
         ${footerHTML}
     `;
 
-    const hit = nodeDiv.querySelector('button.stack-hit');
-    if (hit) hit.addEventListener('click', () => toggleNode(nodeDiv));
+    bindStackItem(nodeDiv);
     return nodeDiv;
 }
 
@@ -1199,6 +1325,7 @@ async function loadTimeline() {
             if (node.type === 'education') educationGrid.appendChild(rendered);
             else workGrid.appendChild(rendered);
         });
+        workGrid.querySelectorAll('.stack-item').forEach(syncCollapsedReveal);
         setupTimelineTabs('work');
         initScrollAnimations();
         syncExpandAllButton();
@@ -1240,7 +1367,8 @@ function renderOtherProject(project) {
     const detailsHref = `./projects/?slug=${encodeURIComponent(project.slug)}`;
     const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}">${PROJECT_PAGE_CTA_LABEL}</a>`;
     const footerHTML = renderStackFooter(renderTags(projectDisplayTags(project)), renderLinks(project.links) + pageLink);
-    const hasBody = Boolean(highlightsHTML);
+    const summaryHTML = project.summary ? `<p class="stack-summary is-clamped">${escapeHtml(project.summary)}</p>` : '';
+    const hasBody = Boolean(highlightsHTML || summaryHTML);
     const panelId = hasBody ? `stack-panel-${++stackUid}` : '';
     const hitOpen = hasBody
         ? `<button type="button" class="stack-hit" aria-expanded="false" aria-controls="${panelId}">`
@@ -1257,9 +1385,8 @@ function renderOtherProject(project) {
                     </div>
                     ${hasBody ? CHEVRON_HTML : ''}
                 </div>
-                ${project.summary ? `<p class="stack-summary">${escapeHtml(project.summary)}</p>` : ''}
             ${hitClose}
-            ${hasBody ? `<div class="stack-body" id="${panelId}"><div class="stack-body-inner">${highlightsHTML}</div></div>` : ''}
+            ${hasBody ? `<div class="stack-body" id="${panelId}"><div class="stack-body-inner">${summaryHTML}${highlightsHTML}</div></div>` : ''}
             ${footerHTML}
         </article>
     `;
@@ -1296,7 +1423,7 @@ function createSlideStrip(track, slides, { loop = false, className = 'carousel-s
         }
     };
 
-    const travelMs = ratio => Math.round(CAROUSEL_TRANSITION_MS * Math.max(0.45, Math.min(1, ratio)));
+    const travelMs = ratio => Math.round(CAROUSEL_TRANSITION_MS * Math.max(0.72, Math.min(1, ratio)));
 
     const setOffset = animate => {
         const { width, span } = metrics();
@@ -1391,6 +1518,9 @@ function createCarouselController({
     let pointerId = null;
     let startX = 0;
     let startY = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let velocity = 0;
     let captureTarget = null;
     let suppressClick = false;
     let remainingMs = PROJECTS_CAROUSEL_MS;
@@ -1618,13 +1748,18 @@ function createCarouselController({
             if (event.pointerId !== pointerId) return;
             const dx = event.clientX - startX;
             const dy = event.clientY - startY;
-            const swiped = navigate && Math.abs(dx) > CAROUSEL_SWIPE_PX && Math.abs(dx) > Math.abs(dy);
+            if (event.timeStamp - lastTime > 80) velocity = 0;
+            const alongX = Math.abs(dx) >= Math.abs(dy) || (Math.abs(dx) < 8 && Math.abs(velocity) > CAROUSEL_FLING_VX);
+            const flung = Math.abs(velocity) > CAROUSEL_FLING_VX;
+            const swiped = navigate && alongX && (Math.abs(dx) > CAROUSEL_SWIPE_PX || flung);
+            const signed = flung && Math.abs(dx) <= CAROUSEL_SWIPE_PX ? velocity : dx;
+            const delta = signed < 0 ? 1 : -1;
             if (captureTarget?.hasPointerCapture(pointerId)) captureTarget.releasePointerCapture(pointerId);
             pointerId = null;
             captureTarget = null;
             pointerActive = false;
             onDragChange(false);
-            if (swiped && moveBy(dx < 0 ? 1 : -1)) {
+            if (swiped && moveBy(delta)) {
                 suppressClick = true;
                 if (clickTimer !== null) window.clearTimeout(clickTimer);
                 clickTimer = window.setTimeout(() => {
@@ -1650,6 +1785,9 @@ function createCarouselController({
             pointerId = event.pointerId;
             startX = event.clientX;
             startY = event.clientY;
+            lastX = event.clientX;
+            lastTime = event.timeStamp;
+            velocity = 0;
             captureTarget = event.target.closest?.('a, button') || gestureTarget;
             captureTarget.setPointerCapture(pointerId);
         }, listenerOptions);
@@ -1657,6 +1795,10 @@ function createCarouselController({
             if (event.pointerId !== pointerId || transitioning) return;
             const dx = event.clientX - startX;
             const dy = event.clientY - startY;
+            const elapsed = event.timeStamp - lastTime;
+            if (elapsed >= 8) velocity = (event.clientX - lastX) / elapsed;
+            lastX = event.clientX;
+            lastTime = event.timeStamp;
             if (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy)) {
                 onDragChange(true);
                 onPointerDelta?.(dx, false);
@@ -1931,9 +2073,7 @@ async function loadProjects() {
         const otherList = document.getElementById('other-projects-list');
         if (otherWrap && otherList && others.length) {
             otherList.innerHTML = others.map(renderOtherProject).join('');
-            otherList.querySelectorAll('button.stack-hit').forEach(hit => {
-                hit.addEventListener('click', () => toggleNode(hit.closest('.stack-item')));
-            });
+            otherList.querySelectorAll('.stack-item').forEach(bindStackItem);
             otherWrap.hidden = false;
         }
         initScrollAnimations();
@@ -2566,13 +2706,91 @@ function canNavigateHistoryBack() {
     }
 }
 
+function pathIsProjectPage(pathname) {
+    return /\/projects\/?$/.test(pathname.replace(/\/index\.html$/i, ''));
+}
+
+function prefersCrossDocumentViewTransition() {
+    return !prefersReducedMotion() && 'onpagereveal' in window;
+}
+
+let pageLeaveTimer = 0;
+
+function clearPageLeave() {
+    if (!pageLeaveTimer) return;
+    window.clearTimeout(pageLeaveTimer);
+    pageLeaveTimer = 0;
+}
+
+function goWithPageMotion(url, { historyBack = false } = {}) {
+    const go = () => {
+        if (historyBack) history.back();
+        else window.location.href = url;
+    };
+    if (prefersReducedMotion() || prefersCrossDocumentViewTransition()) {
+        go();
+        return;
+    }
+    try {
+        sessionStorage.setItem('portfolio-page-motion', '1');
+    } catch (error) {}
+    clearPageLeave();
+    document.documentElement.classList.add('is-page-leaving');
+    pageLeaveTimer = window.setTimeout(() => {
+        pageLeaveTimer = 0;
+        go();
+    }, MOTION_SPATIAL_MS);
+}
+
+function isPortfolioProjectNav(href) {
+    let url;
+    try {
+        url = new URL(href, window.location.href);
+    } catch (error) {
+        return false;
+    }
+    if (url.origin !== window.location.origin) return false;
+    return document.body.classList.contains('project-page') !== pathIsProjectPage(url.pathname);
+}
+
+function initPageNavMotion() {
+    window.addEventListener('pageshow', event => {
+        if (!event.persisted) return;
+        clearPageLeave();
+        document.documentElement.classList.remove('is-page-leaving', 'is-page-entering', 'is-page-ready');
+    });
+    if (document.documentElement.classList.contains('is-page-entering')) {
+        if (prefersReducedMotion()) {
+            document.documentElement.classList.remove('is-page-entering');
+        } else {
+            requestAnimationFrame(() => {
+                document.documentElement.classList.add('is-page-ready');
+                window.setTimeout(() => {
+                    document.documentElement.classList.remove('is-page-entering', 'is-page-ready');
+                }, MOTION_SPATIAL_MS + 80);
+            });
+        }
+    }
+    document.addEventListener('click', event => {
+        if (event.defaultPrevented) return;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = event.target.closest('a[href]');
+        if (!link || link.target === '_blank' || link.hasAttribute('download')) return;
+        if (link.classList.contains('back-button')) return;
+        if (!isPortfolioProjectNav(link.href)) return;
+        if (prefersCrossDocumentViewTransition()) return;
+        event.preventDefault();
+        goWithPageMotion(link.href);
+    });
+}
+
 function initProjectBackLink() {
     document.querySelectorAll('a.back-button').forEach(link => {
         link.addEventListener('click', event => {
             if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             if (!canNavigateHistoryBack()) return;
             event.preventDefault();
-            history.back();
+            goWithPageMotion(link.href, { historyBack: true });
         });
     });
 }
@@ -2667,7 +2885,7 @@ async function loadCertificates() {
             <div id="cert-controls" class="cert-controls">
                 <button type="button" id="cert-toggle" class="cert-toggle" aria-expanded="false" aria-controls="certificate-archive"></button>
             </div>
-            <div id="certificate-archive" class="cert-archive" hidden></div>
+            <div id="certificate-archive" class="cert-archive" hidden><div class="cert-archive-inner"></div></div>
         `;
         timelineGrid.appendChild(panel);
     }
@@ -2676,6 +2894,7 @@ async function loadCertificates() {
     const controls = document.getElementById('cert-controls');
     const toggleBtn = document.getElementById('cert-toggle');
     const archiveGrid = document.getElementById('certificate-archive');
+    const archiveInner = archiveGrid?.querySelector('.cert-archive-inner') || archiveGrid;
 
     try {
         const data = await fetchJson(dataUrl('certificates.json'));
@@ -2696,16 +2915,36 @@ async function loadCertificates() {
         revealCertificateCards(primaryGrid);
 
         if (certificates.some(isArchived)) {
-            renderCertificateSections(categories, archiveGrid, isArchived);
+            renderCertificateSections(categories, archiveInner, isArchived);
             toggleBtn.style.display = 'inline-flex';
             toggleBtn.textContent = 'Show additional certificates';
             archiveGrid.hidden = true;
+            archiveGrid.classList.remove('is-open');
             controls.style.display = 'block';
+            let archiveMotionTimer = 0;
             toggleBtn.onclick = () => {
                 const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
                 toggleBtn.setAttribute('aria-expanded', String(!expanded));
-                archiveGrid.hidden = expanded;
-                if (!expanded) revealCertificateCards(archiveGrid);
+                if (archiveMotionTimer) {
+                    window.clearTimeout(archiveMotionTimer);
+                    archiveMotionTimer = 0;
+                }
+                if (expanded) {
+                    archiveGrid.classList.remove('is-open');
+                    if (prefersReducedMotion()) archiveGrid.hidden = true;
+                    else {
+                        archiveMotionTimer = window.setTimeout(() => {
+                            archiveMotionTimer = 0;
+                            if (toggleBtn.getAttribute('aria-expanded') === 'false') archiveGrid.hidden = true;
+                        }, MOTION_SPATIAL_MS + 80);
+                    }
+                } else {
+                    archiveGrid.hidden = false;
+                    archiveGrid.classList.remove('is-open');
+                    archiveGrid.offsetHeight;
+                    archiveGrid.classList.add('is-open');
+                    revealCertificateCards(archiveGrid);
+                }
                 toggleBtn.textContent = expanded ? 'Show additional certificates' : 'Hide additional certificates';
             };
         } else {
@@ -2777,7 +3016,7 @@ function waitTimelineSettle(panels, reduce, done) {
         };
         panel.addEventListener('transitionend', onEnd);
     });
-    window.setTimeout(complete, 450);
+    window.setTimeout(complete, MOTION_SPATIAL_MS + 80);
 }
 
 function beginTimelineDrag(dx) {
@@ -2875,6 +3114,9 @@ function selectTimelineTab(index, { direction = 0, focusTab = false, fromDrag = 
             item.panel.hidden = false;
             item.panel.removeAttribute('inert');
             item.panel.classList.add('is-active');
+            if (item.id !== 'certificates') {
+                item.panel.querySelectorAll('.stack-item').forEach(syncCollapsedReveal);
+            }
             if (!reduce && direction && !fromDrag) {
                 item.panel.classList.remove('is-from-left', 'is-from-right');
                 item.panel.classList.add(direction > 0 ? 'is-from-right' : 'is-from-left');
@@ -3417,6 +3659,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initMobileNav();
     initThemeToggle();
+    initPageNavMotion();
     if (document.body.classList.contains('project-page')) {
         initProjectPage();
         return;

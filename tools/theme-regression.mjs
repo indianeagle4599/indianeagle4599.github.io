@@ -859,7 +859,7 @@ async function runE2E(session) {
         const text = await (await fetch('scripts/main.js')).text();
         return {
             delay: /const PROJECTS_CAROUSEL_MS = 8400;/.test(text),
-            transition: /const CAROUSEL_TRANSITION_MS = 660;/.test(text),
+            transition: /const CAROUSEL_TRANSITION_MS = 820;/.test(text),
             settle: (text.match(/CAROUSEL_TRANSITION_MS \\+ 80/g) || []).length,
             loading: /dataset\\.src/.test(text) && /preload = 'none'/.test(text),
             oldDelay: /PROJECTS_CAROUSEL_MS = 12000/.test(text)
@@ -1420,7 +1420,7 @@ async function runSource() {
     if (!js.includes('const PROJECTS_CAROUSEL_MS = 8400') || js.includes('PROJECTS_CAROUSEL_MS = 12000')) {
         contactGaps.push('carousel-autoplay-ms');
     }
-    if (!js.includes('const CAROUSEL_TRANSITION_MS = 660') || (js.match(/CAROUSEL_TRANSITION_MS \+ 80/g) || []).length < 2) {
+    if (!js.includes('const CAROUSEL_TRANSITION_MS = 820') || (js.match(/CAROUSEL_TRANSITION_MS \+ 80/g) || []).length < 2) {
         contactGaps.push('carousel-transition-settle');
     }
     if (!js.includes('image.dataset.src') || !js.includes("video.preload = 'none'")) {
