@@ -9,8 +9,7 @@
         "bio": "I start with the data: what it represents, how it should be prepared, and what the problem actually needs. From there, I choose the method that fits and carry it through to a working, production-grade system.",
         "highlights": [
             "I have applied that approach across speech, computer vision, biotech, and multimodal retrieval, using anything from classical methods and deep learning to generative models when the problem calls for it.",
-            "I work across the full path from data preparation and experimentation to evaluation, deployment, databases, and usable interfaces.",
-            "I optimise for real constraints such as latency, compute, data quality, and measurable performance."
+            "I work across the full path from data preparation and experimentation to evaluation, deployment, databases, and usable interfaces. I optimise for real constraints such as latency, compute, data quality, and measurable performance."
         ],
         "focus": [
             "Computer vision and multimodal systems",

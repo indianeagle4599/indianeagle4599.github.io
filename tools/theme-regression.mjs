@@ -284,6 +284,96 @@ async function waitGalleryReady(client) {
     }
 }
 
+async function aboutPortraitLayout(client) {
+    return evaluate(client, `(() => {
+        const homeImgs = [...document.querySelectorAll('#home img')].map(img => img.getAttribute('src') || '');
+        const portraits = [...document.querySelectorAll('.about-portrait img')];
+        const layout = document.querySelector('.about-layout');
+        const media = document.querySelector('.about-media');
+        const content = document.querySelector('.about-content');
+        const plate = document.querySelector('.about-portrait');
+        const img = plate?.querySelector('img');
+        const github = document.getElementById('about-github');
+        const socials = document.querySelector('.about-socials');
+        const bio = document.getElementById('about-bio');
+        const highlights = document.getElementById('about-highlights');
+        const meta = document.querySelector('.about-meta-group');
+        const location = document.getElementById('about-availability');
+        const header = document.querySelector('#about .section-header');
+        const lr = layout?.getBoundingClientRect();
+        const mediaR = media?.getBoundingClientRect();
+        const pr = plate?.getBoundingClientRect();
+        const br = bio?.getBoundingClientRect();
+        const cr = content?.getBoundingClientRect();
+        const loc = location?.getBoundingClientRect();
+        const hr = header?.getBoundingClientRect();
+        const gr = github?.getBoundingClientRect();
+        const mr = meta?.getBoundingClientRect();
+        const imgStyle = img ? getComputedStyle(img) : null;
+        const plateStyle = plate ? getComputedStyle(plate) : null;
+        const layoutStyle = layout ? getComputedStyle(layout) : null;
+        const metaStyle = meta ? getComputedStyle(meta) : null;
+        const bioStyle = bio ? getComputedStyle(bio) : null;
+        const midX = box => (box.left + box.right) / 2;
+        const firstGlyph = () => {
+            const node = bio?.firstChild;
+            if (!node || node.nodeType !== 3 || !node.length) return 0;
+            const range = document.createRange();
+            range.setStart(node, 0);
+            range.setEnd(node, 1);
+            return range.getBoundingClientRect().left;
+        };
+        return {
+            homePortrait: homeImgs.some(src => src.includes('hitesh-goyal')),
+            portraitCount: portraits.length,
+            overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+            display: layoutStyle?.display || '',
+            float: plateStyle?.float || '',
+            hasDivider: Boolean(document.querySelector('.about-divider')),
+            metaDirection: metaStyle?.flexDirection || '',
+            highlightTags: [...(highlights?.children || [])].map(el => el.tagName),
+            proseCount: (bio ? 1 : 0) + (highlights?.children.length || 0),
+            bioWeight: bioStyle?.fontWeight || '',
+            plateW: Math.round(pr?.width || 0),
+            plateH: Math.round(pr?.height || 0),
+            ratio: pr?.height ? Number((pr.width / pr.height).toFixed(3)) : 0,
+            filter: imgStyle?.filter || '',
+            objectFit: imgStyle?.objectFit || '',
+            src: img?.getAttribute('src') || '',
+            border: plateStyle?.borderTopWidth || '',
+            firstLineLeft: firstGlyph(),
+            plateRight: pr?.right || 0,
+            plateLeft: pr?.left || 0,
+            contentLeft: cr?.left || 0,
+            metaLeft: meta?.getBoundingClientRect().left || 0,
+            metaBottom: mr?.bottom || 0,
+            bioTop: br?.top || 0,
+            plateBottom: pr?.bottom || 0,
+            headerBottom: hr?.bottom || 0,
+            locationTop: loc?.top || 0,
+            locationLeft: loc?.left || 0,
+            locationBottom: loc?.bottom || 0,
+            layoutBottom: lr?.bottom || 0,
+            plateCenter: pr ? midX(pr) : 0,
+            layoutCenter: lr ? midX(lr) : 0,
+            plateMidY: pr ? (pr.top + pr.bottom) / 2 : 0,
+            mediaMidY: mediaR ? (mediaR.top + mediaR.bottom) / 2 : 0,
+            githubInPortrait: Boolean(plate?.contains(github)),
+            githubLabel: github?.getAttribute('aria-label') || '',
+            githubText: (github?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            githubLeft: gr?.left || 0,
+            githubRight: gr?.right || 0,
+            githubBottom: gr?.bottom || 0,
+            homeGithub: Boolean(document.getElementById('introduction-github')),
+            locationText: (location?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            locationIcon: Boolean(location?.querySelector('.about-location-icon')),
+            locationIst: (location?.querySelector('.about-timezone')?.textContent || '').trim(),
+            plateShadow: plateStyle?.boxShadow || '',
+            socialShadow: socials ? getComputedStyle(socials).boxShadow : ''
+        };
+    })()`);
+}
+
 async function galleryCaptionGeom(client) {
     return evaluate(client, `(() => {
         const gallery = document.querySelector('.project-media-gallery');
@@ -480,7 +570,7 @@ async function runE2E(session) {
         const prevTheme = document.documentElement.getAttribute('data-theme');
         const availabilityEl = document.getElementById('introduction-availability');
         const dot = document.querySelector('.availability-dot');
-        const actions = [...(document.querySelector('.introduction-actions')?.children || [])].map(el => el.id);
+        const actions = [...document.querySelectorAll('.introduction-actions [id]')].map(el => el.id);
         const rgb = (value) => value.replace(/\\s+/g, '');
         document.documentElement.setAttribute('data-theme', 'light');
         void availabilityEl?.offsetHeight;
@@ -505,9 +595,13 @@ async function runE2E(session) {
             availability: (availabilityEl?.textContent || '').replace(/\\s+/g, ' ').trim(),
             aboutText: (document.querySelector('#about')?.textContent || ''),
             aboutBio: (document.getElementById('about-bio')?.textContent || '').replace(/\\s+/g, ' ').trim(),
-            github: Boolean(document.getElementById('introduction-github')),
-            linkedin: Boolean(document.getElementById('introduction-linkedin')),
+            github: Boolean(document.getElementById('about-github')),
+            linkedin: Boolean(document.getElementById('about-linkedin')),
+            homeGithub: Boolean(document.getElementById('introduction-github')),
+            homeLinkedin: Boolean(document.getElementById('introduction-linkedin')),
             actions,
+            timezone: (document.querySelector('.introduction-timezone')?.textContent || '').replace(/\\s+/g, ' ').trim(),
+            aboutTimezone: (document.querySelector('#about .about-timezone')?.textContent || '').trim(),
             dotHidden: dot?.getAttribute('aria-hidden') === 'true',
             pulseAfter: dot ? getComputedStyle(dot, '::after').display : '',
             pulseAfterAnim: dot ? getComputedStyle(dot, '::after').animationName : '',
@@ -539,16 +633,83 @@ async function runE2E(session) {
         'landing-availability-line',
         placement.availability === 'Open to Freelance and Full-time positions'
             && !placement.aboutText.includes('Open to Freelance and Full-time positions')
-            && placement.github && placement.linkedin,
+            && placement.github && placement.linkedin
+            && !placement.homeGithub && !placement.homeLinkedin,
         JSON.stringify({ availability: placement.availability, github: placement.github, linkedin: placement.linkedin })
     ));
     results.push(check(
         'landing-cta-row-order',
-        placement.actions[0] === 'introduction-contact'
-            && placement.actions[1] === 'introduction-github'
-            && placement.actions[2] === 'introduction-linkedin',
+        placement.actions.length === 1 && placement.actions[0] === 'introduction-contact'
+            && !placement.timezone
+            && placement.aboutTimezone === 'IST',
         JSON.stringify({ actions: placement.actions })
     ));
+
+    const portraitViewports = [
+        { width: 1440, height: 900, mobile: false, stacked: false },
+        { width: 1280, height: 900, mobile: false, stacked: false },
+        { width: 1024, height: 900, mobile: false, stacked: false },
+        { width: 768, height: 1024, mobile: false, stacked: false },
+        { width: 430, height: 932, mobile: true, stacked: true },
+        { width: 390, height: 844, mobile: true, stacked: true },
+        { width: 320, height: 720, mobile: true, stacked: true }
+    ];
+    const portraitLayouts = [];
+    for (const viewport of portraitViewports) {
+        await emulate(client, {
+            storedTheme: 'dark',
+            theme: 'dark',
+            viewport
+        });
+        await evaluate(client, 'window.scrollTo(0, 0)');
+        await delay(40);
+        portraitLayouts.push({ width: viewport.width, stacked: viewport.stacked, ...(await aboutPortraitLayout(client)) });
+    }
+    const portraitOk = portraitLayouts.every(row => {
+        const ratioOk = Math.abs(row.ratio - 0.8) <= 0.02;
+        const filterOk = row.filter === 'none';
+        const srcOk = row.src.includes('hitesh-goyal-portrait.jpg');
+        const coverOk = row.objectFit === 'cover';
+        const once = !row.homePortrait && row.portraitCount === 1;
+        const locationOk = row.locationText === 'Based in Bangalore, India. IST'
+            && row.locationIcon
+            && row.locationIst === 'IST';
+        const paras = row.highlightTags.length === 2 && row.highlightTags.every(tag => tag === 'P') && row.proseCount === 3;
+        const metaStacked = row.metaDirection === 'column';
+        if (row.overflowX || !ratioOk || !filterOk || !srcOk || !coverOk || !once || !locationOk || !paras || !metaStacked) return false;
+        if (!row.githubInPortrait || row.homeGithub || row.hasDivider || row.githubLabel !== 'GitHub' || row.githubText !== '') return false;
+        if (row.bioWeight !== '400') return false;
+        const overlayOk = row.githubLeft >= row.plateLeft
+            && row.githubRight <= row.plateRight + 2
+            && row.githubBottom <= row.plateBottom + 2
+            && row.githubBottom >= row.plateBottom - 56;
+        const locationFooter = row.locationTop >= row.plateBottom - 2
+            && row.locationTop >= row.metaBottom - 2
+            && row.locationBottom <= row.layoutBottom + 2;
+        if (!row.stacked) {
+            return row.float === 'none'
+                && row.display === 'grid'
+                && row.plateW >= 240 && row.plateW <= 300
+                && row.firstLineLeft >= row.plateRight - 2
+                && row.contentLeft >= row.plateRight - 2
+                && row.metaLeft >= row.plateRight - 2
+                && row.border === '1px'
+                && overlayOk
+                && locationFooter
+                && Math.abs(row.plateMidY - row.mediaMidY) <= 8;
+        }
+        return row.float === 'none'
+            && row.plateW >= 220 && row.plateW <= 260
+            && row.plateBottom <= row.bioTop + 1
+            && row.headerBottom <= row.plateBottom
+            && overlayOk
+            && locationFooter
+            && Math.abs(row.plateCenter - row.layoutCenter) <= 12;
+    });
+    results.push(check('home-portrait-removed', portraitLayouts.every(row => !row.homePortrait), JSON.stringify(portraitLayouts.map(row => ({ width: row.width, homePortrait: row.homePortrait })))));
+    results.push(check('about-portrait-responsive', portraitOk, JSON.stringify(portraitLayouts)));
+    await setViewportTheme(client, 'desktop', 'dark', 'dark');
+    await goto(client, new URL('/', url).href, 'home');
     const tagIcons = await evaluate(client, `(() => {
         const chips = (root, sel) => [...(root?.querySelectorAll(sel) || [])];
         const inspect = (el) => ({
@@ -833,11 +994,7 @@ async function runE2E(session) {
             ...(dot?.getAnimations?.() || []),
             ...document.getAnimations()
         ];
-        const anim = animations.find(item => {
-            const effect = item.effect;
-            return (effect && effect.pseudoElement === '::after')
-                || item.animationName === 'availability-pulse';
-        });
+        const anim = animations.find(item => item.animationName === 'availability-pulse');
         if (!anim || !anim.effect) {
             return { found: false, display: dot ? getComputedStyle(dot, '::after').display : '' };
         }
@@ -1312,8 +1469,63 @@ async function runSource() {
         contactGaps.push('landing-cta-label');
     }
     const actionsBlock = html.match(/class="introduction-actions"[\s\S]*?<\/div>/);
-    if (!actionsBlock || !/id="introduction-contact"[\s\S]*id="introduction-github"[\s\S]*id="introduction-linkedin"/.test(actionsBlock[0])) {
+    if (!actionsBlock || !/id="introduction-contact"/.test(actionsBlock[0]) || /introduction-github|introduction-linkedin/.test(actionsBlock[0])) {
         contactGaps.push('landing-cta-row-order');
+    }
+    await readFile(join(ROOT, 'assets', 'hitesh-goyal.jpg'));
+    await readFile(join(ROOT, 'assets', 'hitesh-goyal-portrait.jpg'));
+    const homeHtml = html.slice(html.indexOf('id="home"'), html.indexOf('id="about"'));
+    const aboutMarkup = html.slice(html.indexOf('id="about"'), html.indexOf('id="projects"'));
+    if ((html.split('assets/hitesh-goyal-portrait.jpg').length - 1) !== 1 || /src="assets\/hitesh-goyal\.jpg"/.test(html)) {
+        contactGaps.push('portrait-asset');
+    }
+    if (/src="assets\/hitesh-goyal/.test(homeHtml) || homeHtml.includes('introduction-portrait') || homeHtml.includes('introduction-layout')) {
+        contactGaps.push('home-portrait-removed');
+    }
+    if (!aboutMarkup.includes('class="about-portrait"') || !/class="about-portrait"[\s\S]*width="800"[\s\S]*height="1000"/.test(aboutMarkup)) {
+        contactGaps.push('portrait-dimensions');
+    }
+    if (aboutMarkup.includes('about-minimal') || aboutMarkup.includes('about-list') || /<ul id="about-highlights"/.test(aboutMarkup)) {
+        contactGaps.push('about-monolith-card');
+    }
+    if (!aboutMarkup.includes('class="about-media"') || !aboutMarkup.includes('class="about-content"') || aboutMarkup.includes('about-divider')) {
+        contactGaps.push('about-split-card');
+    }
+    const aboutMediaBlock = css.match(/\.about-media \{[\s\S]*?\}/)?.[0] || '';
+    if (!aboutMediaBlock.includes('align-items: center')) contactGaps.push('about-media-center');
+    if (css.includes('.about-portrait:hover .about-socials')) contactGaps.push('about-social-hover-scope');
+    if (!aboutMarkup.includes('id="about-github"') || !aboutMarkup.includes('id="about-linkedin"') || !aboutMarkup.includes('id="about-availability"')) {
+        contactGaps.push('about-socials');
+    }
+    if (!/class="about-portrait"[\s\S]*id="about-github"[\s\S]*id="about-linkedin"[\s\S]*<\/figure>/.test(aboutMarkup)
+        || !aboutMarkup.includes('class="about-social"')
+        || !aboutMarkup.includes('aria-label="GitHub"')) {
+        contactGaps.push('about-social-overlay');
+    }
+    if (homeHtml.includes('IST') || homeHtml.includes('introduction-timezone')
+        || !aboutMarkup.includes('class="about-timezone"')
+        || !/>IST</.test(aboutMarkup)
+        || aboutMarkup.includes('IST Timezone')) {
+        contactGaps.push('ist-timezone');
+    }
+    if (!aboutMarkup.includes('class="about-location-icon"') || !aboutMarkup.includes('id="about-location-text"')) {
+        contactGaps.push('about-location-icon');
+    }
+    if (homeHtml.includes('introduction-github') || homeHtml.includes('introduction-linkedin') || homeHtml.includes('id="about-github"')) {
+        contactGaps.push('home-socials-moved');
+    }
+    if (!/getElementById\('about-highlights'\)[\s\S]*createElement\('p'\)/.test(js)
+        || /getElementById\('about-highlights'\)[\s\S]{0,240}createElement\('li'\)/.test(js)) {
+        contactGaps.push('about-highlight-paras');
+    }
+    const portraitBlock = css.match(/\.about-portrait \{[\s\S]*?\}/)?.[0] || '';
+    const portraitImgBlock = css.match(/\.about-portrait img \{[\s\S]*?\}/)?.[0] || '';
+    const portraitSlice = css.match(/about-portrait[\s\S]{0,900}/)?.[0] || '';
+    if (!portraitBlock.includes('aspect-ratio: 4 / 5')) contactGaps.push('portrait-aspect');
+    if (!portraitBlock.includes('var(--shadow-raised)')) contactGaps.push('portrait-depth');
+    if (!css.includes('0 6px 14px color-mix(in srgb, #000000 42%, transparent)')) contactGaps.push('about-social-depth');
+    if (/filter\s*:/.test(portraitImgBlock) || /grayscale/.test(portraitSlice) || /:root\[data-theme="light"\] \.about-portrait/.test(css)) {
+        contactGaps.push('portrait-filter');
     }
     if (!css.includes('#34C759') || !css.includes('#1f7a37') || !css.includes('#30D158') || !css.includes('#2BB44D') || css.includes('#7dae8a') || css.includes('#2d6a46')) {
         contactGaps.push('availability-apple-green');

@@ -748,9 +748,9 @@ function hydrateAboutSection(profile) {
     if (highlightsEl) {
         highlightsEl.replaceChildren();
         (aboutData.highlights || []).forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            highlightsEl.appendChild(li);
+            const paragraph = document.createElement('p');
+            paragraph.textContent = item;
+            highlightsEl.appendChild(paragraph);
         });
     }
 
@@ -776,9 +776,9 @@ function hydrateAboutSection(profile) {
         });
     }
 
-    const availabilityEl = document.getElementById('about-availability');
-    if (availabilityEl) {
-        availabilityEl.textContent = [
+    const locationTextEl = document.getElementById('about-location-text');
+    if (locationTextEl) {
+        locationTextEl.textContent = [
             profile.location ? `Based in ${profile.location}.` : '',
             aboutData.availability || ''
         ].filter(Boolean).join(' ');
@@ -1113,8 +1113,8 @@ async function loadProfile() {
         const summaryEl = document.getElementById('introduction-summary');
         if (nameEl) nameEl.textContent = profile.name;
         if (summaryEl) summaryEl.textContent = profile.summary || '';
-        setExternalHref('introduction-github', profile.socials && profile.socials.github);
-        setExternalHref('introduction-linkedin', profile.socials && profile.socials.linkedin);
+        setExternalHref('about-github', profile.socials && profile.socials.github);
+        setExternalHref('about-linkedin', profile.socials && profile.socials.linkedin);
         renderIntroductionTitle(profile.title || '');
         hydrateAboutSection(profile);
     } catch (error) {
