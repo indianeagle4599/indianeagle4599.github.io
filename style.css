@@ -332,11 +332,6 @@ html.theme-transitioning .btn-outline {
     .cert-kind-dot {
         animation: none;
     }
-
-    .projects-carousel .project-card:hover .btn svg,
-    .projects-carousel .project-card:focus-within .btn svg {
-        transform: none;
-    }
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -822,7 +817,6 @@ body.nav-open {
     width: 16px;
     height: 16px;
     flex: 0 0 auto;
-    transition: transform var(--motion-fast) var(--ease);
 }
 
 .btn svg,
@@ -1979,11 +1973,6 @@ body.contact-modal-open {
 .projects-carousel .project-card:active {
     transform: translateY(1px);
     transition-duration: var(--motion-press);
-}
-
-.projects-carousel .project-card:hover .btn svg,
-.projects-carousel .project-card:focus-within .btn svg {
-    transform: translateX(3px);
 }
 
 .project-card-title-row {
