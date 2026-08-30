@@ -758,6 +758,10 @@ body.nav-open {
     opacity: var(--blink-on);
 }
 
+.cursor.is-typing {
+    opacity: 1;
+}
+
 @keyframes blink-clock {
     50% {
         --blink-on: 0;

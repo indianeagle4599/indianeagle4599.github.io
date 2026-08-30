@@ -3266,27 +3266,82 @@ async function loadRecommendations() {
     }
 }
 
+function typeUnits(text) {
+    const value = String(text || '');
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+        return Array.from(new Intl.Segmenter().segment(value), (part) => part.segment);
+    }
+    return Array.from(value);
+}
+
+function typeKind(ch) {
+    if (ch === ' ' || ch === '\n' || ch === '\t') return 'space';
+    if (/\p{L}/u.test(ch)) return 'letter';
+    if (/\p{N}/u.test(ch)) return 'digit';
+    if (/\p{P}|\p{S}/u.test(ch)) return 'mark';
+    return 'other';
+}
+
+function nextTypeDelay(ch) {
+    const base = 1000 / 13;
+    const variance = 0.4;
+    let u = 0;
+    let v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    let ms = base * (1 + z * variance);
+    ms = Math.max(base * (1 - variance), Math.min(base * (1 + variance), ms));
+    const kind = typeKind(ch);
+    if (kind === 'space') ms += base * 0.35;
+    if (kind === 'mark') ms *= /[.!?]/.test(ch) ? 4 : 1.8;
+    if (Math.random() < 0.02) ms += 200 + Math.random() * 300;
+    return Math.round(Math.max(18, ms));
+}
+
+function planTypeDelays(units) {
+    return units.map((ch) => nextTypeDelay(ch));
+}
+
+let introTitleTypeGen = 0;
+let introTitleTypeTimer = 0;
+
 function renderIntroductionTitle(text) {
     const element = document.getElementById('introduction-title');
     if (!element) return;
+    window.clearTimeout(introTitleTypeTimer);
+    introTitleTypeGen += 1;
+    const gen = introTitleTypeGen;
+    const units = typeUnits(text);
+    const full = `> ${units.join('')}`;
     if (prefersReducedMotion()) {
-        element.textContent = `> ${text}`;
+        element.textContent = full;
         return;
     }
-    const cursor = element.querySelector('.cursor');
-    if (!cursor) {
-        element.textContent = `> ${text}`;
+    const typed = document.createTextNode('');
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor is-typing';
+    cursor.textContent = '_';
+    element.replaceChildren();
+    element.append('> ', typed, cursor);
+    if (!units.length) {
+        cursor.classList.remove('is-typing');
         return;
     }
+    const delays = planTypeDelays(units);
     let i = 0;
     const type = () => {
-        if (i < text.length) {
-            cursor.insertAdjacentText('beforebegin', text.charAt(i));
-            i += 1;
-            setTimeout(type, 40);
+        if (gen !== introTitleTypeGen) return;
+        if (i >= units.length) {
+            cursor.classList.remove('is-typing');
+            return;
         }
+        typed.nodeValue += units[i];
+        const wait = delays[i];
+        i += 1;
+        introTitleTypeTimer = window.setTimeout(type, wait);
     };
-    setTimeout(type, 500);
+    introTitleTypeTimer = window.setTimeout(type, 180 + Math.round(Math.random() * 160));
 }
 
 function animateLogo() {
