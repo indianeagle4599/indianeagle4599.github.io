@@ -2,7 +2,7 @@ const THEME_STORAGE_KEY = 'portfolio-theme';
 /* Keep equal to --bg-page in style.css. Head scripts cannot read that variable before paint. */
 const THEME_PAGE_COLOR = {
     light: '#f4f4f2',
-    dark: '#121212'
+    dark: '#000000'
 };
 const THEME_ICONS = {
     light: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m17.07-7.07-1.41 1.41M6.34 17.66l-1.41 1.41m14.14 0-1.41-1.41M6.34 6.34 4.93 4.93"></path></svg>',

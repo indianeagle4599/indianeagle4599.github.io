@@ -1,7 +1,7 @@
 @property --bg-page {
     syntax: "<color>";
     inherits: true;
-    initial-value: #121212;
+    initial-value: #000000;
 }
 
 @property --bg-surface {
@@ -61,9 +61,9 @@
 /* --- Global Variables --- */
 :root {
     color-scheme: dark;
-    /* theme-color meta/JS must stay equal to --bg-page (hex: #121212 / #f4f4f2). */
+    /* theme-color meta/JS must stay equal to --bg-page (hex: #000000 / #f4f4f2). */
     /* Depth: --bg-page L0 canvas, --bg-surface L1 content. */
-    --bg-page: #121212;
+    --bg-page: #000000;
     --bg-surface: #1c1c1c;
     --bg-interactive: #242424;
     --bg-floating: color-mix(in srgb, var(--bg-surface) 84%, transparent);

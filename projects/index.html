@@ -9,7 +9,7 @@
     <meta name="description" content="Project detail page for Hitesh Goyal's portfolio.">
     <meta name="author" content="Hitesh Goyal">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#000000">
 
     <link rel="icon" type="image/svg+xml" href="../assets/hg-logo.svg">
     <link rel="apple-touch-icon" href="../assets/hg-logo.svg">
@@ -37,8 +37,8 @@
                 ? stored
                 : prefersDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
-            /* Keep #f4f4f2 / #121212 equal to --bg-page in style.css. */
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f4f4f2' : '#121212');
+            /* Keep #f4f4f2 / #000000 equal to --bg-page in style.css. */
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f4f4f2' : '#000000');
             try {
                 if (sessionStorage.getItem('portfolio-page-motion') === '1') {
                     document.documentElement.classList.add('is-page-entering');

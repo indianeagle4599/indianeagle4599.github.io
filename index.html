@@ -13,7 +13,7 @@
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
     <meta name="application-name" content="Hitesh Goyal Portfolio">
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#000000">
     <link rel="canonical" href="https://hiteshgoyal.me/">
     <link rel="author" href="https://www.linkedin.com/in/hitesh-goyal-5732bb208/">
     <link rel="icon" type="image/svg+xml" href="assets/hg-logo.svg">
@@ -44,8 +44,8 @@
                 ? stored
                 : prefersDark ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
-            /* Keep #f4f4f2 / #121212 equal to --bg-page in style.css. */
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f4f4f2' : '#121212');
+            /* Keep #f4f4f2 / #000000 equal to --bg-page in style.css. */
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f4f4f2' : '#000000');
             try {
                 if (sessionStorage.getItem('portfolio-page-motion') === '1') {
                     document.documentElement.classList.add('is-page-entering');
