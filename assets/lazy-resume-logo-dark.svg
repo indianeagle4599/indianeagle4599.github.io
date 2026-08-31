@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" role="img" aria-label="LazyResume">
-  <g fill="none" stroke="#A3B6C9" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round">
-    <rect x="4.2" y="3.4" width="11.4" height="15.4" rx="2.3"/>
-    <rect x="8.4" y="5.2" width="11.4" height="15.4" rx="2.3"/>
-    <path d="M11.1 10.4h6"/>
-  </g>
-</svg>

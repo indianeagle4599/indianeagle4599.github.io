@@ -811,7 +811,6 @@ function normalizeProject(project) {
         slug: project.slug,
         title: project.title,
         logo: project.logo || '',
-        logoDark: project.logoDark || '',
         logoTone: project.logoTone || '',
         featured: Boolean(project.featured),
         summary: project.summary || '',
@@ -2733,8 +2732,6 @@ function renderProjectActionBar(project, element) {
 
 function renderProjectIntroduction(project) {
     const logoEl = document.getElementById('project-logo');
-    const logoDarkEl = document.getElementById('project-logo-dark');
-    const heading = logoEl?.closest('.project-introduction-heading');
     if (logoEl) {
         if (project.logo) {
             logoEl.src = assetUrl(project.logo);
@@ -2742,21 +2739,9 @@ function renderProjectIntroduction(project) {
             logoEl.classList.toggle('node-logo--on-dark', project.logoTone === 'on-dark');
             logoEl.hidden = false;
         } else {
-            logoEl.removeAttribute('src');
             logoEl.hidden = true;
         }
     }
-    if (logoDarkEl) {
-        if (project.logo && project.logoDark) {
-            logoDarkEl.src = assetUrl(project.logoDark);
-            logoDarkEl.alt = '';
-            logoDarkEl.hidden = false;
-        } else {
-            logoDarkEl.removeAttribute('src');
-            logoDarkEl.hidden = true;
-        }
-    }
-    heading?.toggleAttribute('data-logo-pair', Boolean(project.logo && project.logoDark));
 
     document.getElementById('project-title').textContent = project.title;
 

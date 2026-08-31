@@ -1,34 +1,13 @@
 #!/usr/bin/env node
 
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { ROOT, delay, evaluate, openSession } from './cdp-session.mjs';
 
 const NEW_MARKS = [
-    {
-        dark: '#A3B6C9',
-        darkFile: 'lazy-resume-logo-dark.svg',
-        file: 'lazy-resume-logo.svg',
-        light: '#6E849C',
-        slug: 'lazy-resume',
-        title: 'LazyResume'
-    },
-    {
-        dark: '#5BBAA8',
-        darkFile: 'ai-generated-image-classifier-logo-dark.svg',
-        file: 'ai-generated-image-classifier-logo.svg',
-        light: '#3FA896',
-        slug: 'ai-generated-image-classifier',
-        title: 'Detecting AI Generated Images'
-    },
-    {
-        dark: '#D4B445',
-        darkFile: 'fuzzy-hybrid-stock-trading-logo-dark.svg',
-        file: 'fuzzy-hybrid-stock-trading-logo.svg',
-        light: '#C9A227',
-        slug: 'fuzzy-hybrid-stock-trading',
-        title: 'Fuzzy Hybrid Model for Stock Trading'
-    }
+    { file: 'lazy-resume-logo.svg', slug: 'lazy-resume', title: 'LazyResume' },
+    { file: 'ai-generated-image-classifier-logo.svg', slug: 'ai-generated-image-classifier', title: 'Detecting AI Generated Images' },
+    { file: 'fuzzy-hybrid-stock-trading-logo.svg', slug: 'fuzzy-hybrid-stock-trading', title: 'Fuzzy Hybrid Model for Stock Trading' }
 ];
 
 function parseArgs(argv) {
@@ -82,10 +61,6 @@ async function waitFor(client, expression) {
     throw new Error(`Timed out waiting for ${expression}`);
 }
 
-function geometryKey(svg) {
-    return svg.replace(/#[0-9A-Fa-f]{6}/g, '').replace(/fill-opacity="[0-9.]+"/g, '');
-}
-
 async function runSource() {
     const projects = JSON.parse(await readFile(join(ROOT, 'data', 'projects.json'), 'utf8'));
     const css = await readFile(join(ROOT, 'style.css'), 'utf8');
@@ -100,29 +75,22 @@ async function runSource() {
         if (project.logo !== `./assets/${mark.file}`) {
             throw new Error(`${mark.slug} logo path is ${JSON.stringify(project.logo)}`);
         }
-        if (project.logoDark !== `./assets/${mark.darkFile}`) {
-            throw new Error(`${mark.slug} logoDark path is ${JSON.stringify(project.logoDark)}`);
+        if (project.logoTone !== 'on-dark') {
+            throw new Error(`${mark.slug} is missing logoTone "on-dark" (OS Toolkit plate-off treatment)`);
         }
-        const lightSvg = await readFile(join(ROOT, 'assets', mark.file), 'utf8');
-        const darkSvg = await readFile(join(ROOT, 'assets', mark.darkFile), 'utf8');
-        if (!/viewBox="0 0 24 24"/.test(lightSvg) || !/viewBox="0 0 24 24"/.test(darkSvg)) {
-            throw new Error(`${mark.file} pair is missing a 24×24 viewBox`);
+        if (project.logoDark) throw new Error(`${mark.slug} still has a logoDark variant`);
+        const asset = join(ROOT, 'assets', mark.file);
+        await access(asset);
+        const svg = await readFile(asset, 'utf8');
+        if (!/viewBox="0 0 24 24"/.test(svg)) throw new Error(`${mark.file} is missing a 24×24 viewBox`);
+        if ((JSON.stringify(project).match(/"logo"/g) || []).length !== 1) {
+            throw new Error(`${mark.slug} has a duplicate logo field`);
         }
-        if (!lightSvg.includes(mark.light)) throw new Error(`${mark.file} lost its light ink ${mark.light}`);
-        if (!darkSvg.includes(mark.dark)) throw new Error(`${mark.darkFile} lost its dark ink ${mark.dark}`);
-        if (darkSvg.includes(mark.light)) throw new Error(`${mark.darkFile} still uses the light ink`);
-        if (geometryKey(lightSvg) !== geometryKey(darkSvg)) {
-            throw new Error(`${mark.slug} light/dark geometry diverged`);
-        }
-        if (tagIcons.includes(mark.file) || tagIcons.includes(mark.darkFile)) {
-            throw new Error(`${mark.file} is referenced from TAG_ICONS`);
-        }
+        if (tagIcons.includes(mark.file)) throw new Error(`${mark.file} is referenced from TAG_ICONS`);
     }
 
     const missing = projects.filter(project => !project.logo);
     if (missing.length) throw new Error(`projects still missing logo: ${missing.map(item => item.slug).join(', ')}`);
-    const unexpectedDark = projects.filter(project => project.logoDark && !NEW_MARKS.some(mark => mark.slug === project.slug));
-    if (unexpectedDark.length) throw new Error(`unexpected logoDark on ${unexpectedDark.map(item => item.slug).join(', ')}`);
 
     const expectedExisting = {
         'ask-krishna': './assets/ask-krishna-logo.svg',
@@ -136,20 +104,18 @@ async function runSource() {
         if (project?.logo !== logo) throw new Error(`${slug} existing logo path changed: ${JSON.stringify(project?.logo)}`);
     }
 
-    if (!/\.node-logo \{\s*width: 36px;\s*height: 36px;/.test(css)) {
-        throw new Error('.node-logo 36×36 sizing changed');
+    if (projects.find(item => item.slug === 'os-toolkit')?.logoTone !== 'on-dark') {
+        throw new Error('OS Toolkit logoTone on-dark was removed');
+    }
+    if (projects.some(item => item.logoDark)) throw new Error('logoDark remains on a project record');
+    if (!/\.node-logo \{\s*width: 36px;\s*height: 36px;/.test(css) || !/\.node-logo--on-dark \{/.test(css)) {
+        throw new Error('.node-logo 36×36 sizing or on-dark plate-off treatment changed');
     }
     if (!/\.project-logo \{\s*width: 56px;\s*height: 56px;/.test(css)) {
         throw new Error('.project-logo 56×56 sizing changed');
     }
     if (!/function logoImg\(src, className, tone\)/.test(js) || !/logoEl\.src = assetUrl\(project\.logo\)/.test(js)) {
         throw new Error('project logo renderer changed');
-    }
-    if (!/logoImg\(project\.logo, 'node-logo', project\.logoTone\)/.test(js)) {
-        throw new Error('Other-projects renderer is no longer using the light logo on the plate');
-    }
-    if (!/data-logo-pair/.test(js) || !/\[data-logo-pair\] \.project-logo--dark/.test(css)) {
-        throw new Error('detail logo pair / data-theme swap is missing');
     }
 
     console.log(`Source: OK (${projects.length} projects, ${NEW_MARKS.length} new marks)`);
@@ -184,9 +150,11 @@ async function describeHomeLogos(client) {
                 h: Math.round(imgBox.height),
                 overflow: imgBox.right > rowBox.right + 0.5 || imgBox.bottom > rowBox.bottom + 0.5,
                 plate: style.backgroundColor,
+                padding: style.padding,
+                borderWidth: style.borderWidth,
+                onDark: img.classList.contains('node-logo--on-dark'),
                 display: style.display,
                 srcOk: img.getAttribute('src')?.includes(expectedFile) || false,
-                usesDarkAsset: (img.getAttribute('src') || '').includes('-dark.svg'),
                 titleAligned: titleEl ? Math.abs((imgBox.top + imgBox.height / 2) - (titleEl.getBoundingClientRect().top + titleEl.getBoundingClientRect().height / 2)) < 8 : false
             };
         };
@@ -198,47 +166,32 @@ async function describeHomeLogos(client) {
     })()`);
 }
 
-async function describeDetailLogo(client) {
+async function describeDetailLogo(client, file) {
     return evaluate(client, `(() => {
-        const light = document.getElementById('project-logo');
-        const dark = document.getElementById('project-logo-dark');
-        if (!light) return { found: false };
-        const heading = light.closest('.project-introduction-heading');
+        const img = document.getElementById('project-logo');
+        if (!img) return { found: false };
+        const heading = img.closest('.project-introduction-heading');
         const title = document.getElementById('project-title');
-        const theme = document.documentElement.getAttribute('data-theme');
-        const describe = img => {
-            if (!img) return null;
-            const box = img.getBoundingClientRect();
-            const display = getComputedStyle(img).display;
-            return {
-                complete: img.complete,
-                display,
-                hidden: img.hidden,
-                naturalWidth: img.naturalWidth,
-                src: img.getAttribute('src') || '',
-                visible: !img.hidden && display !== 'none' && box.width > 0,
-                w: Math.round(box.width),
-                h: Math.round(box.height)
-            };
-        };
-        const lightState = describe(light);
-        const darkState = describe(dark);
-        const visibleImg = lightState?.visible ? light : (darkState?.visible ? dark : null);
-        const visibleBox = visibleImg?.getBoundingClientRect();
-        const titleBox = title?.getBoundingClientRect();
+        const imgBox = img.getBoundingClientRect();
         const headingBox = heading?.getBoundingClientRect();
+        const titleBox = title?.getBoundingClientRect();
+        const page = getComputedStyle(document.documentElement).getPropertyValue('--bg-page').trim();
         return {
-            dark: darkState,
             found: true,
-            light: lightState,
+            hidden: img.hidden,
+            src: img.getAttribute('src'),
+            complete: img.complete,
+            naturalWidth: img.naturalWidth,
+            w: Math.round(imgBox.width),
+            h: Math.round(imgBox.height),
+            srcOk: img.getAttribute('src')?.includes(${JSON.stringify(file)}) || false,
+            relative: (img.getAttribute('src') || '').startsWith('../assets/'),
+            overflow: headingBox ? imgBox.right > headingBox.right + 0.5 : false,
+            titleAligned: titleBox ? Math.abs((imgBox.top + imgBox.height / 2) - (titleBox.top + titleBox.height / 2)) < 10 : false,
             og: document.querySelector('meta[property="og:image"]')?.getAttribute('content') || '',
-            overflow: visibleBox && headingBox ? visibleBox.right > headingBox.right + 0.5 : false,
-            page: getComputedStyle(document.documentElement).getPropertyValue('--bg-page').trim(),
-            pair: heading?.hasAttribute('data-logo-pair') || false,
-            theme,
-            titleAligned: visibleBox && titleBox ? Math.abs((visibleBox.top + visibleBox.height / 2) - (titleBox.top + titleBox.height / 2)) < 10 : false,
-            visibleSize: visibleBox ? { w: Math.round(visibleBox.width), h: Math.round(visibleBox.height) } : null,
-            visibleSrc: visibleImg?.getAttribute('src') || ''
+            page,
+            plate: getComputedStyle(img).backgroundColor,
+            onDark: img.classList.contains('node-logo--on-dark')
         };
     })()`);
 }
@@ -275,9 +228,10 @@ async function runE2E(options) {
             await setTheme(client, theme);
             const home = await describeHomeLogos(client);
             results.push(check(`home-${theme}-new-marks-present`, home.newMarks.every(item => item.found && item.hasImg), JSON.stringify(home.newMarks)));
-            results.push(check(`home-${theme}-src-and-load`, home.newMarks.every(item => item.srcOk && item.complete && item.naturalWidth > 0 && !item.usesDarkAsset), JSON.stringify(home.newMarks.map(item => ({ src: item.src, complete: item.complete, naturalWidth: item.naturalWidth, usesDarkAsset: item.usesDarkAsset })))));
-            results.push(check(`home-${theme}-36px-plate`, home.newMarks.every(item => item.w === 36 && item.h === 36 && item.plate === 'rgb(255, 255, 255)'), JSON.stringify(home.newMarks.map(item => ({ w: item.w, h: item.h, plate: item.plate })))));
+            results.push(check(`home-${theme}-src-and-load`, home.newMarks.every(item => item.srcOk && item.complete && item.naturalWidth > 0), JSON.stringify(home.newMarks.map(item => ({ src: item.src, complete: item.complete, naturalWidth: item.naturalWidth })))));
+            results.push(check(`home-${theme}-36px-no-plate`, home.newMarks.every(item => item.w === 36 && item.h === 36 && item.plate === 'rgba(0, 0, 0, 0)' && item.onDark && item.padding === '0px'), JSON.stringify(home.newMarks.map(item => ({ w: item.w, h: item.h, plate: item.plate, onDark: item.onDark, padding: item.padding })))));
             results.push(check(`home-${theme}-align-no-overflow`, home.newMarks.every(item => item.titleAligned && !item.overflow), JSON.stringify(home.newMarks.map(item => ({ titleAligned: item.titleAligned, overflow: item.overflow })))));
+            results.push(check(`home-${theme}-os-toolkit-still-on-dark`, home.existing[0].onDark && home.existing[0].plate === 'rgba(0, 0, 0, 0)', JSON.stringify(home.existing[0])));
             results.push(check(`home-${theme}-existing-still-render`, home.existing.every(item => item.found && item.hasImg && item.complete && item.naturalWidth > 0), JSON.stringify(home.existing)));
             results.push(check(`home-${theme}-root-relative-src`, home.newMarks.every(item => (item.src || '').startsWith('./assets/')), JSON.stringify(home.newMarks.map(item => item.src))));
         }
@@ -291,36 +245,20 @@ async function runE2E(options) {
         for (const mark of NEW_MARKS) {
             await goto(client, new URL(`/projects/?slug=${mark.slug}`, url).href);
             await waitFor(client, `document.querySelector('#project-title')?.textContent && document.querySelector('#project-title')?.textContent !== 'Loading project...'`);
-            await waitFor(client, `document.getElementById('project-logo')?.complete && document.getElementById('project-logo-dark')?.complete && document.getElementById('project-logo-dark')?.naturalWidth > 0`);
-
-            await setTheme(client, 'light');
-            let detail = await describeDetailLogo(client);
-            results.push(check(`detail-light-${mark.slug}-uses-light-asset`, detail.pair && detail.visibleSrc.includes(mark.file) && !detail.visibleSrc.includes('-dark') && detail.light.complete && detail.dark.complete && detail.dark.display === 'none', JSON.stringify(detail)));
-            results.push(check(`detail-light-${mark.slug}-56px`, detail.visibleSize?.w === 56 && detail.visibleSize?.h === 56 && detail.titleAligned && !detail.overflow && detail.page.includes('244'), JSON.stringify(detail)));
-
-            await setTheme(client, 'dark');
-            detail = await describeDetailLogo(client);
-            results.push(check(`detail-dark-${mark.slug}-uses-dark-asset`, detail.pair && detail.visibleSrc.includes(mark.darkFile) && detail.light.display === 'none' && detail.dark.complete && detail.dark.naturalWidth > 0, JSON.stringify(detail)));
-            results.push(check(`detail-dark-${mark.slug}-56px`, detail.visibleSize?.w === 56 && detail.visibleSize?.h === 56 && detail.titleAligned && !detail.overflow && detail.page.includes('0, 0, 0'), JSON.stringify(detail)));
-            results.push(check(`detail-fetch-dark-${mark.slug}`, await fetchOk(client, new URL(detail.dark.src, url).href), detail.dark.src));
-
-            await evaluate(client, `document.getElementById('theme-toggle')?.click()`);
-            await delay(80);
-            const afterToggle = await describeDetailLogo(client);
-            results.push(check(`detail-toggle-${mark.slug}-to-light`, afterToggle.theme === 'light' && afterToggle.visibleSrc.includes(mark.file) && !afterToggle.visibleSrc.includes('-dark') && afterToggle.visibleSize?.w === 56 && afterToggle.light.complete && afterToggle.dark.complete, JSON.stringify(afterToggle)));
-            await evaluate(client, `document.getElementById('theme-toggle')?.click()`);
-            await delay(80);
-            const afterToggleBack = await describeDetailLogo(client);
-            results.push(check(`detail-toggle-${mark.slug}-back-to-dark`, afterToggleBack.theme === 'dark' && afterToggleBack.visibleSrc.includes(mark.darkFile) && afterToggleBack.visibleSize?.w === 56, JSON.stringify(afterToggleBack)));
+            for (const theme of ['dark', 'light']) {
+                await setTheme(client, theme);
+                const detail = await describeDetailLogo(client, mark.file);
+                results.push(check(`detail-${theme}-${mark.slug}-visible`, detail.found && !detail.hidden && detail.srcOk && detail.complete && detail.naturalWidth > 0 && detail.onDark && detail.plate === 'rgba(0, 0, 0, 0)', JSON.stringify(detail)));
+                results.push(check(`detail-${theme}-${mark.slug}-56px`, detail.w === 56 && detail.h === 56 && detail.relative && !detail.overflow && detail.titleAligned, JSON.stringify(detail)));
+            }
+            const detail = await describeDetailLogo(client, mark.file);
+            results.push(check(`detail-fetch-${mark.slug}`, await fetchOk(client, new URL(detail.src, url).href), detail.src));
         }
 
         await goto(client, new URL('/projects/?slug=ask-krishna', url).href);
         await waitFor(client, `document.querySelector('#project-title')?.textContent === 'Ask Krishna'`);
-        await setTheme(client, 'dark');
-        const askDark = await describeDetailLogo(client);
-        await setTheme(client, 'light');
-        const askLight = await describeDetailLogo(client);
-        results.push(check('detail-existing-ask-krishna-unaffected', !askDark.pair && !askLight.pair && askDark.visibleSrc.includes('ask-krishna-logo.svg') && askLight.visibleSrc.includes('ask-krishna-logo.svg') && askDark.dark.hidden && askLight.dark.hidden, JSON.stringify({ askDark, askLight })));
+        const ask = await describeDetailLogo(client, 'ask-krishna-logo.svg');
+        results.push(check('detail-existing-ask-krishna', ask.found && !ask.hidden && ask.srcOk && ask.complete && !ask.onDark, JSON.stringify(ask)));
     } finally {
         await session.close();
     }
