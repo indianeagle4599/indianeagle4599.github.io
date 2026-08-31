@@ -1703,13 +1703,14 @@ body.contact-modal-open {
 
 .contact-modal-dialog {
     --contact-dialog-max: 40rem;
+    --contact-dialog-max-schedule: 56rem;
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     width: min(100%, var(--contact-dialog-max));
     max-height: min(90vh, 100%);
-    overflow: auto;
+    overflow: hidden;
     padding: 1.15rem 1.25rem 1.1rem;
     background-color: var(--bg-transient);
     background-image: var(--surface-sheen);
@@ -1718,6 +1719,12 @@ body.contact-modal-open {
     box-shadow: var(--dialog-shadow);
     transform: translateY(14px);
     transition: transform var(--motion-spatial) var(--ease-spatial);
+}
+
+.contact-modal-dialog--schedule {
+    --contact-dialog-max: var(--contact-dialog-max-schedule);
+    height: min(52rem, 92vh);
+    max-height: min(92vh, 100%);
 }
 
 .contact-modal.is-open .contact-modal-dialog {
@@ -1729,7 +1736,8 @@ body.contact-modal-open {
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 1.625rem;
+    margin-bottom: 0.85rem;
+    flex-shrink: 0;
 }
 
 .contact-modal-heading {
@@ -1785,6 +1793,99 @@ body.contact-modal-open {
 .contact-modal-close:active {
     transform: translateY(1px);
     transition-duration: var(--motion-press);
+}
+
+.contact-tablist {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 4px;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 0 1.05rem;
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.contact-tablist::-webkit-scrollbar {
+    display: none;
+}
+
+.contact-tab {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    min-height: var(--touch);
+    padding: 8px 12px 10px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color var(--motion) var(--ease);
+}
+
+.contact-tab:hover {
+    color: var(--text-main);
+}
+
+.contact-tab[aria-selected="true"] {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.contact-panels {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+}
+
+.contact-modal-dialog--schedule .contact-panels {
+    overflow: hidden;
+}
+
+.contact-panel {
+    min-width: 0;
+}
+
+#contact-panel-schedule {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.contact-calendly-placeholder {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 42ch;
+}
+
+.contact-calendly {
+    min-width: 320px;
+    min-height: 0;
+    width: 100%;
+    flex: 1 1 auto;
+    height: 100%;
+}
+
+.contact-calendly iframe {
+    display: block;
+    width: 100%;
+    min-width: 320px;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    border: 0;
 }
 
 #contact-form {
@@ -3239,6 +3340,46 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
 
     .project-media-comparison-pair {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .contact-modal {
+        padding: 8px;
+    }
+
+    .contact-modal:has(.contact-modal-dialog--schedule) {
+        align-items: stretch;
+    }
+
+    @media (max-width: 359px) {
+        .contact-modal:has(.contact-modal-dialog--schedule) {
+            padding: 0;
+        }
+    }
+
+    .contact-modal-dialog {
+        width: 100%;
+        max-height: calc(100vh - 16px);
+    }
+
+    .contact-modal-dialog--schedule {
+        height: calc(100vh - 16px);
+    }
+
+    @supports (height: 100dvh) {
+        .contact-modal-dialog {
+            max-height: calc(100dvh - 16px);
+        }
+
+        .contact-modal-dialog--schedule {
+            height: calc(100dvh - 16px);
+        }
+    }
+
+    .contact-calendly,
+    .contact-calendly iframe {
+        min-height: 0;
     }
 }
 

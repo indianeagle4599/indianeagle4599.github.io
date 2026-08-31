@@ -18,6 +18,9 @@ const CONTACT_TURNSTILE_LOAD_ERROR = "Security check couldn't load. Please refre
 const CONTACT_PHONE_ERROR = 'Enter a valid phone number.';
 const CONTACT_COUNTRY_RE = /^\+\d{1,4}$/;
 const CONTACT_PHONE_LOCAL_RE = /^[0-9 ()\-.]+$/;
+const CALENDLY_EVENT_URL = 'https://calendly.com/hiteshgoyal/30min';
+const CALENDLY_WIDGET_JS = 'https://assets.calendly.com/assets/external/widget.js';
+const CALENDLY_HIDE_EVENT_TYPE_DETAILS = true;
 const PROJECT_SLUG_RE = /^[a-z0-9-]+$/i;
 const SAFE_HREF_RE = /^(https?:|mailto:|tel:|#|\/|\.\/|\.\.\/)/i;
 const CERT_KIND_LABELS = {
@@ -135,6 +138,10 @@ let themeTransitionTimer = 0;
 let contactDestination = '';
 let themeMediaQuery = null;
 let turnstileLoader = null;
+let calendlyLoader = null;
+let calendlyInitialized = false;
+let calendlyInitStarted = false;
+let calendlyMessageBound = false;
 
 function isLocalContactHost(host) {
     return host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0';
@@ -193,6 +200,64 @@ function loadTurnstileScript() {
         document.head.appendChild(script);
     });
     return turnstileLoader;
+}
+
+function calendlyEventUrl() {
+    const raw = String(CALENDLY_EVENT_URL || '').trim();
+    if (!raw) return '';
+    try {
+        const url = new URL(raw);
+        if (url.protocol !== 'https:') return '';
+        if (url.hostname !== 'calendly.com' && !url.hostname.endsWith('.calendly.com')) return '';
+        return url.toString();
+    } catch (error) {
+        return '';
+    }
+}
+
+function calendlyEmbedUrl() {
+    const raw = calendlyEventUrl();
+    if (!raw) return '';
+    const url = new URL(raw);
+    if (CALENDLY_HIDE_EVENT_TYPE_DETAILS) url.searchParams.set('hide_event_type_details', '1');
+    url.searchParams.delete('hide_gdpr_banner');
+    return url.toString();
+}
+
+function loadCalendlyAssets() {
+    if (window.Calendly) return Promise.resolve();
+    if (calendlyLoader) return calendlyLoader;
+    calendlyLoader = new Promise((resolve, reject) => {
+        const existing = document.getElementById('calendly-widget-js');
+        if (existing) {
+            if (window.Calendly) resolve();
+            else {
+                existing.addEventListener('load', () => resolve(), { once: true });
+                existing.addEventListener('error', () => reject(new Error('calendly')), { once: true });
+            }
+            return;
+        }
+        const script = document.createElement('script');
+        script.id = 'calendly-widget-js';
+        script.src = CALENDLY_WIDGET_JS;
+        script.async = true;
+        script.addEventListener('load', () => resolve(), { once: true });
+        script.addEventListener('error', () => reject(new Error('calendly')), { once: true });
+        document.head.appendChild(script);
+    });
+    calendlyLoader.catch(() => { calendlyLoader = null; });
+    return calendlyLoader;
+}
+
+function bindCalendlyScheduledListener(tab, panel) {
+    if (calendlyMessageBound) return;
+    calendlyMessageBound = true;
+    window.addEventListener('message', event => {
+        if (event.origin !== 'https://calendly.com') return;
+        if (!event.data || event.data.event !== 'calendly.event_scheduled') return;
+        tab?.setAttribute('data-calendly-booked', 'true');
+        panel?.setAttribute('data-calendly-booked', 'true');
+    });
 }
 
 function placeUnderlineIndicator(container, indicator, target, { instant = false } = {}) {
@@ -905,6 +970,15 @@ function initContactModal() {
     if (!modal || !form || !triggers.length) return;
 
     const dialog = modal.querySelector('.contact-modal-dialog');
+    const tablist = modal.querySelector('.contact-tablist');
+    const tabIndicator = tablist?.querySelector('.tab-indicator');
+    const messageTab = document.getElementById('contact-tab-message');
+    const scheduleTab = document.getElementById('contact-tab-schedule');
+    const messagePanel = document.getElementById('contact-panel-message');
+    const schedulePanel = document.getElementById('contact-panel-schedule');
+    const calendlyMount = document.getElementById('contact-calendly');
+    const calendlyPlaceholder = document.getElementById('contact-calendly-placeholder');
+    const contactTabs = [messageTab, scheduleTab].filter(Boolean);
     const nameInput = document.getElementById('contact-name');
     const emailInput = document.getElementById('contact-email');
     const countryInput = document.getElementById('contact-country');
@@ -922,7 +996,7 @@ function initContactModal() {
     const submitButton = document.getElementById('contact-submit');
     const submitLabel = submitButton?.querySelector('[data-contact-submit-label]');
     const idleLabel = submitLabel?.textContent || 'Send message';
-    const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusSelector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), textarea:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])';
     let lastFocus = null;
     let widgetId = null;
     let turnstileToken = '';
@@ -930,11 +1004,79 @@ function initContactModal() {
     let abortController = null;
     let pendingKey = null;
     let modalMotionTimer = 0;
+    let contactTabIndex = 0;
 
     const clearModalMotion = () => {
         if (!modalMotionTimer) return;
         window.clearTimeout(modalMotionTimer);
         modalMotionTimer = 0;
+    };
+
+    const syncTabIndicator = ({ instant = false } = {}) => {
+        const current = contactTabs[contactTabIndex];
+        if (tablist && tabIndicator && current) placeUnderlineIndicator(tablist, tabIndicator, current, { instant });
+    };
+
+    const focusableInDialog = () => [...dialog.querySelectorAll(focusSelector)].filter(el => {
+        if (el.closest('[inert]')) return false;
+        const hiddenRoot = el.closest('[hidden]');
+        return !hiddenRoot || hiddenRoot === modal;
+    });
+
+    const ensureCalendly = async () => {
+        const configured = calendlyEmbedUrl();
+        if (!configured || !calendlyMount || calendlyInitialized || calendlyInitStarted) return;
+        calendlyInitStarted = true;
+        try {
+            await loadCalendlyAssets();
+        } catch (error) {
+            calendlyInitStarted = false;
+            return;
+        }
+        if (!window.Calendly || typeof window.Calendly.initInlineWidget !== 'function') {
+            calendlyInitStarted = false;
+            return;
+        }
+        if (calendlyPlaceholder) calendlyPlaceholder.hidden = true;
+        calendlyMount.hidden = false;
+        const prefill = {};
+        const name = String(nameInput?.value || '').trim();
+        const email = String(emailInput?.value || '').trim();
+        if (name) prefill.name = name;
+        if (email) prefill.email = email;
+        const embedUrl = new URL(configured);
+        if (name) embedUrl.searchParams.set('name', name);
+        if (email) embedUrl.searchParams.set('email', email);
+        window.Calendly.initInlineWidget({
+            url: embedUrl.toString(),
+            parentElement: calendlyMount,
+            prefill,
+            resize: true
+        });
+        calendlyInitialized = true;
+        bindCalendlyScheduledListener(scheduleTab, schedulePanel);
+    };
+
+    const selectContactTab = (index, { focusTab = false } = {}) => {
+        if (!contactTabs.length || !messagePanel || !schedulePanel) return;
+        const nextIndex = Math.max(0, Math.min(index, contactTabs.length - 1));
+        contactTabIndex = nextIndex;
+        contactTabs.forEach((tab, tabIndex) => {
+            const selected = tabIndex === nextIndex;
+            tab.setAttribute('aria-selected', String(selected));
+            tab.tabIndex = selected ? 0 : -1;
+        });
+        const scheduleSelected = nextIndex === 1;
+        // Keep the Calendly iframe in the DOM across hides. Calendly may still
+        // drop a partially selected slot when the panel is hidden; we do not rebuild it.
+        messagePanel.hidden = scheduleSelected;
+        schedulePanel.hidden = !scheduleSelected;
+        messagePanel.toggleAttribute('inert', scheduleSelected);
+        schedulePanel.toggleAttribute('inert', !scheduleSelected);
+        dialog?.classList.toggle('contact-modal-dialog--schedule', scheduleSelected);
+        syncTabIndicator({ instant: prefersReducedMotion() });
+        if (scheduleSelected) ensureCalendly();
+        if (focusTab) contactTabs[nextIndex]?.focus();
     };
 
     const setError = (input, errorEl, message) => {
@@ -1035,6 +1177,7 @@ function initContactModal() {
         setSending(false, idleLabel);
         resetWidget();
         pendingKey = null;
+        selectContactTab(0);
         const restore = lastFocus;
         requestAnimationFrame(() => {
             if (restore && typeof restore.focus === 'function') restore.focus();
@@ -1094,10 +1237,12 @@ function initContactModal() {
         modal.classList.remove('is-leaving');
         modal.hidden = false;
         lockPage(true);
+        selectContactTab(0);
         setStatus('', '');
         hideMailto();
         ensureWidget();
         (nameInput || emailInput || dialog).focus();
+        requestAnimationFrame(() => syncTabIndicator({ instant: true }));
         if (prefersReducedMotion()) {
             modal.classList.add('is-open');
             return;
@@ -1110,6 +1255,21 @@ function initContactModal() {
     triggers.forEach(trigger => {
         trigger.addEventListener('click', () => openFrom(trigger));
     });
+    contactTabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => selectContactTab(index));
+    });
+    tablist?.addEventListener('keydown', event => {
+        const last = contactTabs.length - 1;
+        if (last < 1) return;
+        let next = contactTabIndex;
+        if (event.key === 'ArrowRight') next = Math.min(last, contactTabIndex + 1);
+        else if (event.key === 'ArrowLeft') next = Math.max(0, contactTabIndex - 1);
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = last;
+        else return;
+        event.preventDefault();
+        selectContactTab(next, { focusTab: true });
+    });
     modal.addEventListener('click', event => {
         if (event.target.closest('[data-contact-dismiss]')) close();
     });
@@ -1121,7 +1281,7 @@ function initContactModal() {
             return;
         }
         if (event.key !== 'Tab' || !dialog) return;
-        const items = [...dialog.querySelectorAll(focusSelector)];
+        const items = focusableInDialog();
         if (!items.length) return;
         const first = items[0];
         const last = items[items.length - 1];

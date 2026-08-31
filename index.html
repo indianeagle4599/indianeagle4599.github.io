@@ -311,6 +311,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"></path></svg>
                 </button>
             </div>
+            <div class="contact-tablist" role="tablist" aria-label="Contact options">
+                <span class="tab-indicator" aria-hidden="true"></span>
+                <button type="button" class="contact-tab" role="tab" id="contact-tab-message" aria-controls="contact-panel-message" aria-selected="true" tabindex="0">Send a message</button>
+                <button type="button" class="contact-tab" role="tab" id="contact-tab-schedule" aria-controls="contact-panel-schedule" aria-selected="false" tabindex="-1">Schedule a Call</button>
+            </div>
+            <div class="contact-panels">
+            <div class="contact-panel" id="contact-panel-message" role="tabpanel" aria-labelledby="contact-tab-message">
             <form id="contact-form" novalidate>
                 <div class="contact-honeypot" aria-hidden="true">
                     <label for="contact-website">Website</label>
@@ -363,6 +370,12 @@
                     </button>
                 </div>
             </form>
+            </div>
+            <div class="contact-panel" id="contact-panel-schedule" role="tabpanel" aria-labelledby="contact-tab-schedule" hidden inert>
+                <p id="contact-calendly-placeholder" class="contact-calendly-placeholder">Loading the calendar…</p>
+                <div id="contact-calendly" class="contact-calendly" hidden></div>
+            </div>
+            </div>
         </div>
     </div>
 
