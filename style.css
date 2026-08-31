@@ -2663,6 +2663,18 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
     flex-shrink: 0;
 }
 
+.project-introduction-heading[data-logo-pair] .project-logo--dark {
+    display: none;
+}
+
+:root[data-theme="dark"] .project-introduction-heading[data-logo-pair] .project-logo--light {
+    display: none;
+}
+
+:root[data-theme="dark"] .project-introduction-heading[data-logo-pair] .project-logo--dark {
+    display: block;
+}
+
 .project-introduction-heading h1 {
     margin-bottom: 0;
     overflow-wrap: anywhere;

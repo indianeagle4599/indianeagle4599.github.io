@@ -605,6 +605,7 @@
         "slug": "lazy-resume",
         "title": "LazyResume",
         "logo": "./assets/lazy-resume-logo.svg",
+        "logoDark": "./assets/lazy-resume-logo-dark.svg",
         "summary": "Start with an existing resume PDF, turn it into a structured profile, and regenerate a clean, consistently formatted resume without rebuilding everything by hand.",
         "highlights": [
             "Converts a resume PDF into a canonical structured profile, then into standardized Markdown/PDF output.",
@@ -631,6 +632,7 @@
         "slug": "fuzzy-hybrid-stock-trading",
         "title": "Fuzzy Hybrid Model for Stock Trading",
         "logo": "./assets/fuzzy-hybrid-stock-trading-logo.svg",
+        "logoDark": "./assets/fuzzy-hybrid-stock-trading-logo-dark.svg",
         "summary": "A stock-trading research project where I used domain analysis and feature engineering to cut the predictor’s market-input channels by over 70%, then combined deep learning with fuzzy logic for trading decisions.",
         "highlights": [
             "Reduced the predictor’s market-input channels from 96 to 26 (~73%) through domain-driven feature engineering, leaving each training run with substantially less to process.",
@@ -678,6 +680,7 @@
         "slug": "ai-generated-image-classifier",
         "title": "Detecting AI Generated Images",
         "logo": "./assets/ai-generated-image-classifier-logo.svg",
+        "logoDark": "./assets/ai-generated-image-classifier-logo-dark.svg",
         "summary": "A systematic PyTorch training and tuning workflow for distinguishing AI-generated from human images, with repeatable experiment runs that preserve configs, metrics, plots, and checkpoints so each iteration can inform the next.",
         "highlights": [
             "Configuration-driven model training with selectable torchvision backbones and optional FFT/DCT feature heads.",
