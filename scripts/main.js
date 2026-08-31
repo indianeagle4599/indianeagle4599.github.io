@@ -2153,7 +2153,46 @@ function projectMediaLeaves(project) {
     return projectMediaBlocks(project).flatMap(mediaBlockLeaves);
 }
 
-function createProjectMediaLeaf(item, projectTitle, ancestry, deferImage = false) {
+function isAnimatedGif(src) {
+    return /\.gif(?:[?#]|$)/i.test(String(src || ''));
+}
+
+function warmMediaLeaf(element) {
+    const image = element?.querySelector('img[data-src]');
+    if (image && !image.hasAttribute('src')) image.src = image.dataset.src;
+}
+
+function warmAdjacentMediaLeaves(leaves, activeIndex, edgeClones) {
+    const count = leaves.length;
+    if (!count) return;
+    [-1, 0, 1].forEach(offset => {
+        const index = ((activeIndex + offset) % count + count) % count;
+        warmMediaLeaf(leaves[index].element);
+        if (index === 0) warmMediaLeaf(edgeClones?.first);
+        if (index === count - 1) warmMediaLeaf(edgeClones?.last);
+    });
+}
+
+function edgeClonesFromMotion(motion, leafCount) {
+    const cards = motion?.cards;
+    if (!cards || cards.length !== leafCount + 2) return null;
+    return { first: cards[cards.length - 1], last: cards[0] };
+}
+
+function activateMediaCarouselNearViewport(root, activate) {
+    if (!('IntersectionObserver' in window)) {
+        activate();
+        return;
+    }
+    const observer = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        observer.disconnect();
+        activate();
+    }, { rootMargin: '800px 0px' });
+    observer.observe(root);
+}
+
+function createProjectMediaLeaf(item, projectTitle, ancestry) {
     if (!item || typeof item.src !== 'string' || !item.src.trim()) return null;
     const title = resolveInheritedText('title', ...ancestry, item);
     const caption = resolveInheritedText('caption', ...ancestry, item);
@@ -2170,10 +2209,9 @@ function createProjectMediaLeaf(item, projectTitle, ancestry, deferImage = false
         link.rel = 'noopener';
         const image = document.createElement('img');
         image.className = 'project-media-image';
-        if (deferImage) image.dataset.src = src;
+        if (isAnimatedGif(item.src)) image.dataset.src = src;
         else image.src = src;
         image.alt = item.alt.trim();
-        image.loading = 'lazy';
         image.decoding = 'async';
         image.draggable = false;
         link.appendChild(image);
@@ -2208,8 +2246,6 @@ function createProjectMediaLeaf(item, projectTitle, ancestry, deferImage = false
 
 function setProjectMediaLeafActive(element, active) {
     if (!active) element.querySelector('video')?.pause();
-    const image = element.querySelector('img[data-src]');
-    if (active && image && !image.hasAttribute('src')) image.src = image.dataset.src;
     const iframe = element.querySelector('iframe[data-src]');
     if (!iframe) return;
     if (active && !iframe.hasAttribute('src')) iframe.src = iframe.dataset.src;
@@ -2218,7 +2254,7 @@ function setProjectMediaLeafActive(element, active) {
 
 function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
     const items = Array.isArray(block.items) ? block.items : [];
-    const leaves = items.map((item, index) => createProjectMediaLeaf(item, projectTitle, [media, block], index > 0)).filter(Boolean);
+    const leaves = items.map(item => createProjectMediaLeaf(item, projectTitle, [media, block])).filter(Boolean);
     if (!leaves.length) return null;
 
     const gallery = document.createElement('section');
@@ -2239,6 +2275,16 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
     leaves.forEach((leaf, index) => {
         leaf.element.dataset.mediaIndex = String(index);
     });
+
+    const hasDeferredMedia = leaves.some(leaf => leaf.element.querySelector('img[data-src]'));
+    let edgeClones = null;
+    let currentIndex = 0;
+    let activated = !hasDeferredMedia;
+    const activate = () => {
+        if (activated) return;
+        activated = true;
+        warmAdjacentMediaLeaves(leaves, currentIndex, edgeClones);
+    };
 
     const updateCopy = activeIndex => {
         const activeLeaf = leaves[activeIndex];
@@ -2265,9 +2311,17 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
             return title ? `Show ${title}` : `Go to slide ${index + 1} of ${leaves.length}`;
         },
         ariaLabel: index => `${galleryLabel}, slide ${index + 1} of ${leaves.length}`,
-        onRender: updateCopy,
+        onRender: index => {
+            updateCopy(index);
+            currentIndex = index;
+            if (activated) warmAdjacentMediaLeaves(leaves, index, edgeClones);
+        },
         onSettle: (_index, card, active) => setProjectMediaLeafActive(card, active)
     });
+    if (hasDeferredMedia) {
+        edgeClones = edgeClonesFromMotion(view?.motion, leaves.length);
+        activateMediaCarouselNearViewport(gallery, activate);
+    }
     if (view?.stage) {
         const viewport = document.createElement('div');
         viewport.className = 'project-media-viewport';
@@ -2279,7 +2333,10 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
         gallery.append(metadata);
     }
     updateCopy(0);
-    if (leaves.length === 1) setProjectMediaLeafActive(leaves[0].element, true);
+    if (leaves.length === 1) {
+        warmMediaLeaf(leaves[0].element);
+        setProjectMediaLeafActive(leaves[0].element, true);
+    }
 
     const firstImage = leaves[0].element.querySelector('img');
     const syncViewport = () => {
@@ -2292,8 +2349,8 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
         view?.motion?.setOffset(false);
     };
     if (firstImage) {
-        if (firstImage.complete) syncViewport();
-        else firstImage.addEventListener('load', syncViewport, { once: true });
+        firstImage.addEventListener('load', syncViewport, { once: true });
+        if (firstImage.hasAttribute('src') && firstImage.complete) syncViewport();
     } else {
         syncViewport();
     }
@@ -2340,6 +2397,7 @@ function createProjectMediaBlockHeader(media, block) {
 
 function activateProjectMediaLeafOnView(element) {
     if (!element.querySelector('iframe[data-src]') || !('IntersectionObserver' in window)) {
+        warmMediaLeaf(element);
         setProjectMediaLeafActive(element, true);
         return;
     }
@@ -2381,9 +2439,10 @@ function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
         const source = createProjectMediaLeaf(group?.source, projectTitle, [media, block, group]);
         const variants = (Array.isArray(group?.variants) ? group.variants : []).map(variant => ({
             label: typeof variant?.label === 'string' ? variant.label.trim() : '',
-            leaf: createProjectMediaLeaf(variant, projectTitle, [media, block, group], true)
+            leaf: createProjectMediaLeaf(variant, projectTitle, [media, block, group])
         })).filter(variant => variant.label && variant.leaf);
         if (!source || !variants.length) return;
+        const variantLeaves = variants.map(({ leaf }) => leaf);
 
         const comparison = document.createElement('section');
         comparison.className = 'project-media-card project-media-comparison-group';
@@ -2399,6 +2458,7 @@ function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
         pair.className = 'project-media-comparison-pair';
         source.element.classList.add('project-media-comparison-source');
         appendProjectMediaLeafMetadata(source);
+        warmMediaLeaf(source.element);
         setProjectMediaLeafActive(source.element, true);
         const results = document.createElement('div');
         results.className = 'carousel-track project-media-comparison-results';
@@ -2406,16 +2466,24 @@ function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
             leaf.element.classList.add('project-media-comparison-result');
             leaf.element.dataset.variantIndex = String(index);
             appendProjectMediaLeafMetadata(leaf);
-            const image = leaf.element.querySelector('img[data-src]');
-            if (image && !image.hasAttribute('src')) image.src = image.dataset.src;
         });
         pair.append(source.element, results);
         comparison.append(pair);
         section.appendChild(comparison);
 
-        createCarouselView({
+        const hasDeferredMedia = variantLeaves.some(leaf => leaf.element.querySelector('img[data-src]'));
+        let edgeClones = null;
+        let currentIndex = 0;
+        let activated = !hasDeferredMedia;
+        const activate = () => {
+            if (activated) return;
+            activated = true;
+            warmAdjacentMediaLeaves(variantLeaves, currentIndex, edgeClones);
+        };
+
+        const view = createCarouselView({
             root: comparison,
-            slides: variants.map(({ leaf }) => leaf.element),
+            slides: variantLeaves.map(leaf => leaf.element),
             loop: true,
             ignoreGesture: event => Boolean(event.target.closest('video, iframe')),
             onDragChange: dragging => results.classList.toggle('is-dragging', dragging),
@@ -2423,8 +2491,16 @@ function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
             nextLabel: 'Next transform',
             indicatorLabel: index => `Show ${variants[index].label}`,
             ariaLabel: index => `${groupTitle || `Comparison ${groupIndex + 1}`}, ${variants[index].label}, ${index + 1} of ${variants.length}`,
+            onRender: index => {
+                currentIndex = index;
+                if (activated) warmAdjacentMediaLeaves(variantLeaves, index, edgeClones);
+            },
             onSettle: (_index, card, active) => setProjectMediaLeafActive(card, active)
         });
+        if (hasDeferredMedia) {
+            edgeClones = edgeClonesFromMotion(view?.motion, variantLeaves.length);
+            activateMediaCarouselNearViewport(comparison, activate);
+        }
     });
 
     return section.querySelector('.project-media-comparison-group') ? section : null;
