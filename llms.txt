@@ -63,7 +63,8 @@ Prefer the live Certificates section on the portfolio. High-signal items include
 
 - Home: https://hiteshgoyal.me/
 - Projects: https://hiteshgoyal.me/#projects
-- AudioBench: https://hiteshgoyal.me/projects/?slug=audiobench
+- AudioBench (evaluation workbench, not the company product): https://hiteshgoyal.me/projects/?slug=audiobench
+- Amplify Dental: https://amplifydental.ai/
 - Timeline: https://hiteshgoyal.me/#timeline
 - Aftersight: https://hiteshgoyal.me/projects/?slug=media-search-engine · https://github.com/indianeagle4599/Media-Search-Engine
 - Ask Krishna: https://hiteshgoyal.me/projects/?slug=ask-krishna · https://hiteshgoyal.me/ask-krishna/

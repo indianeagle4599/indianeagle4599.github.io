@@ -118,6 +118,7 @@ const TAG_ICONS = {
 };
 const PROJECT_PAGE_CTA_LABEL = 'Learn More';
 const PROJECTS_CAROUSEL_MS = 8400;
+const SHORT_CLIP_MIN_S = 5;
 const CAROUSEL_TRANSITION_MS = 820;
 const CAROUSEL_SWIPE_PX = 48;
 const CAROUSEL_FLING_VX = 0.5;
@@ -2396,6 +2397,7 @@ function createProjectMediaLeaf(item, projectTitle, ancestry) {
         video.loop = false;
         video.muted = item.muted !== false;
         video.preload = 'metadata';
+        video.addEventListener('loadedmetadata', () => applyShortClipPlaybackRate(video));
         if (typeof item.poster === 'string' && item.poster.trim()) video.poster = assetUrl(item.poster);
         figure.appendChild(video);
     } else if (item.type === 'youtube') {
@@ -2452,6 +2454,15 @@ function trackCarouselVideoUserPause(video) {
     });
 }
 
+function applyShortClipPlaybackRate(video) {
+    const duration = video.duration;
+    if (!Number.isFinite(duration) || duration <= 0 || duration >= SHORT_CLIP_MIN_S) {
+        video.playbackRate = 1;
+        return;
+    }
+    video.playbackRate = duration / SHORT_CLIP_MIN_S;
+}
+
 function carouselVideoMayAutoplay(controller) {
     if (prefersReducedMotion()) return false;
     const reasons = controller?.pauseReasons?.();
@@ -2459,31 +2470,39 @@ function carouselVideoMayAutoplay(controller) {
     return !reasons.hidden && !reasons.offscreen;
 }
 
+function carouselVideoHoldsAdvance(controller) {
+    const reasons = controller?.pauseReasons?.();
+    return Boolean(reasons?.hover || reasons?.focus);
+}
+
 function syncCarouselVideoLeaf(element, active, carouselRoot) {
     const video = element.querySelector('video');
     if (!video) return;
     trackCarouselVideoUserPause(video);
     video.muted = true;
-    video.loop = false;
     video.playsInline = true;
     if (!active) {
+        video.loop = false;
         unbindCarouselVideoEnded(video);
         pauseCarouselVideo(video, true);
         video._carouselUserPaused = false;
         return;
     }
     if (!carouselVideoMayAutoplay(carouselRoot?._carouselController)) {
+        video.loop = false;
         unbindCarouselVideoEnded(video);
         pauseCarouselVideo(video, true);
         video._carouselUserPaused = false;
         return;
     }
+    video.loop = carouselVideoHoldsAdvance(carouselRoot?._carouselController);
     video.preload = 'auto';
+    applyShortClipPlaybackRate(video);
     if (!video._onCarouselEnded) {
         const onEnded = () => {
             if (prefersReducedMotion()) return;
             const controller = carouselRoot._carouselController;
-            if (!controller) return;
+            if (!controller || carouselVideoHoldsAdvance(controller)) return;
             controller.goTo(controller.getIndex() + 1);
         };
         video._onCarouselEnded = onEnded;

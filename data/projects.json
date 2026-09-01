@@ -14,7 +14,13 @@
         "tags": ["Python", "Whisper", "ASR", "Benchmarking", "Local-first", "FastAPI"],
         "detailOrder": "writeup-split-media",
         "mediaSplitAfter": 2,
-        "links": [],
+        "links": [
+            {
+                "label": "Amplify Dental",
+                "url": "https://amplifydental.ai/",
+                "kind": "website"
+            }
+        ],
         "writeup": "",
         "writeupMid": "## Built for Amplify Dental\n\nAudioBench is the evaluation and annotation workbench I built for Amplify Dental's transcription work. On a small team, every hour spent re-solving transcription, labelling, or benchmarking is an hour not spent on the product. The design goal is simple: solve each of those once.\n\nSpeech quality is not one number. Far speech, room noise, accent, and microphone all change the answer. Opening one model on one clip cannot show that. AudioBench keeps gold audio, prepare pipelines, and backends on one scoreboard so the team compares instead of redoing the work.\n\nThe still on the left is that scoreboard: models sorted so the strongest sits at the top, with enough signal to see where it wins and where it does not. A glance is useful. Real data has too many dimensions for a glance. Heatmaps and a full-size grid exist so observations that would hide in a spreadsheet are hard to miss.\n\n## Solve it once, then reuse it\n\nThe annotation UI is a product layer I owned, not a spreadsheet next to the audio. Waveform, raw versus clean listen, playback speed, then a saved human transcript. The sample library is the same gold with tags and status, so nobody starts labelling from a blank page. Test Live is hearing a backend on that gold before a grid is spent.\n\nPrepare is a named pipeline, not a one-off file edit. Experiments start from a preset and a dry-run plan. A Whisper Small server on the laptop catches mistakes cheaply; cloud GPUs take the same job when the matrix is large.",
         "writeupAfter": "## How it is built\n\nThe stack is modular, scalable, and config-driven. New datasets, models, preprocess steps, or compute instances plug in without rebuilding the bench. Local-first Python and FastAPI; backends behind one manifest; word error rate, character error rate, and real-time factor so accuracy and cost sit on the same row.\n\n### Public data and models\n\nThe public set is chosen to stress real conditions, not only studio read speech: AMI (headset and distant meeting mics), VoxPopuli (accented English), Common Voice, VCTK, and LibriSpeech test-clean. Far speech, ambient noise, accents, and microphone variation are in the suite so a good model has to survive them.\n\nThe harness in this recording includes Whisper Large v3 (Hugging Face and Faster-Whisper), Whisper Small, Kyutai STT, Google MedASR, Moonshine Base, and Qwen3-ASR. Prepare variants include passthrough, ASR prep, annotation listen, and clean audio, plus composed Lab chains.\n\nWord error rate is how often the transcript is wrong. Character error rate is how far it drifted. Real-time factor is how expensive the model is in time.\n\n### Thanks\n\nSpecial thanks to David Griswold for generously allowing me to showcase this product.\n\n### About this recording\n\nListen and annotate shots use public LibriSpeech, not clinic audio. This is the evaluation bench, not Amplify's dental product UI. Whole Nine Yards was stopped with unfinished cells. The cloud clip is two GPU VMs launching beside the local server.",
@@ -79,11 +85,18 @@
                     "title": "Label once, hear it live",
                     "items": [
                         {
-                            "type": "video",
-                            "src": "./assets/projects/audiobench/18-samples-library.mp4",
-                            "poster": "./assets/projects/audiobench/18-samples-library.webp",
+                            "type": "image",
+                            "src": "./assets/projects/audiobench/18-samples-library-tags.webp",
+                            "alt": "AudioBench Samples page with a ready local transcription server and a tag cloud for corpus, microphone, and listening conditions",
                             "title": "The library around annotation",
-                            "caption": "Tags for corpus, mic, and condition, plus whether a human has already labelled the clip. Nobody re-listens from scratch."
+                            "caption": "Tags for corpus, mic, and condition sit on the gold so the team can filter instead of starting from a blank page."
+                        },
+                        {
+                            "type": "image",
+                            "src": "./assets/projects/audiobench/18-samples-library.webp",
+                            "alt": "AudioBench sample library table with annotated clips marked Complete",
+                            "title": "Already labelled",
+                            "caption": "Complete means a human already wrote the transcript. Nobody re-listens from scratch."
                         },
                         {
                             "type": "video",

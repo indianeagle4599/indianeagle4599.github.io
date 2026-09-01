@@ -55,7 +55,7 @@ Project-page media is configured as ordered blocks:
 }
 ```
 
-Blocks support explicit `image`, `video`, and `youtube` leaves. A gallery with one item renders directly without carousel controls. In a 2+ item gallery, `video` leaves muted-autoplay (no sound), skip the 8.4s dwell until `ended`, and pause when offscreen or the tab is hidden; `prefers-reduced-motion` keeps poster and controls only. `title` and `caption` inherit through media → block → group → item; omit a field to inherit it or set it to `null` to suppress it. Images always require their own `alt`, and comparison variants require their own `label`.
+Blocks support explicit `image`, `video`, and `youtube` leaves. A gallery with one item renders directly without carousel controls. In a 2+ item gallery, `video` leaves muted-autoplay (no sound), skip the 8.4s dwell until `ended`, and pause when offscreen or the tab is hidden. Hover (and focus inside the slide) keeps the clip looping and does not advance; `prefers-reduced-motion` keeps poster and controls only. `title` and `caption` inherit through media → block → group → item; omit a field to inherit it or set it to `null` to suppress it. Images always require their own `alt`, and comparison variants require their own `label`.
 
 `data/media/` is ignored local intake for full-quality source/reference material. Curated website derivatives belong under `assets/projects/<project-slug>/`; never overwrite intake files with optimized copies.
 
@@ -64,5 +64,6 @@ Blocks support explicit `image`, `video`, and `youtube` leaves. A gallery with o
 
 ## Contact
 - Email: [hiteshgoyal.business@gmail.com](mailto:hiteshgoyal.business@gmail.com)
+- Calendly: [calendly.com/hiteshgoyal/30min](https://calendly.com/hiteshgoyal/30min)
 - GitHub: [@indianeagle4599](https://github.com/indianeagle4599)
 - LinkedIn: [Hitesh Goyal](https://www.linkedin.com/in/hitesh-goyal-5732bb208/)
