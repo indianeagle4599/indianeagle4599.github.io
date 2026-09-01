@@ -95,6 +95,7 @@ const TAG_ICONS = {
     Productivity: 'lu-list-checks',
     Benchmarking: 'lu-gauge',
     Evaluation: 'lu-clipboard-check',
+    Orchestration: 'lu-server',
     'Distributed Systems': 'lu-network',
     SLURM: 'lu-server',
     Mathematics: 'lu-sigma',

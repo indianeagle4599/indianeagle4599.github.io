@@ -10,8 +10,8 @@
             "Label gold audio once in an annotation UI built for speed, then reuse it across prepares, backends, and datasets.",
             "Config-driven and modular: add data, models, prepares, or compute without rebuilding the bench."
         ],
-        "displayTags": ["ASR", "Benchmarking", "Local-first"],
-        "tags": ["Python", "Whisper", "ASR", "Benchmarking", "Local-first", "FastAPI"],
+        "displayTags": ["ASR", "Benchmarking", "Orchestration", "Evaluation"],
+        "tags": ["Python", "Whisper", "ASR", "Benchmarking", "Orchestration", "Evaluation", "FastAPI"],
         "detailOrder": "writeup-split-media",
         "mediaSplitAfter": 2,
         "links": [
