@@ -9,6 +9,11 @@
             {
                 "label": "Website",
                 "url": "https://amplifydental.ai/"
+            },
+            {
+                "label": "AudioBench",
+                "url": "./projects/?slug=audiobench",
+                "kind": "demo"
             }
         ],
         "roles": [
