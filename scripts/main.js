@@ -1663,7 +1663,9 @@ function createCarouselController({
     onPointerDelta,
     onResize,
     transitionTarget,
-    ariaLabel
+    ariaLabel,
+    shouldHoldAutoplay,
+    onPauseChange
 }) {
     if (!root || count < 1 || typeof render !== 'function') return null;
     root._carouselController?.destroy();
@@ -1691,6 +1693,14 @@ function createCarouselController({
     const abortController = new AbortController();
     const listenerOptions = { signal: abortController.signal };
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const holdingAutoplay = () => typeof shouldHoldAutoplay === 'function' && shouldHoldAutoplay(activeIndex);
+    const pauseReasons = () => ({
+        hover: Boolean(pauseFlags & PAUSE.hover),
+        pointer: Boolean(pauseFlags & PAUSE.pointer),
+        focus: Boolean(pauseFlags & PAUSE.focus),
+        hidden: Boolean(pauseFlags & PAUSE.hidden),
+        offscreen: Boolean(pauseFlags & PAUSE.offscreen)
+    });
     indicators.forEach(attachCarouselProgressFill);
 
     const clearTimer = () => {
@@ -1711,7 +1721,7 @@ function createCarouselController({
     };
     const rootReady = () => root.isConnected && !root.closest('[hidden]') && root.getBoundingClientRect().width > 0;
     const syncProgress = (playing) => {
-        const showTrack = count > 1 && !prefersReducedMotion();
+        const showTrack = count > 1 && !prefersReducedMotion() && !holdingAutoplay();
         if (showTrack) root.setAttribute('data-autoplay-progress', '');
         else root.removeAttribute('data-autoplay-progress');
         const activeFill = progressFill(indicators[activeIndex]);
@@ -1756,7 +1766,7 @@ function createCarouselController({
         const element = node && node.nodeType === 1 ? node : node?.parentElement;
         return Boolean(element?.closest?.('.carousel-slide') && root.contains(element));
     };
-    const canAutoplay = () => count > 1 && !prefersReducedMotion() && pauseFlags === 0;
+    const canAutoplay = () => count > 1 && !prefersReducedMotion() && pauseFlags === 0 && !holdingAutoplay();
     const applyPause = (flag, on) => {
         const next = on ? pauseFlags | flag : pauseFlags & ~flag;
         if (next === pauseFlags) {
@@ -1764,6 +1774,7 @@ function createCarouselController({
             return;
         }
         pauseFlags = next;
+        onPauseChange?.(pauseReasons());
         if (canAutoplay()) start();
         else pauseCycle();
     };
@@ -2027,13 +2038,7 @@ function createCarouselController({
         isAutoplaying: () => timer !== null,
         remainingMs: remainingNow,
         progressTime: () => progressAnimation?.currentTime ?? null,
-        pauseReasons: () => ({
-            hover: Boolean(pauseFlags & PAUSE.hover),
-            pointer: Boolean(pauseFlags & PAUSE.pointer),
-            focus: Boolean(pauseFlags & PAUSE.focus),
-            hidden: Boolean(pauseFlags & PAUSE.hidden),
-            offscreen: Boolean(pauseFlags & PAUSE.offscreen)
-        }),
+        pauseReasons,
         relayout,
         restart: start,
         destroy() {
@@ -2046,11 +2051,13 @@ function createCarouselController({
             observer?.disconnect();
             abortController.abort();
             stopProgressAnimation();
+            root.querySelectorAll('video').forEach(video => video.pause());
             root.removeAttribute('data-autoplay-progress');
             root.removeAttribute('aria-busy');
         }
     };
     root._carouselController = api;
+    onPauseChange?.(pauseReasons());
     return api;
 }
 
@@ -2074,6 +2081,8 @@ function createCarouselView({
     ariaLabel,
     onRender,
     onSettle,
+    shouldHoldAutoplay,
+    onPauseChange,
     previousLabel = 'Previous slide',
     nextLabel = 'Next slide',
     indicatorLabel = (index, count) => `Go to slide ${index + 1} of ${count}`
@@ -2182,6 +2191,8 @@ function createCarouselView({
         transitionTarget: motion.strip,
         onResize: () => motion.setOffset(false),
         ariaLabel,
+        shouldHoldAutoplay,
+        onPauseChange,
         render(index, direction, animate) {
             onRender?.(index, direction, animate);
             return motion.render(index, direction, animate);
@@ -2382,7 +2393,9 @@ function createProjectMediaLeaf(item, projectTitle, ancestry) {
         video.src = assetUrl(item.src);
         video.controls = true;
         video.playsInline = true;
-        video.preload = 'none';
+        video.loop = false;
+        video.muted = item.muted !== false;
+        video.preload = 'metadata';
         if (typeof item.poster === 'string' && item.poster.trim()) video.poster = assetUrl(item.poster);
         figure.appendChild(video);
     } else if (item.type === 'youtube') {
@@ -2401,15 +2414,108 @@ function createProjectMediaLeaf(item, projectTitle, ancestry) {
         return null;
     }
 
-    return { caption, element: figure, title, type: item.type };
+    return {
+        caption,
+        element: figure,
+        title,
+        type: item.type,
+        carouselAutoplay: item.type === 'video' && item.autoplay !== false
+    };
 }
 
-function setProjectMediaLeafActive(element, active) {
-    if (!active) element.querySelector('video')?.pause();
+function unbindCarouselVideoEnded(video) {
+    if (!video?._onCarouselEnded) return;
+    video.removeEventListener('ended', video._onCarouselEnded);
+    delete video._onCarouselEnded;
+}
+
+function pauseCarouselVideo(video, reset) {
+    video._carouselSystemPause = true;
+    video.pause();
+    video._carouselSystemPause = false;
+    if (!reset) return;
+    try {
+        video.currentTime = 0;
+    } catch (error) {
+        /* ignore seek on unloaded media */
+    }
+}
+
+function trackCarouselVideoUserPause(video) {
+    if (video._carouselPauseTracked) return;
+    video._carouselPauseTracked = true;
+    video.addEventListener('pause', () => {
+        if (!video._carouselSystemPause) video._carouselUserPaused = true;
+    });
+    video.addEventListener('play', () => {
+        video._carouselUserPaused = false;
+    });
+}
+
+function carouselVideoMayAutoplay(controller) {
+    if (prefersReducedMotion()) return false;
+    const reasons = controller?.pauseReasons?.();
+    if (!reasons) return false;
+    return !reasons.hidden && !reasons.offscreen;
+}
+
+function syncCarouselVideoLeaf(element, active, carouselRoot) {
+    const video = element.querySelector('video');
+    if (!video) return;
+    trackCarouselVideoUserPause(video);
+    video.muted = true;
+    video.loop = false;
+    video.playsInline = true;
+    if (!active) {
+        unbindCarouselVideoEnded(video);
+        pauseCarouselVideo(video, true);
+        video._carouselUserPaused = false;
+        return;
+    }
+    if (!carouselVideoMayAutoplay(carouselRoot?._carouselController)) {
+        unbindCarouselVideoEnded(video);
+        pauseCarouselVideo(video, true);
+        video._carouselUserPaused = false;
+        return;
+    }
+    video.preload = 'auto';
+    if (!video._onCarouselEnded) {
+        const onEnded = () => {
+            if (prefersReducedMotion()) return;
+            const controller = carouselRoot._carouselController;
+            if (!controller) return;
+            controller.goTo(controller.getIndex() + 1);
+        };
+        video._onCarouselEnded = onEnded;
+        video.addEventListener('ended', onEnded);
+    }
+    if (video._carouselUserPaused) return;
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+}
+
+function setProjectMediaLeafActive(element, active, options = {}) {
+    if (options.autoplay) syncCarouselVideoLeaf(element, active, options.carouselRoot);
+    else if (!active) element.querySelector('video')?.pause();
     const iframe = element.querySelector('iframe[data-src]');
     if (!iframe) return;
     if (active && !iframe.hasAttribute('src')) iframe.src = iframe.dataset.src;
     if (!active) iframe.removeAttribute('src');
+}
+
+function projectCarouselVideoHooks(root, leaves) {
+    const sync = (card, active) => setProjectMediaLeafActive(card, active, { carouselRoot: root, autoplay: true });
+    return {
+        shouldHoldAutoplay: index => Boolean(leaves[index]?.carouselAutoplay),
+        onPauseChange() {
+            root.querySelectorAll(':scope .carousel-slide').forEach(slide => {
+                sync(slide, slide.getAttribute('aria-hidden') !== 'true');
+            });
+        },
+        onSettle(_index, card, active) {
+            sync(card, active);
+        }
+    };
 }
 
 function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
@@ -2458,6 +2564,7 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
         else activeLeaf.element.removeAttribute('aria-describedby');
     };
 
+    const videoHooks = projectCarouselVideoHooks(gallery, leaves);
     const view = createCarouselView({
         root: gallery,
         slides: leaves.map(leaf => leaf.element),
@@ -2476,7 +2583,9 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
             currentIndex = index;
             if (activated) warmAdjacentMediaLeaves(leaves, index, edgeClones);
         },
-        onSettle: (_index, card, active) => setProjectMediaLeafActive(card, active)
+        shouldHoldAutoplay: videoHooks.shouldHoldAutoplay,
+        onPauseChange: videoHooks.onPauseChange,
+        onSettle: videoHooks.onSettle
     });
     if (hasDeferredMedia) {
         edgeClones = edgeClonesFromMotion(view?.motion, leaves.length);
@@ -2641,6 +2750,7 @@ function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
             warmAdjacentMediaLeaves(variantLeaves, currentIndex, edgeClones);
         };
 
+        const videoHooks = projectCarouselVideoHooks(comparison, variantLeaves);
         const view = createCarouselView({
             root: comparison,
             slides: variantLeaves.map(leaf => leaf.element),
@@ -2655,7 +2765,9 @@ function renderProjectMediaComparison(block, media, projectTitle, blockIndex) {
                 currentIndex = index;
                 if (activated) warmAdjacentMediaLeaves(variantLeaves, index, edgeClones);
             },
-            onSettle: (_index, card, active) => setProjectMediaLeafActive(card, active)
+            shouldHoldAutoplay: videoHooks.shouldHoldAutoplay,
+            onPauseChange: videoHooks.onPauseChange,
+            onSettle: videoHooks.onSettle
         });
         if (hasDeferredMedia) {
             edgeClones = edgeClonesFromMotion(view?.motion, variantLeaves.length);
