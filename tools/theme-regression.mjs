@@ -1217,7 +1217,7 @@ async function runE2E(session) {
             && askTags.tags.every(tag => tag.icon && tag.text),
         JSON.stringify(askTags)
     ));
-    results.push(check('project-canonical', /\/projects\/\?slug=ask-krishna$/.test(project.canonical || ''), project.canonical));
+    results.push(check('project-canonical', /\/projects\/ask-krishna\/$/.test(project.canonical || ''), project.canonical));
     results.push(check('project-gallery-label', /previous|next|show/i.test(project.galleryNext), project.galleryNext || 'missing gallery next label'));
     results.push(check('project-no-overflow', !project.overflowX, `overflowX=${project.overflowX}`));
 

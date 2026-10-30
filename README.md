@@ -3,7 +3,7 @@
   <samp>Hitesh Goyal – Portfolio</samp>
 </h1>
 
-A data-driven static portfolio for AI engineering experience, projects, timeline, and credentials. The homepage is JSON-rendered; dedicated project pages share `data/projects.json` through a query-string shell.
+A data-driven static portfolio for AI engineering experience, projects, timeline, and credentials. The homepage is JSON-rendered. Each project has a static page at `projects/<slug>/` with its own title, description, and structured data. `projects/?slug=<slug>` still opens that project and redirects to the canonical path on the public site.
 
 ## Highlights
 - Profile, projects, timeline, and certificates load from JSON.
@@ -20,7 +20,7 @@ A data-driven static portfolio for AI engineering experience, projects, timeline
 2. Visit `http://localhost:8000`.
 3. Update JSON files to refresh content without touching markup.
 
-HTML metadata, `sitemap.xml`, and `llms.txt` are static exceptions: crawlers that do not run JavaScript will not see per-project titles generated at runtime.
+HTML metadata, `sitemap.xml`, and `llms.txt` are generated for crawlers that do not run JavaScript. After editing `data/projects.json`, run `node tools/render-project-pages.mjs` so each `projects/<slug>/index.html` and `sitemap.xml` stay in sync. The generator also keeps the live sub-path apps (`/ask-krishna/`, its Read Gita page, `/flodoro/`, and `/msi-web/`) in the sitemap. `robots.txt` points at the sitemap.
 
 ## Customising
 - **Introduction/About:** Edit `data/profile.json`.

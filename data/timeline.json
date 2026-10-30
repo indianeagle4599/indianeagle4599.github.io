@@ -12,7 +12,7 @@
             },
             {
                 "label": "AudioBench",
-                "url": "./projects/?slug=audiobench",
+                "url": "/projects/audiobench/",
                 "kind": "demo"
             }
         ],

@@ -73,6 +73,7 @@ const TAG_ICONS = {
     Speech: 'lu-audio-lines',
     'Speech Recognition': 'lu-audio-lines',
     'Speech and audio ML': 'lu-audio-lines',
+    'Speech recognition and audio ML': 'lu-audio-lines',
     'Computer Vision': 'lu-scan-eye',
     'Computer vision and multimodal systems': 'lu-layers',
     'Deep Learning': 'lu-brain-circuit',
@@ -394,8 +395,16 @@ function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function siteRelativePrefix() {
+    let path = window.location.pathname || '/';
+    path = path.replace(/\/index\.html$/i, '/');
+    if (!path.endsWith('/')) path += '/';
+    const depth = path.split('/').filter(Boolean).length;
+    return depth ? '../'.repeat(depth) : './';
+}
+
 function dataUrl(file) {
-    return document.body.classList.contains('project-page') ? `../data/${file}` : `./data/${file}`;
+    return `${siteRelativePrefix()}data/${file}`;
 }
 
 async function fetchJson(url) {
@@ -563,8 +572,26 @@ function sortByRecency(a, b) {
 function assetUrl(src) {
     if (!src) return '';
     if (/^[a-z][a-z0-9+.-]*:\/\//i.test(src) || src.startsWith('//') || src.startsWith('/')) return src;
-    const cleaned = src.replace(/^\.\//, '');
-    return document.body.classList.contains('project-page') ? '../' + cleaned : './' + cleaned;
+    return siteRelativePrefix() + src.replace(/^\.\//, '');
+}
+
+function projectDetailsHref(slug) {
+    return `/projects/${encodeURIComponent(slug)}/`;
+}
+
+function projectSlugFromLocation() {
+    const path = (window.location.pathname || '').replace(/\/index\.html$/i, '').replace(/\/$/, '');
+    const match = path.match(/\/projects\/([^/]+)$/i);
+    if (match && PROJECT_SLUG_RE.test(match[1])) return match[1];
+    const query = new URLSearchParams(window.location.search).get('slug') || '';
+    return PROJECT_SLUG_RE.test(query) ? query : '';
+}
+
+function isLegacyProjectQuery() {
+    const path = (window.location.pathname || '').replace(/\/index\.html$/i, '').replace(/\/$/, '');
+    if (path !== '/projects') return false;
+    const query = new URLSearchParams(window.location.search).get('slug') || '';
+    return PROJECT_SLUG_RE.test(query);
 }
 
 function absoluteUrl(src) {
@@ -1503,8 +1530,8 @@ function renderProjectCard(project) {
     const highlightsHTML = highlights.length
         ? `<ul class="project-card-highlights">${highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
         : '';
-    const detailsHref = `./projects/?slug=${encodeURIComponent(project.slug)}`;
-    const detailsBtn = `<a href="${detailsHref}" class="${actionButtonClass(true)}">${PROJECT_PAGE_CTA_LABEL}</a>`;
+    const detailsHref = projectDetailsHref(project.slug);
+    const detailsBtn = `<a href="${detailsHref}" class="${actionButtonClass(true)}" aria-label="Learn more about ${escapeHtml(project.title)}">${PROJECT_PAGE_CTA_LABEL}</a>`;
 
     return `
         <article class="project-card">
@@ -1526,8 +1553,8 @@ function renderOtherProject(project) {
     const highlightsHTML = highlights.length
         ? `<ul>${highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
         : '';
-    const detailsHref = `./projects/?slug=${encodeURIComponent(project.slug)}`;
-    const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}">${PROJECT_PAGE_CTA_LABEL}</a>`;
+    const detailsHref = projectDetailsHref(project.slug);
+    const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}" aria-label="Learn more about ${escapeHtml(project.title)}">${PROJECT_PAGE_CTA_LABEL}</a>`;
     const footerHTML = renderStackFooter(renderTags(projectDisplayTags(project)), renderLinks(project.links) + pageLink);
     const summaryHTML = project.summary ? `<p class="stack-summary is-clamped">${escapeHtml(project.summary)}</p>` : '';
     const hasBody = Boolean(highlightsHTML || summaryHTML);
@@ -2271,6 +2298,17 @@ function setCanonical(url) {
     link.setAttribute('href', url);
 }
 
+function upsertProjectJsonLd(data) {
+    let script = document.getElementById('project-jsonld');
+    if (!script) {
+        script = document.createElement('script');
+        script.id = 'project-jsonld';
+        script.type = 'application/ld+json';
+        document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(data);
+}
+
 function youtubeEmbedUrl(url) {
     try {
         const parsed = new URL(String(url || ''));
@@ -2400,6 +2438,10 @@ function createProjectMediaLeaf(item, projectTitle, ancestry) {
         video.preload = 'metadata';
         video.addEventListener('loadedmetadata', () => applyShortClipPlaybackRate(video));
         if (typeof item.poster === 'string' && item.poster.trim()) video.poster = assetUrl(item.poster);
+        const videoLabel = (typeof title === 'string' && title.trim())
+            || (typeof caption === 'string' && caption.trim())
+            || projectTitle;
+        if (videoLabel) video.setAttribute('aria-label', videoLabel);
         figure.appendChild(video);
     } else if (item.type === 'youtube') {
         const embed = youtubeEmbedUrl(item.src);
@@ -2982,10 +3024,13 @@ function renderProjectResults(project) {
     return rendered.length > 0;
 }
 
-function updateProjectSeo(project, slug) {
-    const title = `${project.title} | Hitesh Goyal`;
-    const description = project.summary || 'Project detail page for Hitesh Goyal.';
-    const url = `${SITE_ORIGIN}/projects/?slug=${encodeURIComponent(slug)}`;
+function updateProjectSeo(project) {
+    const seo = typeof ProjectSeo !== 'undefined' && ProjectSeo.forProject
+        ? ProjectSeo.forProject(project)
+        : null;
+    const title = seo?.title || `${project.title} | Hitesh Goyal`;
+    const description = seo?.description || project.summary || 'Project by Hitesh Goyal, Applied AI Engineer.';
+    const url = seo?.url || `${SITE_ORIGIN}/projects/${encodeURIComponent(project.slug)}/`;
     document.title = title;
     setMeta('meta[name="description"]', description);
     setMeta('meta[property="og:title"]', title);
@@ -2993,22 +3038,16 @@ function updateProjectSeo(project, slug) {
     setMeta('meta[property="og:url"]', url);
     setMeta('meta[name="twitter:title"]', title);
     setMeta('meta[name="twitter:description"]', description);
+    setMeta('meta[name="twitter:card"]', seo?.twitterCard || 'summary');
     setCanonical(url);
-    const mediaItems = projectMediaLeaves(project);
-    const firstImage = mediaItems.find(item => item?.type === 'image'
-        && typeof item.src === 'string' && item.src.trim()
-        && typeof item.alt === 'string' && item.alt.trim());
-    const firstVideoPoster = mediaItems.find(item => item?.type === 'video'
-        && typeof item.src === 'string' && item.src.trim()
-        && typeof item.poster === 'string' && item.poster.trim());
-    const ogImageSrc = firstImage?.src || firstVideoPoster?.poster || project.logo || 'assets/hg-logo.svg';
-    let ogImage = document.head.querySelector('meta[property="og:image"]');
-    if (!ogImage) {
-        ogImage = document.createElement('meta');
-        ogImage.setAttribute('property', 'og:image');
-        document.head.appendChild(ogImage);
+    const image = seo?.image || absoluteUrl(project.logo || 'assets/hg-logo-4k.png');
+    setMeta('meta[property="og:image"]', image);
+    setMeta('meta[name="twitter:image"]', image);
+    if (seo?.imageAlt) {
+        setMeta('meta[property="og:image:alt"]', seo.imageAlt);
+        setMeta('meta[name="twitter:image:alt"]', seo.imageAlt);
     }
-    ogImage.setAttribute('content', absoluteUrl(ogImageSrc));
+    if (seo?.jsonLd) upsertProjectJsonLd(seo.jsonLd);
 }
 
 function renderProjectActionBar(project, element) {
@@ -3075,7 +3114,8 @@ function canNavigateHistoryBack() {
 }
 
 function pathIsProjectPage(pathname) {
-    return /\/projects\/?$/.test(pathname.replace(/\/index\.html$/i, ''));
+    const path = String(pathname || '').replace(/\/index\.html$/i, '').replace(/\/$/, '') || '/';
+    return path === '/projects' || /^\/projects\/[a-z0-9-]+$/i.test(path);
 }
 
 function prefersCrossDocumentViewTransition() {
@@ -3165,9 +3205,9 @@ function initProjectBackLink() {
 
 async function initProjectPage() {
     initProjectBackLink();
-    const slug = new URLSearchParams(window.location.search).get('slug');
-    if (!slug || !PROJECT_SLUG_RE.test(slug)) {
-        window.location.replace('../index.html#projects');
+    const slug = projectSlugFromLocation();
+    if (!slug) {
+        window.location.replace('/#projects');
         return;
     }
 
@@ -3183,11 +3223,15 @@ async function initProjectPage() {
 
     const project = projects.map(normalizeProject).find(item => item.slug === slug);
     if (!project) {
-        window.location.replace('../index.html#projects');
+        window.location.replace('/#projects');
+        return;
+    }
+    if (isLegacyProjectQuery() && !isLocalContactHost(window.location.hostname)) {
+        window.location.replace(`/projects/${encodeURIComponent(slug)}/${window.location.hash}`);
         return;
     }
 
-    updateProjectSeo(project, slug);
+    updateProjectSeo(project);
     renderProjectIntroduction(project);
 
     const hasWriteup = Boolean(project.writeup.trim());

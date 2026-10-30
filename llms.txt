@@ -17,7 +17,7 @@
 
 - Computer vision and multimodal systems
 - Generative AI pipelines
-- Speech and audio ML
+- Speech recognition and audio ML (ASR)
 - End-to-end path from data preparation and experimentation to evaluation, interfaces, and deployment constraints (latency, compute, data quality)
 
 ## Experience
@@ -63,14 +63,14 @@ Prefer the live Certificates section on the portfolio. High-signal items include
 
 - Home: https://hiteshgoyal.me/
 - Projects: https://hiteshgoyal.me/#projects
-- AudioBench (evaluation workbench, not the company product): https://hiteshgoyal.me/projects/?slug=audiobench
+- AudioBench (evaluation workbench, not the company product): https://hiteshgoyal.me/projects/audiobench/
 - Amplify Dental: https://amplifydental.ai/
 - Timeline: https://hiteshgoyal.me/#timeline
-- Aftersight: https://hiteshgoyal.me/projects/?slug=media-search-engine · https://github.com/indianeagle4599/Media-Search-Engine
-- Ask Krishna: https://hiteshgoyal.me/projects/?slug=ask-krishna · https://hiteshgoyal.me/ask-krishna/
-- Pixtyle: https://hiteshgoyal.me/projects/?slug=pixtyle · https://github.com/indianeagle4599/Pixtyle
-- Flodoro: https://hiteshgoyal.me/projects/?slug=flodoro · https://hiteshgoyal.me/flodoro/
-- OS Toolkit: https://hiteshgoyal.me/projects/?slug=os-toolkit · https://github.com/indianeagle4599/os-toolkit
-- Fuzzy Hybrid Model for Stock Trading: https://hiteshgoyal.me/projects/?slug=fuzzy-hybrid-stock-trading
-- Detecting AI Generated Images: https://hiteshgoyal.me/projects/?slug=ai-generated-image-classifier · https://github.com/indianeagle4599/ai-generated-image-classifier
-- LazyResume: https://hiteshgoyal.me/projects/?slug=lazy-resume
+- Aftersight: https://hiteshgoyal.me/projects/media-search-engine/ · https://github.com/indianeagle4599/Media-Search-Engine
+- Ask Krishna: https://hiteshgoyal.me/projects/ask-krishna/ · https://hiteshgoyal.me/ask-krishna/
+- Pixtyle: https://hiteshgoyal.me/projects/pixtyle/ · https://github.com/indianeagle4599/Pixtyle
+- Flodoro: https://hiteshgoyal.me/projects/flodoro/ · https://hiteshgoyal.me/flodoro/
+- OS Toolkit: https://hiteshgoyal.me/projects/os-toolkit/ · https://github.com/indianeagle4599/os-toolkit
+- Fuzzy Hybrid Model for Stock Trading: https://hiteshgoyal.me/projects/fuzzy-hybrid-stock-trading/
+- Detecting AI Generated Images: https://hiteshgoyal.me/projects/ai-generated-image-classifier/ · https://github.com/indianeagle4599/ai-generated-image-classifier
+- LazyResume: https://hiteshgoyal.me/projects/lazy-resume/
