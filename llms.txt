@@ -38,7 +38,7 @@
 
 - AudioBench — Evaluation and annotation workbench built for Amplify Dental: gold audio labelled once, prepare pipelines, and a shared scoreboard so a small team is not redoing transcription and benchmarking.
 - Aftersight — Image-first photo-library search. Indexes images so they can be found by meaning, visible text, or metadata — not just filenames.
-- Ask Krishna — Quiet Bhagavad Gita reflection: no typed question; Reflect shows five passages; Read Gita covers all 18 chapters; marks, resume, and cards stay on the device. Not a chatbot.
+- Ask Krishna — Bhagavad Gita reflection inspired by opening scripture with a question held silently. Five is a suggested limit; the question is never typed or stored. Read Gita covers all 18 chapters.
 - Pixtyle — Classical CV pixel stylizer for photos, folders, and video (k-means, enhanced, Fourier, edge, combo) with temporal palette stability on video.
 - Flodoro — Local-first Pomodoro workspace (timer, tasks, history, preferences) with user-selected local music folders; no account or backend required.
 - OS Toolkit — Python filesystem toolkit for storage analysis, directory trees, and reusable OS operations; benchmarked against copytree and robocopy.

@@ -180,10 +180,10 @@
         "relatedProjects": ["flodoro", "media-search-engine"],
         "logo": "./assets/ask-krishna-logo.svg",
         "featured": true,
-        "summary": "Hold a question silently and receive five Gita passages in Reflect, or read all 18 chapters in Read Gita — no chatbot or prompt box. The question is never typed, stored, or sent.",
-        "seoDescription": "Ask Krishna: hold a question silently and receive five Bhagavad Gita passages, or read all 18 chapters. No chatbot; the question is never typed or stored.",
+        "summary": "Ask Krishna is inspired by an old practice: hold a question silently, open the Bhagavad Gita, and let the passage you meet speak to the moment. Read Gita covers all 18 chapters.",
+        "seoDescription": "Ask Krishna: hold a question silently and open the Bhagavad Gita to a passage. Five is a suggested limit; the question is never typed or stored.",
         "highlights": [
-            "Reflect has no text input: five randomly selected passages appear one at a time.",
+            "Open to a passage while holding the question silently; if none of five speaks to it, the practice suggests waiting.",
             "Read Gita pairs Sanskrit shlokas with English and Hindi meanings, with chapter and shloka navigation.",
             "Marks, resume, and in-browser PNG cards stay on the device; nothing from the interaction needs to be stored outside it."
         ],
@@ -212,7 +212,7 @@
                 "kind": "demo"
             }
         ],
-        "writeup": "## What it is\n\nAsk Krishna has two complementary modes.\n\nReflect has no text input. You hold a question in your mind and receive five randomly selected Gita passages, shown one at a time.\n\nRead Gita is the full reading path: all 18 chapters, chapter and shloka navigation, Sanskrit text, and English and Hindi meanings.\n\n## How it is built\n\nThe site is static, with no backend. The question never exists as typed data, so it is never stored or sent. App, session, and reading state stay on the device — including marks and resume. Passages and verses can be saved as PNG cards generated in the browser. Interface strings and meanings load from static language files.\n\n## Why it exists\n\nIt is a gift-to-self project: a quiet interface for internal reflection that lets the Gita speak without turning the experience into a conversation with software.",
+        "writeup": "## What it is\n\nAsk Krishna has two complementary modes.\n\nReflect is inspired by an old practice for moments when someone feels torn or confused: call out to a scripture, open it to a page, and trust the passage they meet to speak to their situation.\n\nIn Ask Krishna, you hold your question silently and open to a passage from the Bhagavad Gita. The question is never typed or stored. Five is a suggested limit: if a passage answers you within five, good; if not, it may be the scripture's way of saying wait.\n\nRead Gita is the full reading path: all 18 chapters, chapter and shloka navigation, Sanskrit text, and English and Hindi meanings.\n\n## How it is built\n\nThe site is static, with no backend. The question never exists as typed data, so it is never stored or sent. App, session, and reading state stay on the device — including marks and resume. Passages and verses can be saved as PNG cards generated in the browser. Interface strings and meanings load from static language files.\n\n## Why it exists\n\nIt is a gift-to-self project: a quiet place to pause with a question and read without turning reflection into a conversation with software.",
         "media": {
             "blocks": [
                 {
@@ -236,16 +236,16 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/reflection-question.png",
-                            "alt": "Ask Krishna screen that says Hold your question silently, with a Receive action and no text input",
+                            "alt": "Ask Krishna screen that says Hold your question silently, with a Receive action",
                             "title": "Hold the question",
-                            "caption": "There is no prompt box: the question stays unspoken."
+                            "caption": "The question stays in your mind and is never typed or stored."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/reflection-passage.png",
                             "alt": "Ask Krishna passage screen with Sanskrit and English verses plus Read in Gita and Save actions",
                             "title": "Receive a passage",
-                            "caption": "One of five randomly selected passages, with Read in Gita and Save."
+                            "caption": "A passage opened while the question stays silent, with Read in Gita and Save."
                         }
                     ]
                 },

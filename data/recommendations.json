@@ -28,5 +28,11 @@
         "name": "Dr. Tan Wee Kek",
         "role": "Associate Professor",
         "organization": "National University of Singapore"
+    },
+    {
+        "quote": "real talent for engineering thinking and for process automation",
+        "name": "David Griswold",
+        "role": "CTO",
+        "organization": "Amplify Dental AI"
     }
 ]
