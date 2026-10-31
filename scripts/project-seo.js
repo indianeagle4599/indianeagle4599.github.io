@@ -58,7 +58,7 @@
         if (project.slug === 'audiobench') {
             return {
                 src: 'assets/projects/audiobench/30-results-leaderboard-share.png',
-                alt: 'AudioBench results leaderboard',
+                alt: 'AudioBench leaderboard comparing ASR models across benchmark conditions',
                 large: true,
                 width: 1200,
                 height: 630
@@ -156,6 +156,7 @@
                     isPartOf: { '@id': `${ORIGIN}/#website` },
                     about: { '@id': `${ORIGIN}/#hitesh-goyal` },
                     mainEntity: { '@id': `${url}#work` },
+                    breadcrumb: { '@id': `${url}#breadcrumbs` },
                     primaryImageOfPage: imageUrl
                 },
                 work,

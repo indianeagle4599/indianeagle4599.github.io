@@ -4126,6 +4126,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNav();
     initThemeToggle();
     initPageNavMotion();
+    if (document.body.classList.contains('projects-hub')) {
+        initScrollAnimations();
+        return;
+    }
     if (document.body.classList.contains('project-page')) {
         initProjectPage();
         return;

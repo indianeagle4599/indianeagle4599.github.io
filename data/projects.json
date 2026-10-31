@@ -2,6 +2,8 @@
     {
         "slug": "audiobench",
         "title": "AudioBench",
+        "hubTopic": "speech-asr",
+        "relatedProjects": ["media-search-engine", "ai-generated-image-classifier"],
         "logo": "./assets/audiobench-logo.svg",
         "featured": true,
         "summary": "AudioBench was built for Amplify Dental so a small team could judge speech models on real conditions — and stop redoing transcription, annotation, and benchmarking from scratch.",
@@ -174,6 +176,8 @@
     {
         "slug": "ask-krishna",
         "title": "Ask Krishna",
+        "hubTopic": "tools-apps",
+        "relatedProjects": ["flodoro", "media-search-engine"],
         "logo": "./assets/ask-krishna-logo.svg",
         "featured": true,
         "summary": "Hold a question silently and receive five Gita passages in Reflect, or read all 18 chapters in Read Gita — no chatbot or prompt box. The question is never typed, stored, or sent.",
@@ -285,6 +289,8 @@
     {
         "slug": "media-search-engine",
         "title": "Aftersight",
+        "hubTopic": "llm-retrieval",
+        "relatedProjects": ["audiobench", "lazy-resume"],
         "logo": "./assets/aftersight-logo.png",
         "featured": true,
         "summary": "Aftersight is an image-first search system for photo libraries. It indexes images so they can be found by meaning, visible text, or metadata — not just filenames.",
@@ -377,6 +383,8 @@
     {
         "slug": "pixtyle",
         "title": "Pixtyle",
+        "hubTopic": "computer-vision",
+        "relatedProjects": ["ai-generated-image-classifier", "media-search-engine"],
         "logo": "./assets/pixtyle-logo.png",
         "featured": true,
         "summary": "Pixel Stylizer Toolkit for transforming photos and videos into stylized wallpapers using advanced computer vision techniques.",
@@ -601,6 +609,8 @@
     {
         "slug": "flodoro",
         "title": "Flodoro",
+        "hubTopic": "tools-apps",
+        "relatedProjects": ["os-toolkit", "ask-krishna"],
         "logo": "./assets/flodoro-logo.png",
         "featured": true,
         "summary": "A local-first Pomodoro workspace that keeps the timer, tasks, history, and your own music on one static page — no account or backend required.",
@@ -699,6 +709,8 @@
     {
         "slug": "os-toolkit",
         "title": "OS Toolkit",
+        "hubTopic": "tools-apps",
+        "relatedProjects": ["lazy-resume", "ai-generated-image-classifier"],
         "logo": "./assets/os-toolkit-logo-blink.gif",
         "logoTone": "on-dark",
         "summary": "An expanding Python filesystem toolkit for developers, data scientists, and scripts or agents: understand storage usage, work with directory trees, and reuse common OS operations without rebuilding them from scratch. Benchmarked against copytree and robocopy.",
@@ -780,6 +792,8 @@
     {
         "slug": "lazy-resume",
         "title": "LazyResume",
+        "hubTopic": "llm-retrieval",
+        "relatedProjects": ["media-search-engine", "os-toolkit"],
         "logo": "./assets/lazy-resume-logo.svg",
         "logoTone": "on-dark",
         "summary": "Start with an existing resume PDF, turn it into a structured profile, and regenerate a clean, consistently formatted resume without rebuilding everything by hand.",
@@ -808,6 +822,8 @@
     {
         "slug": "fuzzy-hybrid-stock-trading",
         "title": "Fuzzy Hybrid Model for Stock Trading",
+        "hubTopic": "research",
+        "relatedProjects": ["ai-generated-image-classifier", "audiobench"],
         "logo": "./assets/fuzzy-hybrid-stock-trading-logo.svg",
         "logoTone": "on-dark",
         "summary": "A stock-trading research project where I used domain analysis and feature engineering to cut the predictor’s market-input channels by over 70%, then combined deep learning with fuzzy logic for trading decisions.",
@@ -857,6 +873,8 @@
     {
         "slug": "ai-generated-image-classifier",
         "title": "Detecting AI Generated Images",
+        "hubTopic": "computer-vision",
+        "relatedProjects": ["pixtyle", "media-search-engine"],
         "logo": "./assets/ai-generated-image-classifier-logo.svg",
         "logoTone": "on-dark",
         "summary": "A systematic PyTorch training and tuning workflow for distinguishing AI-generated from human images, with repeatable experiment runs that preserve configs, metrics, plots, and checkpoints so each iteration can inform the next.",
