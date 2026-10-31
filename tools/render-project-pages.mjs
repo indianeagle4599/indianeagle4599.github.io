@@ -266,6 +266,21 @@ ${cards}
             </div>`;
 }
 
+function recommendationFallback(recommendations) {
+    const spans = ['wide', 'medium', 'small', 'small', 'small', 'small'];
+    const cards = recommendations.map((entry, index) => `                    <article class="recommendation-card recommendation-card--${spans[index] || 'small'}">
+                        <blockquote class="recommendation-quote"><span class="recommendation-mark" aria-hidden="true">“</span><p>${escapeHtml(entry.quote)}</p></blockquote>
+                        <footer class="recommendation-attribution">
+                            <cite class="recommendation-name">${escapeHtml(entry.name)}</cite>
+                            <p class="recommendation-role">${escapeHtml(entry.role)}</p>
+                            <p class="recommendation-org">${escapeHtml(entry.organization)}</p>
+                        </footer>
+                    </article>`).join('\n');
+    return `                <div class="recommendations-mosaic">
+${cards}
+                </div>`;
+}
+
 function hubJsonLd(projects) {
     const url = `${ProjectSeo.ORIGIN}/projects/`;
     return {
@@ -476,6 +491,8 @@ ${urls.join('\n')}
 
 const projects = JSON.parse(await readFile(join(root, 'data', 'projects.json'), 'utf8'));
 if (!Array.isArray(projects)) throw new Error('projects.json must be an array');
+const recommendations = JSON.parse(await readFile(join(root, 'data', 'recommendations.json'), 'utf8'));
+if (!Array.isArray(recommendations)) throw new Error('recommendations.json must be an array');
 
 const projectMap = new Map(projects.map(project => [project.slug, project]));
 const entries = {};
@@ -508,6 +525,15 @@ home = home.replace(
     new RegExp(`${fallbackStart}[\\s\\S]*?${fallbackEnd}`),
     `${fallbackStart}\n${homeFallback(projects)}\n            ${fallbackEnd}`
 );
+const recommendationStart = '<!-- recommendation-fallback:start -->';
+const recommendationEnd = '<!-- recommendation-fallback:end -->';
+if (!home.includes(recommendationStart) || !home.includes(recommendationEnd)) {
+    throw new Error('index.html is missing recommendation fallback markers');
+}
+home = home.replace(
+    new RegExp(`${recommendationStart}[\\s\\S]*?${recommendationEnd}`),
+    `${recommendationStart}\n${recommendationFallback(recommendations)}\n            ${recommendationEnd}`
+);
 await writeFile(homePath, home);
 await writeFile(join(root, 'sitemap.xml'), sitemap(projects));
-console.log(`Wrote ${projects.length} project pages, project hub, homepage fallback, and sitemap.xml`);
+console.log(`Wrote ${projects.length} project pages, project hub, homepage fallbacks, and sitemap.xml`);

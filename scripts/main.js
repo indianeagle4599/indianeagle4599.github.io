@@ -3648,28 +3648,92 @@ async function loadRecommendations() {
         const data = await fetchJson(dataUrl('recommendations.json'));
         if (!Array.isArray(data) || !data.length) throw new Error('recommendations.json must be a non-empty array');
         data.forEach((entry, index) => requireFields(entry, ['quote', 'name', 'role', 'organization'], `recommendations[${index}]`));
-        const pages = [];
-        for (let i = 0; i < data.length; i += RECOMMENDATION_PAGE_SIZE) {
-            pages.push(data.slice(i, i + RECOMMENDATION_PAGE_SIZE));
-        }
-        if (pages.length > 1) {
-            createCarouselView({
-                root,
-                slides: pages.map(renderRecommendationMosaic),
-                loop: true,
-                ariaLabel: index => `Endorsements, page ${index + 1} of ${pages.length}`,
-                indicatorLabel: index => `Show endorsements page ${index + 1} of ${pages.length}`
-            });
-        } else {
-            root._carouselController?.destroy();
-            const controls = root.querySelector(':scope > .carousel-controls');
-            if (controls) controls.hidden = true;
-            root.classList.remove('carousel');
-            root.removeAttribute('aria-roledescription');
-            root.setAttribute('role', 'region');
-            root.setAttribute('aria-label', 'Endorsements');
-            if (track) track.replaceChildren(renderRecommendationMosaic(pages[0]));
-        }
+        root._recommendationMosaicController?.destroy();
+        root._carouselController?.destroy();
+        root.querySelector(':scope > .carousel-controls')?.remove();
+        root.classList.add('carousel');
+        root.tabIndex = 0;
+        root.removeAttribute('aria-roledescription');
+        root.setAttribute('role', 'region');
+        root.setAttribute('aria-label', 'Endorsements');
+
+        const visible = data.slice(0, RECOMMENDATION_PAGE_SIZE);
+        const mosaic = renderRecommendationMosaic(visible);
+        Array.from(mosaic.children).forEach((card, index) => {
+            card.dataset.recommendationIndex = String(index);
+        });
+        track.replaceChildren(mosaic);
+
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const abortController = new AbortController();
+        const listenerOptions = { signal: abortController.signal };
+        let timer = null;
+        let swapping = false;
+        let paused = document.hidden || root.matches(':hover') || root.matches(':focus-within');
+        let pauseGeneration = 0;
+        const randomDelay = () => 4000 + Math.random() * 5000;
+        const isHeld = () => paused || document.hidden || root.matches(':hover, :focus-within');
+        const clearTimer = () => {
+            if (timer !== null) window.clearTimeout(timer);
+            timer = null;
+        };
+        const schedule = () => {
+            clearTimer();
+            if (isHeld() || swapping || motionQuery.matches || data.length <= visible.length) return;
+            timer = window.setTimeout(swapOne, randomDelay());
+        };
+        const swapOne = async () => {
+            timer = null;
+            const generation = pauseGeneration;
+            const cards = Array.from(mosaic.children);
+            const shown = new Set(cards.map(card => Number(card.dataset.recommendationIndex)));
+            const hidden = data.map((_, index) => index).filter(index => !shown.has(index));
+            if (!hidden.length || isHeld() || motionQuery.matches) return schedule();
+
+            swapping = true;
+            const slot = Math.floor(Math.random() * cards.length);
+            const nextIndex = hidden[Math.floor(Math.random() * hidden.length)];
+            const current = cards[slot];
+            await current.animate(
+                [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(8px)' }],
+                { duration: 160, easing: 'ease-in', fill: 'forwards' }
+            ).finished.catch(() => {});
+            if (isHeld() || generation !== pauseGeneration) {
+                current.getAnimations().forEach(animation => animation.cancel());
+                swapping = false;
+                return schedule();
+            }
+            const next = renderRecommendationCard(data[nextIndex], RECOMMENDATION_SPANS[slot] || 'small');
+            next.dataset.recommendationIndex = String(nextIndex);
+            current.replaceWith(next);
+            await next.animate(
+                [{ opacity: 0, transform: 'translateY(-8px)' }, { opacity: 1, transform: 'translateY(0)' }],
+                { duration: 180, easing: 'ease-out' }
+            ).finished.catch(() => {});
+            swapping = false;
+            schedule();
+        };
+        const setPaused = value => {
+            paused = value || document.hidden;
+            if (paused) {
+                pauseGeneration++;
+                clearTimer();
+            }
+            else schedule();
+        };
+        root.addEventListener('mouseenter', () => setPaused(true), listenerOptions);
+        root.addEventListener('mouseleave', () => setPaused(root.matches(':focus-within')), listenerOptions);
+        root.addEventListener('focusin', () => setPaused(true), listenerOptions);
+        root.addEventListener('focusout', () => setPaused(root.matches(':hover')), listenerOptions);
+        document.addEventListener('visibilitychange', () => setPaused(root.matches(':hover, :focus-within')), listenerOptions);
+        motionQuery.addEventListener('change', schedule, listenerOptions);
+        root._recommendationMosaicController = {
+            destroy() {
+                clearTimer();
+                abortController.abort();
+            }
+        };
+        schedule();
         initScrollAnimations();
     } catch (error) {
         console.error('Error loading recommendations:', error);

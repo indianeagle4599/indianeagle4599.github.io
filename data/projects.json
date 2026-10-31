@@ -26,7 +26,7 @@
         ],
         "writeup": "",
         "writeupMid": "## Built for Amplify Dental\n\nAudioBench is the evaluation and annotation workbench I built for Amplify Dental's transcription work. On a small team, every hour spent repeating transcription, labelling, or benchmark setup is an hour not spent on the product. I built each part to be reused.\n\nDistant speech, room noise, accents, and microphones can change which model performs best. AudioBench keeps hand-checked reference audio, named preprocessing pipelines, and local or cloud speech-to-text systems in one results view so the team can compare them without repeating setup.\n\nModels are sorted so the strongest overall result appears first. Heatmaps and a complete results table show interactions between models, datasets, and audio treatments that one average score would hide.\n\n## Solve it once, then reuse it\n\nI built the annotation interface around the audio instead of keeping transcripts in a separate spreadsheet. It shows the waveform, compares original and cleaned audio, changes playback speed, and saves the hand-written reference transcript. The sample library keeps the same reference audio and transcripts with condition tags and completion status. The live test runs one ready speech-to-text system on a hand-checked sample before the team starts a full benchmark.\n\nEach audio-preprocessing workflow is saved by name instead of applied as a one-off file edit. Experiments start from a reusable preset and a preview of the planned model, dataset, and preprocessing combinations. A local Whisper Small server catches setup mistakes before cloud resources are used; cloud GPUs run the same work when an experiment contains many combinations.",
-        "writeupAfter": "## How it is built\n\nI built AudioBench so new datasets, speech-to-text models, preprocessing steps, and computing machines can be added through configuration. Python and FastAPI run locally first, while one shared configuration describes the local and cloud systems.\n\n### Public data and models\n\nThe suite contains 6 public speech datasets: AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech. Together they cover distant microphones, accented English, varied speakers, and clean read speech.\n\nThe recorded interface includes Whisper Large v3 through Hugging Face and Faster-Whisper, Whisper Small, Kyutai STT, Google MedASR, Moonshine Base, and Qwen3-ASR. Its preprocessing options include unchanged audio, audio prepared for recognition, audio prepared for human review, cleaned audio, and longer chains assembled in the lab.\n\nWord error rate is the share of words the model got wrong. Character error rate is the same at the letter level. Real-time factor is processing time divided by audio length.\n\n### Thanks\n\nSpecial thanks to David Griswold for generously allowing me to showcase this product.\n\n### About this recording\n\nThe listening and annotation screenshots use public LibriSpeech recordings, not dental-clinic audio. This is the evaluation bench, not Amplify's dental product UI. The 'Whole Nine Yards' benchmark was stopped before every planned comparison finished. The cloud recording shows two GPU virtual machines starting alongside the local speech-to-text server.",
+        "writeupAfter": "## How it is built\n\nI built AudioBench so new datasets, speech-to-text models, preprocessing steps, and computing machines can be added through configuration. Python and FastAPI run locally first, and one shared config file lists every local and cloud speech-to-text model, so swapping one is a config change.\n\n### Public data and models\n\nThe suite contains 6 public speech datasets: AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech. Together they cover distant microphones, accented English, varied speakers, and clean read speech.\n\nThe recorded interface includes Whisper Large v3 through Hugging Face and Faster-Whisper, Whisper Small, Kyutai STT, Google MedASR, Moonshine Base, and Qwen3-ASR. Its audio options include unchanged audio, audio adjusted for speech recognition, audio adjusted for human review, cleaned audio, and longer sequences of clean-up steps assembled in the lab.\n\nWord error rate is the share of words the model got wrong. Character error rate is the same at the letter level. Real-time factor is processing time divided by audio length.\n\n### Thanks\n\nSpecial thanks to David Griswold for generously allowing me to showcase this product.\n\n### About this recording\n\nThe listening and annotation screenshots use public LibriSpeech recordings, not dental-clinic audio. This is the evaluation bench, not Amplify's dental product UI. The 'Whole Nine Yards' benchmark was stopped before every planned comparison finished. The cloud recording shows two GPU virtual machines starting alongside the local speech-to-text server.",
         "media": {
             "blocks": [
                 {
@@ -65,19 +65,19 @@
                             "src": "./assets/projects/audiobench/32-results-heatmap-by-model.webp",
                             "alt": "AudioBench heatmap comparing audio-preprocessing pipelines with speech-to-text models",
                             "title": "Insights a table would hide",
-                            "caption": "Too many dimensions for one flat view. The heatmap is how a prepare that looks fine on average still fails a backend."
+                            "caption": "The heatmap shows when an audio clean-up step that looks fine on average still hurts one speech-to-text model."
                         },
                         {
                             "type": "video",
                             "src": "./assets/projects/audiobench/33-results-heatmap-by-dataset.mp4",
                             "poster": "./assets/projects/audiobench/33-results-heatmap-by-dataset.webp",
                             "title": "The same truth, by corpus",
-                            "caption": "Slice the grid another way and a different weakness shows up. That is the point of keeping every dimension in one system."
+                            "caption": "Group the same results by speech dataset and a different weakness can appear. Keeping every comparison together makes that visible."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/13-wny-overview.webp",
-                            "alt": "Whole Nine Yards experiment overview showing a large benchmark that was stopped with unfinished cells",
+                            "alt": "Whole Nine Yards experiment overview showing a large benchmark stopped before every planned comparison finished",
                             "title": "A question too big for a demo 2×2",
                             "caption": "The run used seven speech-to-text systems, 6 datasets, and four preprocessing options. It ran for about six hours and was stopped before every planned comparison finished."
                         }
@@ -119,7 +119,7 @@
                             "src": "./assets/projects/audiobench/01-prepare-lab.webp",
                             "alt": "AudioBench Preprocess Lab showing The Works pipeline of seven audio processors in slot order",
                             "title": "A pipeline, not a file",
-                            "caption": "Name the chain, run it on any clip, compare waveforms. The DSP work is solved once."
+                            "caption": "Name the sequence of audio clean-up steps, run it on any clip, and compare the waveforms. The work is reusable."
                         },
                         {
                             "type": "video",
@@ -139,14 +139,14 @@
                             "src": "./assets/projects/audiobench/10-experiment-presets.mp4",
                             "poster": "./assets/projects/audiobench/10-experiment-presets.webp",
                             "title": "Presets",
-                            "caption": "Fill the matrix from a preset, or pick backends yourself. The experiment design is a config, not a new script."
+                            "caption": "Start from a saved experiment plan or choose the speech-to-text models yourself. The design is configuration, not a new script."
                         },
                         {
                             "type": "video",
                             "src": "./assets/projects/audiobench/11-experiment-plan-preview.mp4",
                             "poster": "./assets/projects/audiobench/11-experiment-plan-preview.webp",
                             "title": "See the bill before you pay it",
-                            "caption": "A dry-run of the cells. Change the plan here, not after GPUs are already up."
+                            "caption": "A preview of every model-dataset-preprocessing combination, so you can change the plan before any GPUs start."
                         }
                     ]
                 },
@@ -166,7 +166,7 @@
                             "src": "./assets/projects/audiobench/07-gce-two-vm-provisioning.mp4",
                             "poster": "./assets/projects/audiobench/07-gce-two-vm-provisioning.webp",
                             "title": "Scale the same shape",
-                            "caption": "The same Launch Server action bringing up GPU VMs beside the local box when the matrix needs capacity."
+                            "caption": "The same Launch Server action starts cloud GPU machines beside the local computer when an experiment needs more capacity."
                         }
                     ]
                 }
@@ -180,11 +180,11 @@
         "relatedProjects": ["flodoro", "media-search-engine"],
         "logo": "./assets/ask-krishna-logo.svg",
         "featured": true,
-        "summary": "Ask Krishna has two modes. Reflect lets you hold a question in mind and open the Bhagavad Gita to up to five random passages for guidance. The reading mode covers all 18 chapters.",
-        "seoDescription": "Ask Krishna: hold a question silently and open up to five random Gita passages, or read all 18 chapters. The question is never typed or stored.",
+        "summary": "Ask Krishna has two modes. Reflect lets you hold a question in mind and open the Bhagavad Gita to up to five random passages for guidance. Read Gita covers all 18 chapters.",
+        "seoDescription": "Ask Krishna: hold a question silently and open up to five random Gita passages, or use Read Gita for all 18 chapters. Nothing is typed or stored.",
         "highlights": [
-            "Reflect follows an old practice: when you're torn or confused, hold your question in mind and open the Bhagavad Gita to a random page for guidance.",
-            "The reading mode covers all 18 chapters, with Sanskrit text and English and Hindi meanings.",
+            "Reflect follows an old practice: when you're torn or confused, hold your question in mind and open the Bhagavad Gita to a random page for guidance; if none answers, take it as a sign to wait.",
+            "Read Gita covers all 18 chapters, with Sanskrit text and English and Hindi meanings.",
             "Bookmarks, your reading position, and saved image cards stay on the device; the question is never typed or stored."
         ],
         "displayTags": [
@@ -212,7 +212,7 @@
                 "kind": "demo"
             }
         ],
-        "writeup": "## What it is\n\nAsk Krishna has two modes.\n\nReflect follows an old practice for moments when you're torn or confused: hold your question in mind and open the Bhagavad Gita to a random page for guidance. You can open up to five random passages. If one answers you, good. If none does, take it as the Gita telling you to wait. Five is a suggestion, not an enforced limit. Your question is never typed or stored.\n\nBefore reading, a short mantra appears as a purification pause because you're about to read words spoken by the Lord Himself.\n\nThe second mode lets you read all 18 chapters, navigate by chapter and verse, and view Sanskrit text with English or Hindi meanings.\n\n## How it is built\n\nThe site is static, with no application server. Bookmarks, your reading position, and other reading state stay on the device. Passages and verses can be saved as image cards generated in the browser. Interface strings and meanings load from static language files.\n\n## Why it exists\n\nI built it as a quiet place to pause with a question and read without turning reflection into a conversation with software.",
+        "writeup": "## What it is\n\nAsk Krishna has two modes.\n\nReflect follows an old practice for moments when you're torn or confused: hold your question in mind and open the Bhagavad Gita to a random page for guidance. You can open up to five random passages. If one answers you, good. If none does, take it as the Gita telling you to wait. Five is a suggestion, not an enforced limit. Your question is never typed or stored.\n\nBefore reading, a short mantra appears as a purification pause because you're about to read words spoken by the Lord Himself.\n\nRead Gita lets you read all 18 chapters, navigate by chapter and verse, and view Sanskrit text with English or Hindi meanings.\n\n## How it is built\n\nThe site is static, with no application server. Bookmarks, your reading position, and other reading state stay on the device. Passages and verses can be saved as image cards generated in the browser. Interface strings and meanings load from static language files.\n\n## Why it exists\n\nUnlike a chatbot, there is nothing to type and nothing to ask. You simply hold your question in mind, and a passage appears.",
         "media": {
             "blocks": [
                 {
@@ -251,7 +251,7 @@
                 },
                 {
                     "presentation": "gallery",
-                    "title": "Read all 18 chapters",
+                    "title": "Read Gita",
                     "items": [
                         {
                             "type": "image",
@@ -333,7 +333,7 @@
                 "kind": "blog"
             }
         ],
-        "writeup": "## What it is\n\nI was fed up with how disorganised my own photo library was, so I built Aftersight to explore how language models could organise memories and make them easier to search. A vision-language model—an AI model that connects images and text—describes each image once, and later searches reuse that record.\n\n## Approach\n\n- I identify duplicate files and reconcile their available timestamps before indexing, giving date-based search one chosen date instead of relying on a single filesystem timestamp.\n- MongoDB stores the main image record. ChromaDB searches scenes, keywords, visible text, and metadata separately, then weighted reciprocal rank fusion combines those ranked lists.\n- Search runs locally after the description step. Each result shows why it was returned through its source image, generated description, metadata, component ranks, combined score, and contributing search method.",
+        "writeup": "## What it is\n\nI was fed up with how disorganised my own photo library was, so I built Aftersight to explore how language models could organise memories and make them easier to search. A vision-language model—an AI model that connects images and text—describes each image once, and later searches reuse that record.\n\n## Approach\n\n- I fingerprint each file and reconcile the available timestamps before indexing, giving date-based search one chosen date instead of relying on a single filesystem timestamp.\n- MongoDB stores the main image record. ChromaDB searches scenes, keywords, visible text, and metadata separately, then weighted reciprocal rank fusion combines those ranked lists.\n- Search runs locally after the description step. Each result shows why it was returned through its source image, generated description, metadata, component ranks, combined score, and contributing search method.",
         "media": {
             "blocks": [
                 {
@@ -713,7 +713,7 @@
         "relatedProjects": ["lazy-resume", "ai-generated-image-classifier"],
         "logo": "./assets/os-toolkit-logo-blink.gif",
         "logoTone": "on-dark",
-        "summary": "I built OS Toolkit for developers, data scientists, scripts, and agents that need storage analysis, directory comparison, and reusable file operations without rebuilding them for every task.",
+        "summary": "I built OS Toolkit to analyse disk usage, copy and compare folders, and reuse common file operations from Python or the command line. I benchmarked its copying against copytree and robocopy.",
         "seoDescription": "Python filesystem toolkit for developers, data scientists and agents: storage usage, directory trees and common OS operations, benchmarked against robocopy.",
         "highlights": [
             "Usage analysis shows where space goes in a directory tree, including which folders dominate the root.",
@@ -908,7 +908,7 @@
                 "kind": "github"
             }
         ],
-        "writeup": "## What it is\n\nI built this project for Kaggle's Detect AI vs. Human-Generated Images competition. It trains a binary classifier to distinguish AI-generated images from human images and keeps a repeatable record of every experiment.\n\n## Why it was built\n\nRepeated architecture and configuration experiments are easy to lose if the only saved output is a model checkpoint. This setup keeps the configuration, metrics, plots, and checkpoints together so each experiment can inform the next.\n\n## How an experiment works\n\nA run starts from a configuration, trains, and writes a timestamped folder containing the configuration, per-epoch metrics, training curves, confusion matrices, and checkpoints. I inspect that record before choosing the next model, feature, or training change.\n\n## Model and feature experiments\n\nI can swap PyTorch image-model architectures and optionally add frequency-domain features using FFT or DCT. Dataset preparation and augmentation live in the same repository.\n\n## Result\n\nThe best recorded run used Swin V2 Tiny and reached 87.9% validation accuracy. This is validation accuracy, not a Kaggle leaderboard score.\n\n## Across systems\n\nThe same workflow can run independently on different machines. Each machine writes the same run-folder structure, so results remain comparable without a central scheduler or distributed training.",
+        "writeup": "## What it is\n\nI built this project for Kaggle's Detect AI vs. Human-Generated Images competition. It trains a binary classifier to distinguish AI-generated images from real (human-made) images and keeps a repeatable record of every experiment.\n\n## Why it was built\n\nRepeated architecture and configuration experiments are easy to lose if the only saved output is a model checkpoint. This setup keeps the configuration, metrics, plots, and checkpoints together so each experiment can inform the next.\n\n## How an experiment works\n\nA run starts from a configuration, trains, and writes a timestamped folder containing the configuration, per-epoch metrics, training curves, confusion matrices, and checkpoints. I inspect that record before choosing the next model, feature, or training change.\n\n## Model and feature experiments\n\nI can swap PyTorch image-model architectures and optionally add frequency-domain features using FFT or DCT. Dataset preparation and augmentation live in the same repository.\n\n## Result\n\nThe best recorded run used Swin V2 Tiny and reached 87.9% validation accuracy. This is validation accuracy, not a Kaggle leaderboard score.\n\n## Across systems\n\nThe same workflow can run independently on different machines. Each machine writes the same run-folder structure, so results remain comparable without a central scheduler or distributed training.",
         "writeupAfter": "## How it is built\n\n`train.py` drives the loop, snapshots `config.json` into `runs/<timestamp>/`, appends epoch lines to `run.txt`, and rewrites curves and confusion matrices as the run proceeds. Best and last checkpoints are stored with the same folder.",
         "media": {
             "blocks": [
