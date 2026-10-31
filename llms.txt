@@ -6,8 +6,10 @@
 
 - Name: Hitesh Goyal
 - Location: Bangalore, India
-- Role: Applied AI Engineer | Speech (ASR) · Vision · NLP & LLMs
+- Role: Applied AI Engineer | Speech Recognition (ASR) · Vision · Language Models (LLMs)
+- Keywords: ASR, speech recognition, computer vision, Multimodal AI, LLMs, generative AI
 - Portfolio: https://hiteshgoyal.me/
+- Projects: https://hiteshgoyal.me/projects/
 - LinkedIn: https://www.linkedin.com/in/hitesh-goyal-5732bb208/
 - GitHub: https://github.com/indianeagle4599
 - Resume: https://github.com/indianeagle4599/indianeagle4599/blob/main/Resume.pdf
@@ -15,36 +17,36 @@
 
 ## Focus
 
-- Computer vision and multimodal systems
-- Generative AI pipelines
-- Speech recognition and audio ML (ASR)
+- Computer vision and multimodal systems (Multimodal AI)
+- Generative-AI pipelines with LLMs
+- Speech recognition and audio machine learning (ASR)
 - End-to-end path from data preparation and experimentation to evaluation, interfaces, and deployment constraints (latency, compute, data quality)
 
 ## Experience
 
-- Amplify Dental AI — Applied AI Engineer (contract, May 2026 to Aug 2026), remote. I built an ASR benchmark across AMI headset, AMI distant mic, VoxPopuli, Common Voice, VCTK, and LibriSpeech, comparing local and cloud systems with word error rate, character error rate, and real-time factor.
-- Hummingbird Bioscience / SGInnovate Summation — Machine Learning Engineer intern (Aug 2025 – Jan 2026). I built a biomarker-discovery pipeline on cell-line omics data that starts from a known target and statistically identifies linked genes that could act as biomarkers. Moving CPU-only Python loops to vectorised GPU code cut runtime from days to hours (about 50×), and a proprietary augmentation method multiplied the usable cell-line data almost exponentially.
-- Tata Elxsi — Computer Vision Engineer (full-time). I built computer-vision systems for effluent detection, 18+ content moderation, and live product-linked advertising. Video played at over 30 frames per second with the overlay, and batching per-object classification raised the tracker itself from 1 to 20 frames per second.
-- Samsung R&D (PRISM) — AI Researcher intern. I led a five-student frame-interpolation team that delivered 448×256-pixel Vimeo-90K output against a 128×128 target at 27.9 dB PSNR; the overall result beat the requested target by 1.5×.
+- Amplify Dental AI — Applied AI Engineer (Contract), remote. I built an ASR benchmark across AMI headset, AMI distant mic, VoxPopuli, Common Voice, VCTK, and LibriSpeech, comparing local and cloud systems with word error rate, character error rate, and real-time factor.
+- Hummingbird Bioscience (SGInnovate Deep-Tech Programme) — Machine Learning Engineer (Intern), Aug 2025 – Jan 2026. I built a biomarker-discovery pipeline on cell-line omics data that starts from a known target and statistically identifies linked genes that could act as biomarkers. Moving CPU-only Python loops to vectorised GPU code cut runtime from days to hours (about 50×), and a proprietary augmentation method multiplied the usable cell-line data almost exponentially.
+- Tata Elxsi — Computer Vision Engineer (Full-Time). I built computer-vision systems for effluent detection, 18+ content moderation, and live product-linked advertising. Video played at over 30 frames per second with the overlay, and batching per-object classification raised the tracker itself from 1 to 20 frames per second.
+- Samsung R&D (PRISM) — AI Researcher (Intern). I led a five-student frame-interpolation team that delivered 448×256-pixel Vimeo-90K output against a 128×128 target at 27.9 dB PSNR; the overall result beat the requested target by 1.5×.
 - National University of Singapore — Visiting Student (Intern) on a deep-learning programme. Led a six-person PPE object-detection team for construction-site safety.
 
 ## Education
 
-- Nanyang Technological University — MSc Artificial Intelligence
-- Vellore Institute of Technology — B.Tech Computer Science (Specialization in AI/ML)
-- Thesis: reconstructed phase-space methods for Hindi speech analysis. Owner-attested later Indic ASR experiments reduced the error rate from 80% to 30%, then 15%. Both word error rate and character error rate were measured, with character error rate notably lower.
+- Nanyang Technological University — Master of Science in Artificial Intelligence
+- Vellore Institute of Technology — B.Tech in Computer Science (Specialization in AI/ML)
+- Thesis: Speech Recognition using Reconstructed Phase Spaces (Hindi speech). Owner-attested later Indic ASR experiments reduced the error rate from 80% to 30%, then 15%. Both word error rate and character error rate were measured, with character error rate notably lower.
 
 ## Selected projects
 
-- AudioBench — I built this ASR evaluation workbench for Amplify Dental around hand-checked transcripts, reusable audio-preprocessing pipelines, and one results view for local and cloud speech-to-text systems.
-- Aftersight — I built this image search system because my own photo library was disorganised. It uses language models to find images by meaning, visible text, or metadata—not just filenames.
-- Ask Krishna — Ask Krishna has two modes. Reflect follows an old practice: hold a question in mind and open the Bhagavad Gita to up to five random passages for guidance; if none answers, take it as a sign to wait. The question is never typed or stored. Read Gita covers all 18 chapters.
-- Pixtyle — Inspired by my pollution-monitoring work, I built this image styliser to make colour clustering, Fourier filtering, and edge detection visual across photos, folders, and video.
-- Flodoro — I built this browser-based Pomodoro timer and task manager with session history and user-selected local music; no account or application server is required.
-- OS Toolkit — I built this toolkit to analyse disk usage, copy and compare folders, and reuse common file operations from Python or the command line. I benchmarked its copying against copytree and robocopy.
-- Detecting AI Generated Images — I built this PyTorch workflow for Kaggle's Detect AI vs. Human-Generated Images competition; its best recorded validation accuracy was 87.9% with Swin V2 Tiny.
-- Fuzzy Hybrid Model for Stock Trading — Coursework with Tristan Till. I reduced the values fed into the predictor from 96 to 26, then combined deep learning with fuzzy buy, sell, or hold rules.
-- LazyResume — I built this for people who want to turn an existing resume PDF into a structured profile, correct it, and regenerate a consistently formatted resume.
+- AudioBench (https://hiteshgoyal.me/projects/audiobench/) — I built AudioBench for Amplify Dental to choose the right speech-to-text (ASR) model. It tests models on noisy, accented, and distant-microphone audio and keeps the hand-checked transcripts and test setups, so the team never redoes that work.
+- Ask Krishna (https://hiteshgoyal.me/ask-krishna/) — Ask Krishna has two modes. Reflect lets you hold a question in mind and open the Bhagavad Gita to up to five random passages for guidance; if none answers, take it as a sign to wait. The question is never typed or stored. Read Gita covers all 18 chapters.
+- Aftersight (https://hiteshgoyal.me/projects/media-search-engine/) — I built Aftersight because my own photo library was disorganised and hard to search. It uses language models to organise images and find them by meaning, visible text, or metadata—not just filenames.
+- Pixtyle (https://hiteshgoyal.me/projects/pixtyle/) — I built Pixtyle to turn photos and videos into wallpaper-like or cartoon-like images using colour clustering, Fourier filtering, and edge detection.
+- Flodoro (https://hiteshgoyal.me/flodoro/) — I built Flodoro for people who want a Pomodoro timer, tasks, session history, and local music on one page without an account or application server.
+- OS Toolkit (https://hiteshgoyal.me/projects/os-toolkit/) — I built OS Toolkit to analyse disk usage, copy and compare folders, and reuse common file operations from Python or the command line. I benchmarked its copying against copytree and robocopy.
+- LazyResume (https://hiteshgoyal.me/projects/lazy-resume/) — I built LazyResume for people who already have a resume PDF and want to turn it into a structured profile, correct it, and regenerate a consistently formatted resume.
+- Fuzzy Hybrid Model for Stock Trading (https://hiteshgoyal.me/projects/fuzzy-hybrid-stock-trading/) — Coursework with Tristan Till. I reduced the predictor's inputs from 96 values to 26, then combined a deep-learning price predictor with fuzzy buy, sell, or hold rules.
+- Detecting AI Generated Images (https://hiteshgoyal.me/projects/ai-generated-image-classifier/) — I built this PyTorch workflow for Kaggle's Detect AI vs. Human-Generated Images competition. It records each configuration, metric, plot, and checkpoint so I can compare experiments; the best recorded validation accuracy was 87.9% with Swin V2 Tiny.
 
 ## Credentials
 
@@ -62,10 +64,11 @@ Prefer the live Certificates section on the portfolio. High-signal items include
 ## Important links
 
 - Home: https://hiteshgoyal.me/
-- Projects: https://hiteshgoyal.me/#projects
+- Projects: https://hiteshgoyal.me/projects/ · https://hiteshgoyal.me/#projects
 - AudioBench (evaluation workbench, not the company product): https://hiteshgoyal.me/projects/audiobench/
 - Amplify Dental: https://amplifydental.ai/
 - Timeline: https://hiteshgoyal.me/#timeline
+- Endorsements: https://hiteshgoyal.me/#recommendations
 - Aftersight: https://hiteshgoyal.me/projects/media-search-engine/ · https://github.com/indianeagle4599/Media-Search-Engine
 - Ask Krishna: https://hiteshgoyal.me/projects/ask-krishna/ · https://hiteshgoyal.me/ask-krishna/
 - Pixtyle: https://hiteshgoyal.me/projects/pixtyle/ · https://github.com/indianeagle4599/Pixtyle
