@@ -13,6 +13,8 @@ const LASTMOD = '2026-10-30';
 const HUB_TITLE = 'AI, speech and computer vision projects | Hitesh Goyal';
 const HUB_DESCRIPTION = 'AI and machine learning projects by Hitesh Goyal across speech recognition, computer vision, LLM pipelines, retrieval, research and developer tools.';
 
+const HUB_INTRO = 'Speech recognition, computer vision, language-model and tooling projects I have built, grouped by topic.';
+
 const HUB_TOPICS = [
     { id: 'speech-asr', title: 'Speech & ASR', linkLabel: 'More Speech & ASR projects' },
     { id: 'computer-vision', title: 'Computer vision', linkLabel: 'More computer vision projects' },
@@ -421,6 +423,7 @@ ${bootstrap(entries)}
         <section class="section project-introduction">
             <a class="back-button" href="/#projects">← Back</a>
             <h1>AI and machine learning projects</h1>
+            <p class="project-summary">${HUB_INTRO}</p>
         </section>
 
 ${topics}
