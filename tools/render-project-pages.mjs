@@ -36,6 +36,9 @@ function jsonForScript(value) {
 
 function pageHtml(project, seo) {
     const summary = escapeHtml(project.summary || '');
+    const imageDimensions = seo.imageWidth
+        ? `    <meta property="og:image:width" content="${seo.imageWidth}">\n    <meta property="og:image:height" content="${seo.imageHeight}">\n`
+        : '';
     return `<!DOCTYPE html>
 <html lang="en">
 
@@ -59,7 +62,7 @@ function pageHtml(project, seo) {
     <meta property="og:description" content="${escapeHtml(seo.description)}">
     <meta property="og:url" content="${escapeHtml(seo.url)}">
     <meta property="og:image" content="${escapeHtml(seo.image)}">
-    <meta property="og:image:alt" content="${escapeHtml(seo.imageAlt)}">
+${imageDimensions}    <meta property="og:image:alt" content="${escapeHtml(seo.imageAlt)}">
 
     <meta name="twitter:card" content="${escapeHtml(seo.twitterCard)}">
     <meta name="twitter:title" content="${escapeHtml(seo.title)}">
@@ -210,9 +213,9 @@ function bootstrap(entries) {
 // Live apps deployed from other repos. Confirmed 200 on 2026-10-30.
 // Ask Krishna's reader canonical is pages/read.html (also listed in that app's sitemap).
 const EXTERNAL_APPS = [
-    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-05-25', priority: '0.7' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-05-25', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-05-25', priority: '0.7' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-10-31', priority: '0.7' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-10-31', priority: '0.7' },
     { loc: 'https://hiteshgoyal.me/msi-web/', lastmod: '2026-05-20', priority: '0.6' }
 ];
 

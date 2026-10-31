@@ -7,13 +7,13 @@
 
     const DESCRIPTORS = {
         audiobench: 'ASR evaluation workbench',
-        'ask-krishna': 'Gita reflection',
+        'ask-krishna': 'Bhagavad Gita reflection app',
         'media-search-engine': 'Photo library search',
         pixtyle: 'Computer vision stylizer',
-        flodoro: 'Local Pomodoro workspace',
+        flodoro: 'Pomodoro timer and task manager',
         'os-toolkit': 'Python filesystem toolkit',
         'lazy-resume': 'LLM resume pipeline',
-        'ai-generated-image-classifier': 'Computer vision'
+        'ai-generated-image-classifier': 'PyTorch'
     };
 
     const SCHEMA = {
@@ -55,6 +55,15 @@
     }
 
     function pickImage(project) {
+        if (project.slug === 'audiobench') {
+            return {
+                src: 'assets/projects/audiobench/30-results-leaderboard-share.png',
+                alt: 'AudioBench results leaderboard',
+                large: true,
+                width: 1200,
+                height: 630
+            };
+        }
         const items = leaves(project);
         const image = items.find(item => item
             && item.type === 'image'
@@ -91,20 +100,22 @@
 
     function forProject(project) {
         const slug = String(project.slug || '').trim();
-        const name = String(project.title || slug).trim();
+        const name = slug === 'ai-generated-image-classifier'
+            ? 'Detecting AI-Generated Images'
+            : String(project.title || slug).trim();
         const descriptor = DESCRIPTORS[slug] || '';
         const title = descriptor
             ? `${name} | ${descriptor} | Hitesh Goyal`
             : `${name} | Hitesh Goyal`;
-        const description = String(project.summary || '').trim()
+        const description = String(project.seoDescription || project.summary || '').trim()
             || `${name}, a project by Hitesh Goyal, Applied AI Engineer.`;
         const url = pageUrl(slug);
         const image = pickImage(project);
         const imageUrl = absolute(image.src);
         const schema = SCHEMA[slug] || { type: 'CreativeWork' };
         const linkUrls = httpsLinks(project);
-        const repository = linkUrls.find(link => /github\.com\//i.test(link)) || '';
-        const sameAs = linkUrls.filter(link => link !== url);
+        const sameAs = linkUrls.filter(link => link !== url
+            && !(slug === 'audiobench' && /amplifydental\.ai\//i.test(link)));
         const work = {
             '@type': schema.type,
             '@id': `${url}#work`,
@@ -123,8 +134,14 @@
         };
         if (schema.applicationCategory) work.applicationCategory = schema.applicationCategory;
         if (typeof project.license === 'string' && project.license.trim()) work.license = project.license.trim();
-        if (repository && schema.type === 'SoftwareApplication') work.codeRepository = repository;
         if (sameAs.length) work.sameAs = sameAs;
+        if (slug === 'audiobench') {
+            work.sourceOrganization = {
+                '@type': 'Organization',
+                name: 'Amplify Dental',
+                url: 'https://amplifydental.ai/'
+            };
+        }
 
         const jsonLd = {
             '@context': 'https://schema.org',
@@ -170,6 +187,8 @@
             url,
             image: imageUrl,
             imageAlt: image.alt,
+            imageWidth: image.width,
+            imageHeight: image.height,
             twitterCard: image.large ? 'summary_large_image' : 'summary',
             jsonLd
         };

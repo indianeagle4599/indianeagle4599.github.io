@@ -6,7 +6,7 @@
 
 - Name: Hitesh Goyal
 - Location: Bangalore, India
-- Role: Applied AI Engineer (Vision · NLP · Systems)
+- Role: Applied AI Engineer | Speech (ASR) · Vision · NLP & LLMs
 - Portfolio: https://hiteshgoyal.me/
 - LinkedIn: https://www.linkedin.com/in/hitesh-goyal-5732bb208/
 - GitHub: https://github.com/indianeagle4599

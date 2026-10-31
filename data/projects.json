@@ -5,6 +5,7 @@
         "logo": "./assets/audiobench-logo.svg",
         "featured": true,
         "summary": "AudioBench was built for Amplify Dental so a small team could judge speech models on real conditions — and stop redoing transcription, annotation, and benchmarking from scratch.",
+        "seoDescription": "AudioBench, an ASR evaluation workbench built for Amplify Dental to benchmark speech models on real conditions without redoing transcription and annotation.",
         "highlights": [
             "See the best model at a glance, then read where it still fails — without flattening a multi-dimension grid into one notebook.",
             "Label gold audio once in an annotation UI built for speed, then reuse it across prepares, backends, and datasets.",
@@ -176,6 +177,7 @@
         "logo": "./assets/ask-krishna-logo.svg",
         "featured": true,
         "summary": "Hold a question silently and receive five Gita passages in Reflect, or read all 18 chapters in Read Gita — no chatbot or prompt box. The question is never typed, stored, or sent.",
+        "seoDescription": "Ask Krishna: hold a question silently and receive five Bhagavad Gita passages, or read all 18 chapters. No chatbot; the question is never typed or stored.",
         "highlights": [
             "Reflect has no text input: five randomly selected passages appear one at a time.",
             "Read Gita pairs Sanskrit shlokas with English and Hindi meanings, with chapter and shloka navigation.",
@@ -286,6 +288,7 @@
         "logo": "./assets/aftersight-logo.png",
         "featured": true,
         "summary": "Aftersight is an image-first search system for photo libraries. It indexes images so they can be found by meaning, visible text, or metadata — not just filenames.",
+        "seoDescription": "Aftersight, an image-first search system for photo libraries: find images by meaning, visible text or metadata, not just filenames.",
         "highlights": [
             "Each image is described once into a structured record that is reused across retrieval.",
             "Dedicated scene, keyword, visible-text, and metadata surfaces are fused with weighted reciprocal rank fusion.",
@@ -698,6 +701,7 @@
         "logo": "./assets/os-toolkit-logo-blink.gif",
         "logoTone": "on-dark",
         "summary": "An expanding Python filesystem toolkit for developers, data scientists, and scripts or agents: understand storage usage, work with directory trees, and reuse common OS operations without rebuilding them from scratch. Benchmarked against copytree and robocopy.",
+        "seoDescription": "Python filesystem toolkit for developers, data scientists and agents: storage usage, directory trees and common OS operations, benchmarked against robocopy.",
         "highlights": [
             "Usage analysis shows where space goes in a directory tree, including which folders dominate the root.",
             "File transfer handles recursive copies with dry-run, resume without recopying same-size files, and separate optimisations for SSD and HDD destinations.",
@@ -778,6 +782,7 @@
         "logo": "./assets/lazy-resume-logo.svg",
         "logoTone": "on-dark",
         "summary": "Start with an existing resume PDF, turn it into a structured profile, and regenerate a clean, consistently formatted resume without rebuilding everything by hand.",
+        "seoDescription": "Turn an existing resume PDF into a structured profile with an LLM pipeline, then regenerate a clean, consistently formatted resume.",
         "highlights": [
             "Converts a resume PDF into a canonical structured profile, then into standardized Markdown/PDF output.",
             "Maps inconsistent extracted fields into one stable schema, with review when a mapping is ambiguous.",
@@ -805,6 +810,7 @@
         "logo": "./assets/fuzzy-hybrid-stock-trading-logo.svg",
         "logoTone": "on-dark",
         "summary": "A stock-trading research project where I used domain analysis and feature engineering to cut the predictor’s market-input channels by over 70%, then combined deep learning with fuzzy logic for trading decisions.",
+        "seoDescription": "Stock-trading research: feature engineering cut market-input channels by over 70%, then deep learning was combined with fuzzy logic for trading decisions.",
         "highlights": [
             "Reduced the predictor’s market-input channels from 96 to 26 (~73%) through domain-driven feature engineering, leaving each training run with substantially less to process.",
             "Paired a deep sequence model with a fuzzy rule system that converts continuous market signals into buy, sell, or hold actions.",
@@ -853,6 +859,7 @@
         "logo": "./assets/ai-generated-image-classifier-logo.svg",
         "logoTone": "on-dark",
         "summary": "A systematic PyTorch training and tuning workflow for distinguishing AI-generated from human images, with repeatable experiment runs that preserve configs, metrics, plots, and checkpoints so each iteration can inform the next.",
+        "seoDescription": "PyTorch workflow for detecting AI-generated vs human images, with repeatable experiment runs that keep configs, metrics, plots and checkpoints.",
         "highlights": [
             "Configuration-driven model training with selectable torchvision backbones and optional FFT/DCT feature heads.",
             "Every experiment is captured as a structured run with its configuration, epoch metrics, curves, confusion matrices, and checkpoints.",
