@@ -2,61 +2,85 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://hiteshgoyal.me/</loc>
-        <lastmod>2026-08-26</lastmod>
+        <lastmod>2026-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=audiobench</loc>
-        <lastmod>2026-09-01</lastmod>
+        <loc>https://hiteshgoyal.me/projects/audiobench/</loc>
+        <lastmod>2026-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=ask-krishna</loc>
-        <lastmod>2026-08-26</lastmod>
+        <loc>https://hiteshgoyal.me/projects/ask-krishna/</loc>
+        <lastmod>2026-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=media-search-engine</loc>
-        <lastmod>2026-08-26</lastmod>
+        <loc>https://hiteshgoyal.me/projects/media-search-engine/</loc>
+        <lastmod>2026-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=lazy-resume</loc>
-        <lastmod>2026-08-26</lastmod>
+        <loc>https://hiteshgoyal.me/projects/pixtyle/</loc>
+        <lastmod>2026-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=ai-generated-image-classifier</loc>
-        <lastmod>2026-08-26</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=pixtyle</loc>
-        <lastmod>2026-08-26</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=fuzzy-hybrid-stock-trading</loc>
-        <lastmod>2026-08-26</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=flodoro</loc>
-        <lastmod>2026-08-26</lastmod>
+        <loc>https://hiteshgoyal.me/projects/flodoro/</loc>
+        <lastmod>2026-10-30</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://hiteshgoyal.me/projects/?slug=os-toolkit</loc>
-        <lastmod>2026-08-26</lastmod>
+        <loc>https://hiteshgoyal.me/projects/os-toolkit/</loc>
+        <lastmod>2026-10-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/projects/lazy-resume/</loc>
+        <lastmod>2026-10-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/projects/fuzzy-hybrid-stock-trading/</loc>
+        <lastmod>2026-10-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/projects/ai-generated-image-classifier/</loc>
+        <lastmod>2026-10-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/ask-krishna/</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/ask-krishna/pages/read.html</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/flodoro/</loc>
+        <lastmod>2026-05-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://hiteshgoyal.me/msi-web/</loc>
+        <lastmod>2026-05-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>

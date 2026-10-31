@@ -20,11 +20,50 @@
     <meta property="og:description" content="Project detail page for Hitesh Goyal's portfolio.">
     <meta property="og:url" content="https://hiteshgoyal.me/projects/">
     <meta property="og:image" content="https://hiteshgoyal.me/assets/hg-logo.svg">
+    <meta property="og:image:alt" content="Hitesh Goyal">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Project | Hitesh Goyal">
     <meta name="twitter:description" content="Project detail page for Hitesh Goyal's portfolio.">
     <meta name="twitter:image" content="https://hiteshgoyal.me/assets/hg-logo.svg">
+    <meta name="twitter:image:alt" content="Hitesh Goyal">
+
+    <!-- project-seo-bootstrap:start -->
+<script>
+        (function () {
+            var host = location.hostname;
+            var local = host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0';
+            var slug = new URLSearchParams(location.search).get('slug') || '';
+            var known = {"audiobench":{"t":"AudioBench | ASR evaluation workbench | Hitesh Goyal","d":"AudioBench was built for Amplify Dental so a small team could judge speech models on real conditions — and stop redoing transcription, annotation, and benchmarking from scratch.","u":"https://hiteshgoyal.me/projects/audiobench/","i":"https://hiteshgoyal.me/assets/projects/audiobench/30-results-leaderboard-crop.webp","a":"AudioBench results table with models sorted so the strongest sits at the top of a curated speech benchmark","c":"summary_large_image"},"ask-krishna":{"t":"Ask Krishna | Gita reflection | Hitesh Goyal","d":"Hold a question silently and receive five Gita passages in Reflect, or read all 18 chapters in Read Gita — no chatbot or prompt box. The question is never typed, stored, or sent.","u":"https://hiteshgoyal.me/projects/ask-krishna/","i":"https://hiteshgoyal.me/assets/projects/ask-krishna/reflection-begin.png","a":"Ask Krishna opening screen with the Hare Krishna mahamantra and a Begin action","c":"summary_large_image"},"media-search-engine":{"t":"Aftersight | Photo library search | Hitesh Goyal","d":"Aftersight is an image-first search system for photo libraries. It indexes images so they can be found by meaning, visible text, or metadata — not just filenames.","u":"https://hiteshgoyal.me/projects/media-search-engine/","i":"https://hiteshgoyal.me/assets/projects/media-search-engine/upload-indexing.png","a":"Aftersight upload page showing media moving through store, describe, and index stages","c":"summary_large_image"},"pixtyle":{"t":"Pixtyle | Computer vision stylizer | Hitesh Goyal","d":"Pixel Stylizer Toolkit for transforming photos and videos into stylized wallpapers using advanced computer vision techniques.","u":"https://hiteshgoyal.me/projects/pixtyle/","i":"https://hiteshgoyal.me/assets/projects/pixtyle/day-one-original.jpg","a":"Original daylight photograph of a carved landmark and surrounding architecture","c":"summary_large_image"},"flodoro":{"t":"Flodoro | Local Pomodoro workspace | Hitesh Goyal","d":"A local-first Pomodoro workspace that keeps the timer, tasks, history, and your own music on one static page — no account or backend required.","u":"https://hiteshgoyal.me/projects/flodoro/","i":"https://hiteshgoyal.me/assets/projects/flodoro/timer.png","a":"Flodoro main workspace with the Pomodoro timer, current task, and audio controls","c":"summary_large_image"},"os-toolkit":{"t":"OS Toolkit | Python filesystem toolkit | Hitesh Goyal","d":"An expanding Python filesystem toolkit for developers, data scientists, and scripts or agents: understand storage usage, work with directory trees, and reuse common OS operations without rebuilding them from scratch. Benchmarked against copytree and robocopy.","u":"https://hiteshgoyal.me/projects/os-toolkit/","i":"https://hiteshgoyal.me/assets/os-toolkit-logo-blink.gif","a":"OS Toolkit logo","c":"summary"},"lazy-resume":{"t":"LazyResume | LLM resume pipeline | Hitesh Goyal","d":"Start with an existing resume PDF, turn it into a structured profile, and regenerate a clean, consistently formatted resume without rebuilding everything by hand.","u":"https://hiteshgoyal.me/projects/lazy-resume/","i":"https://hiteshgoyal.me/assets/hg-logo-4k.png","a":"Hitesh Goyal","c":"summary"},"fuzzy-hybrid-stock-trading":{"t":"Fuzzy Hybrid Model for Stock Trading | Hitesh Goyal","d":"A stock-trading research project where I used domain analysis and feature engineering to cut the predictor’s market-input channels by over 70%, then combined deep learning with fuzzy logic for trading decisions.","u":"https://hiteshgoyal.me/projects/fuzzy-hybrid-stock-trading/","i":"https://hiteshgoyal.me/assets/projects/fuzzy-hybrid-stock-trading/model-architecture.png","a":"Architecture diagram showing a GRU-LSTM-Attention backbone feeding three objective-specific GenFIS heads and an aggregation layer","c":"summary_large_image"},"ai-generated-image-classifier":{"t":"Detecting AI Generated Images | Computer vision | Hitesh Goyal","d":"A systematic PyTorch training and tuning workflow for distinguishing AI-generated from human images, with repeatable experiment runs that preserve configs, metrics, plots, and checkpoints so each iteration can inform the next.","u":"https://hiteshgoyal.me/projects/ai-generated-image-classifier/","i":"https://hiteshgoyal.me/assets/projects/ai-generated-image-classifier/training-curves-swin-v2-t.png","a":"Loss, accuracy, and F1 curves for the train and validation splits across a 25-epoch Swin V2 Tiny experiment","c":"summary_large_image"}};
+            var entry = known[slug];
+            if (!entry) return;
+            document.title = entry.t;
+            var set = function (selector, value) {
+                var el = document.head.querySelector(selector);
+                if (el && value) el.setAttribute('content', value);
+            };
+            set('meta[name="description"]', entry.d);
+            set('meta[property="og:title"]', entry.t);
+            set('meta[property="og:description"]', entry.d);
+            set('meta[property="og:url"]', entry.u);
+            set('meta[property="og:image"]', entry.i);
+            set('meta[property="og:image:alt"]', entry.a);
+            set('meta[name="twitter:card"]', entry.c);
+            set('meta[name="twitter:title"]', entry.t);
+            set('meta[name="twitter:description"]', entry.d);
+            set('meta[name="twitter:image"]', entry.i);
+            set('meta[name="twitter:image:alt"]', entry.a);
+            var link = document.head.querySelector('link[rel="canonical"]');
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'canonical';
+                document.head.appendChild(link);
+            }
+            link.href = entry.u;
+            if (!local) location.replace('/projects/' + slug + '/' + location.hash);
+        }());
+    </script>
+    <!-- project-seo-bootstrap:end -->
 
     <script>
         (function () {
@@ -112,6 +151,7 @@
         </footer>
     </main>
 
+    <script src="../scripts/project-seo.js"></script>
     <script src="../scripts/lenis.min.js"></script>
     <script src="../scripts/main.js"></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
