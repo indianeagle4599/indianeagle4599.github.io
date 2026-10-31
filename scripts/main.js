@@ -3671,16 +3671,74 @@ async function loadRecommendations() {
         let swapping = false;
         let paused = document.hidden || root.matches(':hover') || root.matches(':focus-within');
         let pauseGeneration = 0;
+        let cycleMs = 0;
+        let remainingMs = 0;
+        let runningSince = 0;
+        let progressAnimation = null;
         const randomDelay = () => 4000 + Math.random() * 5000;
         const isHeld = () => paused || document.hidden || root.matches(':hover, :focus-within');
+        const canSwap = () => !motionQuery.matches && data.length > visible.length;
+        /* Thin line showing time until the next swap. Absolutely positioned, so it never moves the cards. */
+        root.querySelector(':scope > .recommendations-progress')?.remove();
+        const progress = document.createElement('div');
+        progress.className = 'recommendations-progress';
+        progress.setAttribute('aria-hidden', 'true');
+        const progressFill = document.createElement('span');
+        progressFill.className = 'recommendations-progress-fill';
+        progress.append(progressFill);
+        root.append(progress);
         const clearTimer = () => {
             if (timer !== null) window.clearTimeout(timer);
             timer = null;
         };
+        const remainingNow = () => {
+            if (runningSince === 0) return remainingMs;
+            return Math.max(0, remainingMs - (performance.now() - runningSince));
+        };
+        const syncProgress = playing => {
+            progress.hidden = !canSwap();
+            if (progress.hidden || !cycleMs) {
+                progressAnimation?.cancel();
+                progressAnimation = null;
+                progressFill.style.transform = 'scaleX(0)';
+                return;
+            }
+            if (!progressAnimation) {
+                progressFill.style.removeProperty('transform');
+                progressAnimation = progressFill.animate(
+                    [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+                    { duration: cycleMs, easing: 'linear', fill: 'forwards' }
+                );
+                progressAnimation.pause();
+            }
+            progressAnimation.currentTime = Math.min(cycleMs, Math.max(0, cycleMs - remainingNow()));
+            if (playing) progressAnimation.play();
+            else progressAnimation.pause();
+        };
+        const startCycle = () => {
+            cycleMs = randomDelay();
+            remainingMs = cycleMs;
+            runningSince = 0;
+            progressAnimation?.cancel();
+            progressAnimation = null;
+        };
+        const pauseCycle = () => {
+            remainingMs = remainingNow();
+            runningSince = 0;
+            clearTimer();
+            syncProgress(false);
+        };
         const schedule = () => {
             clearTimer();
-            if (isHeld() || swapping || motionQuery.matches || data.length <= visible.length) return;
-            timer = window.setTimeout(swapOne, randomDelay());
+            if (!canSwap()) {
+                runningSince = 0;
+                return syncProgress(false);
+            }
+            if (!cycleMs || remainingMs <= 0) startCycle();
+            if (isHeld() || swapping) return pauseCycle();
+            runningSince = performance.now();
+            timer = window.setTimeout(swapOne, remainingMs);
+            syncProgress(true);
         };
         const swapOne = async () => {
             timer = null;
@@ -3688,9 +3746,13 @@ async function loadRecommendations() {
             const cards = Array.from(mosaic.children);
             const shown = new Set(cards.map(card => Number(card.dataset.recommendationIndex)));
             const hidden = data.map((_, index) => index).filter(index => !shown.has(index));
+            remainingMs = 0;
+            runningSince = 0;
             if (!hidden.length || isHeld() || motionQuery.matches) return schedule();
 
             swapping = true;
+            startCycle();
+            syncProgress(false);
             const slot = Math.floor(Math.random() * cards.length);
             const nextIndex = hidden[Math.floor(Math.random() * hidden.length)];
             const current = cards[slot];
@@ -3717,7 +3779,7 @@ async function loadRecommendations() {
             paused = value || document.hidden;
             if (paused) {
                 pauseGeneration++;
-                clearTimer();
+                pauseCycle();
             }
             else schedule();
         };
@@ -3730,6 +3792,8 @@ async function loadRecommendations() {
         root._recommendationMosaicController = {
             destroy() {
                 clearTimer();
+                progressAnimation?.cancel();
+                progress.remove();
                 abortController.abort();
             }
         };
