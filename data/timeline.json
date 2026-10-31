@@ -18,10 +18,10 @@
         ],
         "roles": [
             {
-                "title": "Applied AI Engineer (Collaborator, Part-Time)",
+                "title": "Applied AI Engineer (Contract)",
                 "points": [
-                    "I built an ASR benchmark for Amplify Dental and converted 6 public speech datasets—AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech—into one input format.",
-                    "I put local and cloud speech-to-text systems behind one shared configuration, then compared transcript accuracy with word error rate and character error rate, and processing speed with real-time factor.",
+                    "I built a speech-recognition benchmark for Amplify Dental and converted 6 public speech datasets—AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech—into one input format.",
+                    "I put local and cloud speech-to-text systems behind one shared configuration, then compared transcript accuracy with word error rate and character error rate, and processing speed with real-time factor, which is processing time divided by audio duration.",
                     "I added a local benchmark mode that catches code errors before cloud GPUs are started, avoiding more than 1 hour of cloud-related waiting per developer each week."
                 ]
             }
@@ -47,9 +47,9 @@
             {
                 "title": "Machine Learning Engineer (Intern)",
                 "points": [
-                    "I built a biomarker-discovery pipeline on cell-line omics data. Starting from a known target, such as a gene highly expressed in certain cancers, it statistically identifies other genes linked to it through shared pathways or interdependence that could act as biomarkers, without needing lab experiments first. Moving the CPU-only Python loops to vectorised GPU code cut runtime from days to hours (about 50×). I also added a proprietary augmentation method that multiplied the usable cell-line data almost exponentially.",
+                    "I built a biomarker-discovery pipeline using biological measurements from laboratory-grown cell lines. Starting from a known target, such as a gene highly expressed in certain cancers, it statistically identifies other genes linked to it through shared pathways or interdependence that could act as biomarkers, without needing lab experiments first. Moving the CPU-only Python loops to vectorised GPU code cut runtime from days to hours (about 50×). I also added a proprietary augmentation method that multiplied the usable cell-line data almost exponentially.",
                     "I built an analytics dashboard that worked across datasets, reused earlier queries, and produced repeatable charts, cutting one-off analysis from 2–3 days to minutes.",
-                    "I made cluster jobs accessible from VS Code instead of the older Jupyter interface, and ran BoltzGen protein-binder generation on AWS EC2 GPU machines that I configured."
+                    "I let developers submit computing-cluster jobs from VS Code instead of Jupyter, and configured AWS EC2 GPU machines to run BoltzGen protein-binder generation."
                 ]
             }
         ],
@@ -71,9 +71,9 @@
                 "title": "Computer Vision Engineer (Full-Time)",
                 "points": [
                     "I built a simple real-time computer-vision demo that detected effluent being released into a running water body using only a CPU. The demo secured a new client.",
-                    "I built a video-moderation pipeline for nudity and coarse language that reached 90% recall and 80% precision. I combined decisions across neighbouring frames, packaged the system with Docker, and parallelised it with Celery and RabbitMQ.",
+                    "I built a video-moderation pipeline for nudity and coarse language that found 90% of the target content, while 80% of flagged content was correct. I combined decisions across neighbouring frames, packaged the system with Docker, and parallelised it with Celery and RabbitMQ.",
                     "I detected products in live video and overlaid an advertisement with a QR code so viewers could learn more. Video played at over 30 frames per second with the overlay, and batching the per-object classification raised the tracker itself from 1 to 20 frames per second.",
-                    "I fine-tuned YOLO models to detect company-specific personal protective equipment, then used manual review to find unusual cases and reduce false detections."
+                    "I fine-tuned YOLO object-detection models to detect company-specific personal protective equipment, then used manual review to find unusual cases and reduce false detections."
                 ]
             }
         ],
@@ -123,7 +123,7 @@
                 "title": "AI Researcher (Intern)",
                 "points": [
                     "I led a 5-person research team building frame interpolation, which generates intermediate frames to make smartphone video motion smoother.",
-                    "We delivered 448×256-pixel output on Vimeo-90K sequences, well above the requested 128×128 resolution, at 27.9 dB peak signal-to-noise ratio. The overall speed-and-quality result exceeded the requested target by 1.5×."
+                    "We delivered 448×256-pixel output on Vimeo-90K sequences, well above the requested 128×128 resolution, at 27.9 decibels peak signal-to-noise ratio, a video-quality measure where higher is better. The overall speed-and-quality result exceeded the requested target by 1.5×."
                 ]
             }
         ],
@@ -176,8 +176,8 @@
                 "description": "CGPA: 9.06/10.00. Focused on applied AI and machine learning.",
                 "subtitle": "Academic Projects & Coursework",
                 "points": [
-                    "Executed multiple projects spanning app development (React Native), web development (React), networks, and cybersecurity basics.",
-                    "Implemented core AI architectures across Machine Learning, Deep Learning, Computer Vision, NLP, and Reinforcement Learning."
+                    "I built projects across mobile apps, websites, computer networks, and cybersecurity basics.",
+                    "I implemented machine-learning, deep-learning, computer-vision, language-processing, and reinforcement-learning models."
                 ]
             },
             {
