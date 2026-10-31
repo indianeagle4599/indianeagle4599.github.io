@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Page not found | Hitesh Goyal</title>
+    <meta name="description" content="This page does not exist on hiteshgoyal.me.">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#000000">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/hg-logo.svg">
+    <link rel="apple-touch-icon" href="/assets/hg-logo.svg">
+
+    <script>
+        (function () {
+            let stored = null;
+            try {
+                stored = localStorage.getItem('portfolio-theme');
+            } catch (error) {}
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = stored === 'light' || stored === 'dark'
+                ? stored
+                : prefersDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            /* Keep #f4f4f2 / #000000 equal to --bg-page in style.css. */
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'light' ? '#f4f4f2' : '#000000');
+        }());
+    </script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="project-page projects-hub">
+    <nav id="navbar" aria-label="Primary">
+        <div class="nav-content">
+            <a id="nav-logo" class="logo" href="/">HG :)</a>
+            <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <div id="nav-links" class="nav-links">
+                <a href="/#home">Home</a>
+                <a href="/#about">About</a>
+                <a href="/#projects">Projects</a>
+                <a href="/#timeline">Timeline</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="section project-introduction">
+            <h1>Page not found</h1>
+            <p class="project-summary">This page doesn’t exist or has moved.</p>
+            <div class="node-links-bar">
+                <a href="/" class="btn btn-primary btn-tiny">Home</a>
+                <a href="/projects/" class="btn btn-outline btn-tiny">Projects</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="/scripts/lenis.min.js"></script>
+    <script src="/scripts/main.js"></script>
+</body>
+
+</html>
