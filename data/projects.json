@@ -6,12 +6,12 @@
         "relatedProjects": ["media-search-engine", "ai-generated-image-classifier"],
         "logo": "./assets/audiobench-logo.svg",
         "featured": true,
-        "summary": "AudioBench was built for Amplify Dental so a small team could judge speech models on real conditions — and stop redoing transcription, annotation, and benchmarking from scratch.",
-        "seoDescription": "AudioBench, an ASR evaluation workbench built for Amplify Dental to benchmark speech models on real conditions without redoing transcription and annotation.",
+        "summary": "I built AudioBench for Amplify Dental to choose the right speech-to-text model. It tests models on noisy, accented, and distant-microphone audio and keeps the hand-checked transcripts and test setups, so the team never redoes that work.",
+        "seoDescription": "AudioBench compares ASR models across noise, accents, microphones and distant speech while reusing hand-checked transcripts and test setups.",
         "highlights": [
-            "See the best model at a glance, then read where it still fails — without flattening a multi-dimension grid into one notebook.",
-            "Label gold audio once in an annotation UI built for speed, then reuse it across prepares, backends, and datasets.",
-            "Config-driven and modular: add data, models, prepares, or compute without rebuilding the bench."
+            "I sort the results so the strongest overall model appears first, while the full table and heatmaps show which datasets and audio treatments expose weaknesses.",
+            "Create a hand-checked transcript once, then reuse the reference audio across preprocessing pipelines, speech-to-text systems, and datasets.",
+            "Add datasets, speech-to-text models, preprocessing steps, or computing machines through configuration instead of rebuilding the workbench."
         ],
         "displayTags": ["ASR", "Benchmarking", "Orchestration", "Evaluation"],
         "tags": ["Python", "Whisper", "ASR", "Benchmarking", "Orchestration", "Evaluation", "FastAPI"],
@@ -25,8 +25,8 @@
             }
         ],
         "writeup": "",
-        "writeupMid": "## Built for Amplify Dental\n\nAudioBench is the evaluation and annotation workbench I built for Amplify Dental's transcription work. On a small team, every hour spent re-solving transcription, labelling, or benchmarking is an hour not spent on the product. The design goal is simple: solve each of those once.\n\nSpeech quality is not one number. Far speech, room noise, accent, and microphone all change the answer. Opening one model on one clip cannot show that. AudioBench keeps gold audio, prepare pipelines, and backends on one scoreboard so the team compares instead of redoing the work.\n\nThe still on the left is that scoreboard: models sorted so the strongest sits at the top, with enough signal to see where it wins and where it does not. A glance is useful. Real data has too many dimensions for a glance. Heatmaps and a full-size grid exist so observations that would hide in a spreadsheet are hard to miss.\n\n## Solve it once, then reuse it\n\nThe annotation UI is a product layer I owned, not a spreadsheet next to the audio. Waveform, raw versus clean listen, playback speed, then a saved human transcript. The sample library is the same gold with tags and status, so nobody starts labelling from a blank page. Test Live is hearing a backend on that gold before a grid is spent.\n\nPrepare is a named pipeline, not a one-off file edit. Experiments start from a preset and a dry-run plan. A Whisper Small server on the laptop catches mistakes cheaply; cloud GPUs take the same job when the matrix is large.",
-        "writeupAfter": "## How it is built\n\nThe stack is modular, scalable, and config-driven. New datasets, models, preprocess steps, or compute instances plug in without rebuilding the bench. Local-first Python and FastAPI; backends behind one manifest; word error rate, character error rate, and real-time factor so accuracy and cost sit on the same row.\n\n### Public data and models\n\nThe public set is chosen to stress real conditions, not only studio read speech: AMI (headset and distant meeting mics), VoxPopuli (accented English), Common Voice, VCTK, and LibriSpeech test-clean. Far speech, ambient noise, accents, and microphone variation are in the suite so a good model has to survive them.\n\nThe harness in this recording includes Whisper Large v3 (Hugging Face and Faster-Whisper), Whisper Small, Kyutai STT, Google MedASR, Moonshine Base, and Qwen3-ASR. Prepare variants include passthrough, ASR prep, annotation listen, and clean audio, plus composed Lab chains.\n\nWord error rate is how often the transcript is wrong. Character error rate is how far it drifted. Real-time factor is how expensive the model is in time.\n\n### Thanks\n\nSpecial thanks to David Griswold for generously allowing me to showcase this product.\n\n### About this recording\n\nListen and annotate shots use public LibriSpeech, not clinic audio. This is the evaluation bench, not Amplify's dental product UI. Whole Nine Yards was stopped with unfinished cells. The cloud clip is two GPU VMs launching beside the local server.",
+        "writeupMid": "## Built for Amplify Dental\n\nAudioBench is the evaluation and annotation workbench I built for Amplify Dental's transcription work. On a small team, every hour spent repeating transcription, labelling, or benchmark setup is an hour not spent on the product. I built each part to be reused.\n\nDistant speech, room noise, accents, and microphones can change which model performs best. AudioBench keeps hand-checked reference audio, named preprocessing pipelines, and local or cloud speech-to-text systems in one results view so the team can compare them without repeating setup.\n\nModels are sorted so the strongest overall result appears first. Heatmaps and a complete results table show interactions between models, datasets, and audio treatments that one average score would hide.\n\n## Solve it once, then reuse it\n\nI built the annotation interface around the audio instead of keeping transcripts in a separate spreadsheet. It shows the waveform, compares original and cleaned audio, changes playback speed, and saves the hand-written reference transcript. The sample library keeps the same reference audio and transcripts with condition tags and completion status. The live test runs one ready speech-to-text system on a hand-checked sample before the team starts a full benchmark.\n\nEach audio-preprocessing workflow is saved by name instead of applied as a one-off file edit. Experiments start from a reusable preset and a preview of the planned model, dataset, and preprocessing combinations. A local Whisper Small server catches setup mistakes before cloud resources are used; cloud GPUs run the same work when an experiment contains many combinations.",
+        "writeupAfter": "## How it is built\n\nI built AudioBench so new datasets, speech-to-text models, preprocessing steps, and computing machines can be added through configuration. Python and FastAPI run locally first, while one shared configuration describes the local and cloud systems.\n\n### Public data and models\n\nThe suite contains 6 public speech datasets: AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech. Together they cover distant microphones, accented English, varied speakers, and clean read speech.\n\nThe recorded interface includes Whisper Large v3 through Hugging Face and Faster-Whisper, Whisper Small, Kyutai STT, Google MedASR, Moonshine Base, and Qwen3-ASR. Its preprocessing options include unchanged audio, audio prepared for recognition, audio prepared for human review, cleaned audio, and longer chains assembled in the lab.\n\nWord error rate is the share of words the model got wrong. Character error rate is the same at the letter level. Real-time factor is processing time divided by audio length.\n\n### Thanks\n\nSpecial thanks to David Griswold for generously allowing me to showcase this product.\n\n### About this recording\n\nThe listening and annotation screenshots use public LibriSpeech recordings, not dental-clinic audio. This is the evaluation bench, not Amplify's dental product UI. The 'Whole Nine Yards' benchmark was stopped before every planned comparison finished. The cloud recording shows two GPU virtual machines starting alongside the local speech-to-text server.",
         "media": {
             "blocks": [
                 {
@@ -51,19 +51,19 @@
                             "src": "./assets/projects/audiobench/19-annotation-librispeech.mp4",
                             "poster": "./assets/projects/audiobench/19-annotation-librispeech.webp",
                             "title": "Annotate a clip",
-                            "caption": "The annotation UI: waveform, raw versus clean listen, playback speed, then a saved human transcript. Gold is labelled once and reused."
+                            "caption": "The annotation interface shows the waveform, compares original and cleaned audio, changes playback speed, and saves a hand-written reference transcript for reuse."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/24-datasets.webp",
                             "alt": "AudioBench datasets page listing ingested speech corpora including AMI, VoxPopuli, Common Voice, VCTK, and LibriSpeech",
                             "title": "Conditions that actually matter",
-                            "caption": "Meeting mics, accents, and read speech — chosen so a good model has to survive real conditions, not only studio audio."
+                            "caption": "The datasets include distant meeting microphones, accented English, varied speakers, and clean read speech rather than only studio recordings."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/32-results-heatmap-by-model.webp",
-                            "alt": "AudioBench heatmap showing how prepare pipelines and speech models interact across a benchmark",
+                            "alt": "AudioBench heatmap comparing audio-preprocessing pipelines with speech-to-text models",
                             "title": "Insights a table would hide",
                             "caption": "Too many dimensions for one flat view. The heatmap is how a prepare that looks fine on average still fails a backend."
                         },
@@ -79,7 +79,7 @@
                             "src": "./assets/projects/audiobench/13-wny-overview.webp",
                             "alt": "Whole Nine Yards experiment overview showing a large benchmark that was stopped with unfinished cells",
                             "title": "A question too big for a demo 2×2",
-                            "caption": "Seven backends, seven datasets, four prepares. It ran about six hours and was stopped with 100 of 124 cells unfinished."
+                            "caption": "The run used seven speech-to-text systems, 6 datasets, and four preprocessing options. It ran for about six hours and was stopped before every planned comparison finished."
                         }
                     ]
                 },
@@ -92,7 +92,7 @@
                             "src": "./assets/projects/audiobench/18-samples-library-tags.webp",
                             "alt": "AudioBench Samples page with a ready local transcription server and a tag cloud for corpus, microphone, and listening conditions",
                             "title": "The library around annotation",
-                            "caption": "Tags for corpus, mic, and condition sit on the gold so the team can filter instead of starting from a blank page."
+                            "caption": "Each hand-checked sample is tagged by source dataset, microphone, and listening condition so the team can filter and reuse it."
                         },
                         {
                             "type": "image",
@@ -106,7 +106,7 @@
                             "src": "./assets/projects/audiobench/20-test-live.mp4",
                             "poster": "./assets/projects/audiobench/20-test-live.webp",
                             "title": "Hear it before you spend",
-                            "caption": "Try a ready local model on gold audio before a grid burns time."
+                            "caption": "Run one ready local speech-to-text model on hand-checked audio before starting the full benchmark."
                         }
                     ]
                 },
@@ -180,12 +180,12 @@
         "relatedProjects": ["flodoro", "media-search-engine"],
         "logo": "./assets/ask-krishna-logo.svg",
         "featured": true,
-        "summary": "Ask Krishna is inspired by an old practice: hold a question silently, open the Bhagavad Gita, and let the passage you meet speak to the moment. Read Gita covers all 18 chapters.",
-        "seoDescription": "Ask Krishna: hold a question silently and open the Bhagavad Gita to a passage. Five is a suggested limit; the question is never typed or stored.",
+        "summary": "Ask Krishna has two modes. Reflect lets you hold a question in mind and open the Bhagavad Gita to up to five random passages for guidance. The reading mode covers all 18 chapters.",
+        "seoDescription": "Ask Krishna: hold a question silently and open up to five random Gita passages, or read all 18 chapters. The question is never typed or stored.",
         "highlights": [
-            "Open to a passage while holding the question silently; if none of five speaks to it, the practice suggests waiting.",
-            "Read Gita pairs Sanskrit shlokas with English and Hindi meanings, with chapter and shloka navigation.",
-            "Marks, resume, and in-browser PNG cards stay on the device; nothing from the interaction needs to be stored outside it."
+            "Reflect follows an old practice: when you're torn or confused, hold your question in mind and open the Bhagavad Gita to a random page for guidance.",
+            "The reading mode covers all 18 chapters, with Sanskrit text and English and Hindi meanings.",
+            "Bookmarks, your reading position, and saved image cards stay on the device; the question is never typed or stored."
         ],
         "displayTags": [
             "Local-first",
@@ -212,7 +212,7 @@
                 "kind": "demo"
             }
         ],
-        "writeup": "## What it is\n\nAsk Krishna has two complementary modes.\n\nReflect is inspired by an old practice for moments when someone feels torn or confused: call out to a scripture, open it to a page, and trust the passage they meet to speak to their situation.\n\nIn Ask Krishna, you hold your question silently and open to a passage from the Bhagavad Gita. The question is never typed or stored. Five is a suggested limit: if a passage answers you within five, good; if not, it may be the scripture's way of saying wait.\n\nRead Gita is the full reading path: all 18 chapters, chapter and shloka navigation, Sanskrit text, and English and Hindi meanings.\n\n## How it is built\n\nThe site is static, with no backend. The question never exists as typed data, so it is never stored or sent. App, session, and reading state stay on the device — including marks and resume. Passages and verses can be saved as PNG cards generated in the browser. Interface strings and meanings load from static language files.\n\n## Why it exists\n\nIt is a gift-to-self project: a quiet place to pause with a question and read without turning reflection into a conversation with software.",
+        "writeup": "## What it is\n\nAsk Krishna has two modes.\n\nReflect follows an old practice for moments when you're torn or confused: hold your question in mind and open the Bhagavad Gita to a random page for guidance. You can open up to five random passages. If one answers you, good. If none does, take it as the Gita telling you to wait. Five is a suggestion, not an enforced limit. Your question is never typed or stored.\n\nBefore reading, a short mantra appears as a purification pause because you're about to read words spoken by the Lord Himself.\n\nThe second mode lets you read all 18 chapters, navigate by chapter and verse, and view Sanskrit text with English or Hindi meanings.\n\n## How it is built\n\nThe site is static, with no application server. Bookmarks, your reading position, and other reading state stay on the device. Passages and verses can be saved as image cards generated in the browser. Interface strings and meanings load from static language files.\n\n## Why it exists\n\nI built it as a quiet place to pause with a question and read without turning reflection into a conversation with software.",
         "media": {
             "blocks": [
                 {
@@ -231,7 +231,7 @@
                             "src": "./assets/projects/ask-krishna/reflection-purification.png",
                             "alt": "Ask Krishna purification screen showing a Sanskrit verse and English translation",
                             "title": "Prepare",
-                            "caption": "A short purification pause comes before the question."
+                            "caption": "A short mantra appears as a purification pause because you're about to read words spoken by the Lord Himself."
                         },
                         {
                             "type": "image",
@@ -245,13 +245,13 @@
                             "src": "./assets/projects/ask-krishna/reflection-passage.png",
                             "alt": "Ask Krishna passage screen with Sanskrit and English verses plus Read in Gita and Save actions",
                             "title": "Receive a passage",
-                            "caption": "A passage opened while the question stays silent, with Read in Gita and Save."
+                            "caption": "A random passage opened while the question stays in your mind, with actions to read it in context or save it."
                         }
                     ]
                 },
                 {
                     "presentation": "gallery",
-                    "title": "Read Gita",
+                    "title": "Read all 18 chapters",
                     "items": [
                         {
                             "type": "image",
@@ -293,12 +293,12 @@
         "relatedProjects": ["audiobench", "lazy-resume"],
         "logo": "./assets/aftersight-logo.png",
         "featured": true,
-        "summary": "Aftersight is an image-first search system for photo libraries. It indexes images so they can be found by meaning, visible text, or metadata — not just filenames.",
+        "summary": "I built Aftersight because my own photo library was disorganised and hard to search. It uses language models to organise images and find them by meaning, visible text, or metadata—not just filenames.",
         "seoDescription": "Aftersight, an image-first search system for photo libraries: find images by meaning, visible text or metadata, not just filenames.",
         "highlights": [
-            "Each image is described once into a structured record that is reused across retrieval.",
-            "Dedicated scene, keyword, visible-text, and metadata surfaces are fused with weighted reciprocal rank fusion.",
-            "The local interface keeps retrieval inspectable through the source image, generated context, metadata, score, and contributing retrieval surface."
+            "I describe each image once and save its description and metadata so every later search can reuse them.",
+            "I search scenes, keywords, visible text, and metadata separately, then combine their ranked results.",
+            "Each result shows the source image, generated description, file metadata, score, and which search method contributed to its ranking."
         ],
         "displayTags": [
             "Hybrid Retrieval",
@@ -333,7 +333,7 @@
                 "kind": "blog"
             }
         ],
-        "writeup": "## What it is\n\nEach image is described once by a vision-language model into a structured record. Later queries reuse that record across the retrieval system instead of re-describing the image.\n\n## Approach\n\n- Files are fingerprinted and their timestamps reconciled before indexing, giving time-based retrieval a canonical date rather than an unreliable filesystem timestamp.\n- MongoDB holds the canonical record, while ChromaDB separates scene, keyword, visible-text, and metadata retrieval surfaces. Ranked results are combined with weighted reciprocal rank fusion (RRF), with search presets shifting emphasis between exact words, meaning, text, and time.\n- Search runs locally after the description step. Results retain inspectable provenance through the source image, generated description, metadata, rank, fused score, and contributing retrieval surface.",
+        "writeup": "## What it is\n\nI was fed up with how disorganised my own photo library was, so I built Aftersight to explore how language models could organise memories and make them easier to search. A vision-language model—an AI model that connects images and text—describes each image once, and later searches reuse that record.\n\n## Approach\n\n- I identify duplicate files and reconcile their available timestamps before indexing, giving date-based search one chosen date instead of relying on a single filesystem timestamp.\n- MongoDB stores the main image record. ChromaDB searches scenes, keywords, visible text, and metadata separately, then weighted reciprocal rank fusion combines those ranked lists.\n- Search runs locally after the description step. Each result shows why it was returned through its source image, generated description, metadata, component ranks, combined score, and contributing search method.",
         "media": {
             "blocks": [
                 {
@@ -387,7 +387,7 @@
         "relatedProjects": ["ai-generated-image-classifier", "media-search-engine"],
         "logo": "./assets/pixtyle-logo.png",
         "featured": true,
-        "summary": "Pixel Stylizer Toolkit for transforming photos and videos into stylized wallpapers using advanced computer vision techniques.",
+        "summary": "I built Pixtyle to turn photos and videos into wallpaper-like or cartoon-like images using colour clustering, Fourier filtering, and edge detection.",
         "seoDescription": "Pixtyle, a computer vision image stylizer for photos and video using k-means palette reduction, Fourier transforms, edge effects and temporal smoothing.",
         "highlights": [
             "Process a photo, folder, or video into stylised stills or clips, with configurable looks built for posterised, wallpaper-like output.",
@@ -416,7 +416,7 @@
                 "kind": "github"
             }
         ],
-        "writeup": "## What it is\n\nPixtyle is a command-line toolkit for stylising photos and videos into wallpaper-like and cartoon-like looks. It supports single images, folders, and video through a shared transform system spanning colour clustering, frequency-domain processing, edge stylisation, and combined pipelines.",
+        "writeup": "## What it is\n\nMy pollution-monitoring work showed me how strongly image filters change what a vision system sees. I built Pixtyle to make those signal-processing effects visual, controllable, and easier to reason about. It supports single images, folders, and video through colour clustering, frequency filtering, edge stylisation, and combined pipelines.\n\nMany image filters create recognisable visual styles, which makes exploring signal processing more intuitive. Because convolutional neural networks also respond to image structure and edges, seeing what a filter changes helps me reason about what a model receives.",
         "writeupMid": "## How the styles work\n\nEach run selects one transform. The names below are the project’s own style names; the paragraphs explain what they do.\n\n### K-means\n\n`kmeans_cluster` reduces the image to a compact colour palette. Pixels are clustered on colour, optionally weighted with spatial position, then replaced with their centroids and optionally blended back toward the original with edge enhancement. The visual aim is posterised, region-like colour rather than line-first stylisation.\n\n### Enhanced\n\n`enhanced_cluster` blends Euclidean and angular distance at reduced resolution, then overlays a Sobel edge tint and colour-pop finishing. It is the stronger segmented-and-outlined alternative when K-means looks too soft on a busy scene.\n\n### Edge Pop\n\n`edge_pop` is a standalone edge styliser. Sobel and Canny can run on GPU through the Torch backend; Scharr, Prewitt, and Laplacian are OpenCV-only. Thresholds and blend modes (`ink`, `glow`) push outline or glow over the pixels you already have.\n\n### Fourier\n\n`fourier_animate` stylises in the frequency domain: FFT band-stop and radial masks with presets (`anime_soft`, `anime_bold`, `cartoon`, `watercolor`, `graphic_novel`), then colour finishing. The look comes from which frequency bands survive, not from palette size.\n\n### Combo\n\n`cartoon_combo` composes optional Fourier-derived detail maps as an auxiliary extractor (not a destructive first pass), K-means colour flattening, Edge Pop lines, then colour-pop or contrast finishing. On video, the edge mask can be EMA-smoothed across frames.\n\nOne transform is selected per run. Defaults live in `pixtyle_config.py`; CLI flags override them.\n\n## Video stability\n\nClustering each video frame independently can make palettes flicker from frame to frame. Pixtyle carries cluster centroids across neighbouring frames (temporal centroid smoothing) so colours stay more stable on a continuous shot. Scene changes are detected by comparing per-channel histograms with an L1 distance and hysteresis (`SceneChangeDetector`, method `hist`). A detected cut calls `reset_state`, so the previous shot’s palette is not blended into the next.",
         "writeupAfter": "## Technical implementation\n\n### Transform architecture\n\nShowcase stylisers subclass `TransformBase` and implement the same interface: `process_numpy`, `process_torch`, `reset_state`, and `describe`. They register in `processors/registry.py`. A run selects one transform; `pixtyle_config.py` holds defaults and CLI flags override them.\n\nThat isolation is the point: decode, batch, write, and (for video) temporal hooks stay the same while the styliser is swapped.\n\n### Processing pipeline\n\n**Input** is a single image, a folder, or a video.\n\nOpenCV decodes frames. Image folders are grouped into uniform-shape batches so tensors stay consistent. The selected transform runs on each batch. Video then encodes the stylised clip; when `audio_merge` is enabled, ffmpeg remuxes the original audio onto the processed picture.\n\nRoute: input → decode / batch → selected transform → temporal handling where the styliser keeps state → encode → optional audio remux.\n\n### Acceleration and backends\n\nTorch is a hard dependency. Every showcase transform has both NumPy and Torch implementations; the CLI auto-selects a GPU when `detect_torch_device` finds one.\n\nGPU execution applies to the Torch paths for clustering, Fourier processing, and Sobel/Canny edges. Scharr, Prewitt, and Laplacian remain OpenCV-only. GPU is not claimed for the whole toolkit.\n\n### Image-processing primitives\n\n**Colour / clustering.** K-means groups pixels by colour (optionally with spatial weighting) and replaces them with centroids — palette reduction / posterisation. Enhanced clustering uses blended Euclidean and angular distance at reduced resolution, then colour-pop finishing.\n\n**Frequency.** Fourier helpers build a radius grid and apply band-stop / radial masks in FFT space, then colour finishing. Presets (`anime_soft`, `anime_bold`, `cartoon`, `watercolor`, `graphic_novel`) choose which bands survive.\n\n**Edges.** Shared extractors cover Sobel, Canny, and FFT edges (NumPy and Torch). Edge Pop also exposes Scharr, Prewitt, and Laplacian through OpenCV, with `ink` and `glow` blend modes.\n\n**Combined pipeline.** Combo uses optional Fourier-derived detail as a cue, K-means for colour regions, Edge Pop for lines, then colour-pop or contrast finishing (including YUV luminance restore). It does not treat Fourier as a destructive first pass.\n\n### Video-specific state\n\nTemporal centroid smoothing carries cluster centres across neighbouring frames so a continuous shot does not re-seed a new palette every frame.\n\nCombo can EMA-smooth the edge mask across frames (`edge_mask_ema`).\n\n`SceneChangeDetector` compares concatenated per-channel histograms with L1 distance and hysteresis. On a cut, `reset_state` clears centroid history (and Combo’s edge-mask cache) so the next shot starts clean.\n\n### Optional super-resolution\n\nAn image-only TensorFlow SavedModel step (`--sr`) can upscale after stylisation. TensorFlow is not required for the main pipeline. The vendored `sr/` training project is a separate environment, not Pixtyle’s core architecture.",
         "media": {
@@ -613,7 +613,7 @@
         "relatedProjects": ["os-toolkit", "ask-krishna"],
         "logo": "./assets/flodoro-logo.png",
         "featured": true,
-        "summary": "A local-first Pomodoro workspace that keeps the timer, tasks, history, and your own music on one static page — no account or backend required.",
+        "summary": "I built Flodoro for people who want a Pomodoro timer, tasks, session history, and local music on one page without an account or application server.",
         "highlights": [
             "Work, short-break, and long-break sessions with configurable timing, notifications, task progression, and session history.",
             "Pick a local music folder and play it inside Flodoro with playlist, transport, volume, and scrub controls — no streaming login or bundled music library.",
@@ -713,7 +713,7 @@
         "relatedProjects": ["lazy-resume", "ai-generated-image-classifier"],
         "logo": "./assets/os-toolkit-logo-blink.gif",
         "logoTone": "on-dark",
-        "summary": "An expanding Python filesystem toolkit for developers, data scientists, and scripts or agents: understand storage usage, work with directory trees, and reuse common OS operations without rebuilding them from scratch. Benchmarked against copytree and robocopy.",
+        "summary": "I built OS Toolkit for developers, data scientists, scripts, and agents that need storage analysis, directory comparison, and reusable file operations without rebuilding them for every task.",
         "seoDescription": "Python filesystem toolkit for developers, data scientists and agents: storage usage, directory trees and common OS operations, benchmarked against robocopy.",
         "highlights": [
             "Usage analysis shows where space goes in a directory tree, including which folders dominate the root.",
@@ -796,11 +796,11 @@
         "relatedProjects": ["media-search-engine", "os-toolkit"],
         "logo": "./assets/lazy-resume-logo.svg",
         "logoTone": "on-dark",
-        "summary": "Start with an existing resume PDF, turn it into a structured profile, and regenerate a clean, consistently formatted resume without rebuilding everything by hand.",
+        "summary": "I built LazyResume for people who already have a resume PDF and want to turn it into a structured profile, correct it, and regenerate a consistently formatted resume.",
         "seoDescription": "Turn an existing resume PDF into a structured profile with an LLM pipeline, then regenerate a clean, consistently formatted resume.",
         "highlights": [
-            "Converts a resume PDF into a canonical structured profile, then into standardized Markdown/PDF output.",
-            "Maps inconsistent extracted fields into one stable schema, with review when a mapping is ambiguous.",
+            "Converts a resume PDF into one standard structured profile, then into standardised Markdown/PDF output.",
+            "Maps differently named resume fields into one standard structure and asks for review when a match is ambiguous.",
             "Separates extraction from generation, so profile data can be corrected or enriched before producing a new resume."
         ],
         "displayTags": [
@@ -826,11 +826,11 @@
         "relatedProjects": ["ai-generated-image-classifier", "audiobench"],
         "logo": "./assets/fuzzy-hybrid-stock-trading-logo.svg",
         "logoTone": "on-dark",
-        "summary": "A stock-trading research project where I used domain analysis and feature engineering to cut the predictor’s market-input channels by over 70%, then combined deep learning with fuzzy logic for trading decisions.",
-        "seoDescription": "Stock-trading research: feature engineering cut market-input channels by over 70%, then deep learning was combined with fuzzy logic for trading decisions.",
+        "summary": "In this stock-trading research project, I reduced the predictor's inputs from 96 values to 26, then combined a deep-learning price predictor with fuzzy buy, sell, or hold rules.",
+        "seoDescription": "Stock-trading research that reduced model inputs from 96 to 26, then combined deep learning with fuzzy logic for buy, sell or hold decisions.",
         "highlights": [
-            "Reduced the predictor’s market-input channels from 96 to 26 (~73%) through domain-driven feature engineering, leaving each training run with substantially less to process.",
-            "Paired a deep sequence model with a fuzzy rule system that converts continuous market signals into buy, sell, or hold actions.",
+            "I reduced the values fed into the predictor from 96 to 26—about 73% fewer—through domain-led feature engineering.",
+            "I paired a GRU-LSTM attention model with fuzzy rules that convert continuous market signals into buy, sell, or hold actions.",
             "The final system predicted next-day direction correctly about 61% of the time—roughly 13 percentage points above the reported baseline."
         ],
         "displayTags": [
@@ -877,12 +877,12 @@
         "relatedProjects": ["pixtyle", "media-search-engine"],
         "logo": "./assets/ai-generated-image-classifier-logo.svg",
         "logoTone": "on-dark",
-        "summary": "A systematic PyTorch training and tuning workflow for distinguishing AI-generated from human images, with repeatable experiment runs that preserve configs, metrics, plots, and checkpoints so each iteration can inform the next.",
-        "seoDescription": "PyTorch workflow for detecting AI-generated vs human images, with repeatable experiment runs that keep configs, metrics, plots and checkpoints.",
+        "summary": "I built this PyTorch workflow for Kaggle's Detect AI vs. Human-Generated Images competition. It records each configuration, metric, plot, and checkpoint so I can compare experiments.",
+        "seoDescription": "PyTorch workflow for Kaggle's Detect AI vs. Human-Generated Images competition; best validation accuracy was 87.9% with Swin V2 Tiny.",
         "highlights": [
-            "Configuration-driven model training with selectable torchvision backbones and optional FFT/DCT feature heads.",
+            "Choose a PyTorch image-model architecture and optionally add frequency-domain features using FFT or DCT.",
             "Every experiment is captured as a structured run with its configuration, epoch metrics, curves, confusion matrices, and checkpoints.",
-            "The same workflow can run independently across different systems, keeping results consistent and making manual tuning decisions easier to compare."
+            "The best recorded run used Swin V2 Tiny and reached 87.9% validation accuracy; this is a validation result, not a Kaggle leaderboard score."
         ],
         "displayTags": [
             "Python",
@@ -908,7 +908,7 @@
                 "kind": "github"
             }
         ],
-        "writeup": "## What it is\n\nThis project trains a binary classifier for AI-generated versus human images, and wraps that work in a systematic PyTorch training and tuning workflow. The detection task is the concrete problem; the engineering surface is a repeatable experiment record so each attempt can be understood and followed by another.\n\n## Why it was built\n\nRepeated architecture and configuration experiments are easy to lose if the only leftover is a weight file. This setup keeps the configuration, metrics, plots, and checkpoints with the run so the experiment stays inspectable after training.\n\n## How an experiment works\n\nA run starts from a configuration, trains, and writes a timestamped folder. That folder holds the config snapshot, per-epoch metrics, training curves, confusion matrices, and checkpoints. After inspecting the record, the next change to backbone, features, or training settings is chosen by hand — experiment-driven tuning, not an automated search.\n\n## Model and feature experiments\n\nTraining is configuration-driven: torchvision backbones can be swapped, and optional FFT or DCT heads can be added. Dataset preparation and augmentation sit in the same repo, with competition-specific frequency-domain experiments alongside the main trainer.\n\n## Across systems\n\nThe same training and tuning workflow can be launched independently on different machines. Each machine writes the same kind of run folder, so results stay readable in one format. There is no central scheduler and no distributed training.",
+        "writeup": "## What it is\n\nI built this project for Kaggle's Detect AI vs. Human-Generated Images competition. It trains a binary classifier to distinguish AI-generated images from human images and keeps a repeatable record of every experiment.\n\n## Why it was built\n\nRepeated architecture and configuration experiments are easy to lose if the only saved output is a model checkpoint. This setup keeps the configuration, metrics, plots, and checkpoints together so each experiment can inform the next.\n\n## How an experiment works\n\nA run starts from a configuration, trains, and writes a timestamped folder containing the configuration, per-epoch metrics, training curves, confusion matrices, and checkpoints. I inspect that record before choosing the next model, feature, or training change.\n\n## Model and feature experiments\n\nI can swap PyTorch image-model architectures and optionally add frequency-domain features using FFT or DCT. Dataset preparation and augmentation live in the same repository.\n\n## Result\n\nThe best recorded run used Swin V2 Tiny and reached 87.9% validation accuracy. This is validation accuracy, not a Kaggle leaderboard score.\n\n## Across systems\n\nThe same workflow can run independently on different machines. Each machine writes the same run-folder structure, so results remain comparable without a central scheduler or distributed training.",
         "writeupAfter": "## How it is built\n\n`train.py` drives the loop, snapshots `config.json` into `runs/<timestamp>/`, appends epoch lines to `run.txt`, and rewrites curves and confusion matrices as the run proceeds. Best and last checkpoints are stored with the same folder.",
         "media": {
             "blocks": [

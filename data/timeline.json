@@ -20,9 +20,9 @@
             {
                 "title": "Applied AI Engineer (Collaborator, Part-Time)",
                 "points": [
-                    "Designed a representative benchmark suite, standardizing 6 public datasets (far speech, ambient noise, accents, mic variation) into one ingest format so evaluation reflects real-world conditions, not clean-audio benchmarks.",
-                    "Built a plug-and-play interface unifying multiple transcription backends under one manifest, with WER/CER/RTF scoring that enabled evaluation before any domain-specific data was available.",
-                    "Introduced a local-first benchmarking mode that catches code-level errors without cloud spin-up, saving 1+ hr/week per dev of idle wait — more when GPU provisioning or networks fail."
+                    "I built an ASR benchmark for Amplify Dental and converted 6 public speech datasets—AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech—into one input format.",
+                    "I put local and cloud speech-to-text systems behind one shared configuration, then compared transcript accuracy with word error rate and character error rate, and processing speed with real-time factor.",
+                    "I added a local benchmark mode that catches code errors before cloud GPUs are started, avoiding more than 1 hour of cloud-related waiting per developer each week."
                 ]
             }
         ],
@@ -47,10 +47,9 @@
             {
                 "title": "Machine Learning Engineer (Intern)",
                 "points": [
-                    "Engineered a recommendation pipeline integrating multi-omics data (gene expression, DepMap) to cluster therapeutic targets and statistically validate drug candidates.",
-                    "Achieved a 50× runtime reduction in cancer-target discovery via PyTorch GPU vectorization and re-engineered augmentation logic.",
-                    "Developed a config-driven, data-agnostic analytics dashboard with cached queries and reproducible charts, cutting ad-hoc analysis turnaround from 2–3 days to minutes.",
-                    "Built SLURM-to-VS Code remote-kernel tooling to replace the legacy Jupyter interface, and ran generative protein-binder discovery (BoltzGen) on self-provisioned AWS EC2 GPU instances."
+                    "I built a biomarker-discovery pipeline that used existing cell lines' omics data to test which genes could be useful biomarkers when some of their targets were known. I moved the earlier CPU-only Python loops to vectorised GPU processing, reducing runtime from days to hours—about 50× faster—and added a proprietary augmentation method that multiplied the available cell-line data almost exponentially.",
+                    "I built an analytics dashboard that worked across datasets, reused earlier queries, and produced repeatable charts, cutting one-off analysis from 2–3 days to minutes.",
+                    "I made cluster jobs accessible from VS Code instead of the older Jupyter interface, and ran BoltzGen protein-binder generation on AWS EC2 GPU machines that I configured."
                 ]
             }
         ],
@@ -71,10 +70,10 @@
             {
                 "title": "Computer Vision Engineer (Full-Time)",
                 "points": [
-                    "Secured a new client by engineering a real-time CPU-only anomaly detection pipeline for pollution monitoring using image processing, clustering, and segmentation.",
-                    "Achieved 90% recall and 80% precision in content moderation using temporal smoothing; containerized and parallelized the pipeline with Celery and RabbitMQ-based orchestration.",
-                    "Enabled lag-free ad placement at 30+ FPS with stream-agnostic inference logic; improved tracking throughput by 20× via batching and low-latency pipeline design.",
-                    "Fine-tuned YOLO-based PPE detection models for company-specific safety gear, hardening them against edge cases and false positives surfaced in manual review."
+                    "I built a simple real-time computer-vision demo that detected effluent being released into a running water body using only a CPU. The demo secured a new client.",
+                    "I built a video-moderation pipeline for nudity and coarse language that reached 90% recall and 80% precision. I combined decisions across neighbouring frames, packaged the system with Docker, and parallelised it with Celery and RabbitMQ.",
+                    "I detected products in live video and overlaid an advertisement with a QR code so viewers could learn more. The pipeline ran above 30 video frames per second, and batching per-object classification increased tracking from 1 to 20 frames per second.",
+                    "I fine-tuned YOLO models to detect company-specific personal protective equipment, then used manual review to find unusual cases and reduce false detections."
                 ]
             }
         ],
@@ -98,8 +97,8 @@
             {
                 "title": "Visiting Student (Intern)",
                 "points": [
-                    "Excelled at a rigorous Deep Learning bootcamp at NUS (A+ grade), guiding a 6-person team on construction-site safety detection models.",
-                    "Trained object detection models from scratch, delivering a working prototype in under a week under tight compute and time limits."
+                    "I earned an A+ in the NUS deep-learning programme and guided a 6-person team building construction-site safety detection models.",
+                    "I trained the object-detection models from scratch and delivered a working construction-safety prototype in under a week with limited computing time."
                 ]
             }
         ],
@@ -123,8 +122,8 @@
             {
                 "title": "AI Researcher (Intern)",
                 "points": [
-                    "Led R&D for a team of 5 on AI-powered frame-rate conversion (frame interpolation) for smartphone video quality.",
-                    "Achieved 27.9 PSNR on 448×256 sequences while exceeding speed and quality KPIs by 1.5×."
+                    "I led a 5-person research team building frame interpolation, which generates intermediate frames to make smartphone video motion smoother.",
+                    "We delivered 448×256-pixel output on Vimeo-90K sequences, well above the requested 128×128 resolution, at 27.9 dB peak signal-to-noise ratio. The overall speed-and-quality result exceeded the requested target by 1.5×."
                 ]
             }
         ],
@@ -146,12 +145,12 @@
         "roles": [
             {
                 "title": "Master of Science in Artificial Intelligence",
-                "description": "CGPA: 3.89. Specialization in deep learning and AI systems.",
+                "description": "CGPA: 3.89/5.00. Specialisation in deep learning and AI systems.",
                 "subtitle": "Academic Projects & Coursework",
                 "points": [
                     "Computer Vision: Image processing (contrast stretching), depth estimation, 3D reconstruction, segmentation, and super-resolution.",
                     "Deep Learning: Regression, classification, and MLOps for hyperparameter tuning.",
-                    "Natural Language Processing: Sentiment classification and Seq2Seq models for English-French translation.",
+                    "Natural Language Processing: sentiment classification and sequence-to-sequence models for English-to-French translation.",
                     "Advanced ML: Time series analysis and prediction, reinforcement learning, and fuzzy hybrid models."
                 ]
             }
@@ -174,7 +173,7 @@
         "roles": [
             {
                 "title": "B.Tech in Computer Science (Specialization in AI/ML)",
-                "description": "CGPA: 9.06. Focused on AI and ML applications.",
+                "description": "CGPA: 9.06/10.00. Focused on applied AI and machine learning.",
                 "subtitle": "Academic Projects & Coursework",
                 "points": [
                     "Executed multiple projects spanning app development (React Native), web development (React), networks, and cybersecurity basics.",
@@ -184,9 +183,9 @@
             {
                 "title": "Thesis: Speech Recognition using Reconstructed Phase Spaces",
                 "points": [
-                    "Transformed audio signals into 3D phase space representations and applied deep learning for enhanced accuracy.",
-                    "Built a multilingual ASR pipeline for Indic languages using reconstructed phase spaces as image-like speech representations, reducing error rate from 80% to 30%.",
-                    "Further reduced error to 15% by combining RPS and MFCC features in a unified deep learning pipeline despite differing feature dimensions."
+                    "I converted audio signals into three-dimensional reconstructed phase-space images and trained deep-learning models to analyse them.",
+                    "I built an Indic-language speech-recognition pipeline using reconstructed phase spaces as image-like speech features, reducing word error rate from about 80% to about 30%.",
+                    "I later reduced word error rate to about 15% by combining reconstructed phase-space features with mel-frequency cepstral coefficients in one deep-learning pipeline."
                 ]
             }
         ],

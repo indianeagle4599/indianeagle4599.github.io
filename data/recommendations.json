@@ -1,5 +1,11 @@
 [
     {
+        "quote": "real talent for engineering thinking and for process automation",
+        "name": "David Griswold",
+        "role": "CTO",
+        "organization": "Amplify Dental AI"
+    },
+    {
         "quote": "one of the most capable and self-directed contributors I have worked with",
         "name": "Mohan Pradhan",
         "role": "Lead, Pre-clinical Bioinformatics",
@@ -28,11 +34,5 @@
         "name": "Dr. Tan Wee Kek",
         "role": "Associate Professor",
         "organization": "National University of Singapore"
-    },
-    {
-        "quote": "real talent for engineering thinking and for process automation",
-        "name": "David Griswold",
-        "role": "CTO",
-        "organization": "Amplify Dental AI"
     }
 ]

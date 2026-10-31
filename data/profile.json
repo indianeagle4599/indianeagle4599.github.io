@@ -2,14 +2,14 @@
     "name": "Hitesh Goyal",
     "title": "Applied AI Engineer | Speech (ASR) · Vision · NLP & LLMs",
     "location": "Bangalore, India",
-    "summary": "Over 3 years building AI and machine learning systems across research, internships, and industry.",
+    "summary": "I've spent 3+ years building speech, vision, and language models, from research at Samsung R&D and NUS to production work at Tata Elxsi and Amplify Dental.",
     "resume_url": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Resume.pdf",
     "email": "hiteshgoyal.business@gmail.com",
     "about": {
-        "bio": "Good ML starts with understanding the data: what it represents, where it falls short, and what the problem actually needs. Start simple, test assumptions, measure what matters, and change course when the evidence calls for it.",
+        "bio": "I start every ML problem with the data: what it really represents, where it falls short, and what the problem needs. Then I build the simplest thing that could work, measure it on the metric that matters, and change course when the numbers say so.",
         "highlights": [
-            "This approach has worked across speech recognition, computer vision, biotech, and multimodal retrieval, using everything from classical methods and deep learning to generative models. The tools change with the problem. What matters is knowing which to use, how to use it, and when to try something else.",
-            "I carry that thinking through to execution, from data preparation and experimentation to evaluation, deployment, and usable interfaces. The goal is a reliable system built around real constraints like latency, compute, data quality, and measurable performance."
+            "I've used this approach across speech recognition, computer vision, biomarker discovery, and image retrieval. Depending on the problem, I've used classical methods, deep learning, or generative models—and changed tools when the evidence called for it.",
+            "I carry that thinking from data preparation and experiments through evaluation, deployment, and the interface people use. I build around practical limits such as response time, available computing power, data quality, and measurable performance."
         ],
         "focus": [
             "Computer vision and multimodal systems",

@@ -22,29 +22,29 @@
 
 ## Experience
 
-- Amplify Dental AI — Applied AI Engineer (part-time collaborator), remote. ASR evaluation: representative benchmark across 6 public datasets; unified transcription-backend scoring (WER/CER/RTF); local-first benchmarking.
-- Hummingbird Bioscience / SGInnovate Summation — Machine Learning Engineer intern (Aug 2025 – Jan 2026). GPU-accelerated biotech/ML work, including a ~50× runtime reduction from vectorising and parallelising previously naive Python loops.
-- Tata Elxsi — Computer Vision Engineer (full-time). Production CV systems including anomaly detection, content moderation (90% recall / 80% precision), tracking (30+ FPS ad placement; 20× throughput), and YOLO PPE detection.
-- Samsung R&D (PRISM) — AI Researcher intern. Led a five-student frame-interpolation / FRC team; achieved 27.9 PSNR on 448×256 Vimeo-90K sequences while exceeding speed and quality KPIs by 1.5×.
+- Amplify Dental AI — Applied AI Engineer (part-time collaborator), remote. I built an ASR benchmark across AMI headset, AMI distant mic, VoxPopuli, Common Voice, VCTK, and LibriSpeech, comparing local and cloud systems with word error rate, character error rate, and real-time factor.
+- Hummingbird Bioscience / SGInnovate Summation — Machine Learning Engineer intern (Aug 2025 – Jan 2026). I built a biomarker-discovery pipeline from cell-line omics data and made it about 50× faster than the earlier CPU-only Python loops by vectorising it on a GPU.
+- Tata Elxsi — Computer Vision Engineer (full-time). I built computer-vision systems for effluent detection, 18+ content moderation, live product-linked advertising above 30 video frames per second, and tracking improved from 1 to 20 frames per second.
+- Samsung R&D (PRISM) — AI Researcher intern. I led a five-student frame-interpolation team that delivered 448×256-pixel Vimeo-90K output against a 128×128 target at 27.9 dB PSNR; the overall result beat the requested target by 1.5×.
 - National University of Singapore — Visiting Student (Intern) on a deep-learning programme. Led a six-person PPE object-detection team for construction-site safety.
 
 ## Education
 
 - Nanyang Technological University — MSc Artificial Intelligence
 - Vellore Institute of Technology — B.Tech Computer Science (Specialization in AI/ML)
-- Thesis: reconstructed phase-space (RPS) methods for Hindi speech analysis (vowel/CVP classification and ASR experimentation). Owner-attested later Indic ASR experimentation reduced error approximately 80% → 30% → 15%.
+- Thesis: reconstructed phase-space methods for Hindi speech analysis. Owner-attested later Indic ASR experiments reduced word error rate from about 80% to 30%, then about 15%.
 
 ## Selected projects
 
-- AudioBench — Evaluation and annotation workbench built for Amplify Dental: gold audio labelled once, prepare pipelines, and a shared scoreboard so a small team is not redoing transcription and benchmarking.
-- Aftersight — Image-first photo-library search. Indexes images so they can be found by meaning, visible text, or metadata — not just filenames.
-- Ask Krishna — Bhagavad Gita reflection inspired by opening scripture with a question held silently. Five is a suggested limit; the question is never typed or stored. Read Gita covers all 18 chapters.
-- Pixtyle — Classical CV pixel stylizer for photos, folders, and video (k-means, enhanced, Fourier, edge, combo) with temporal palette stability on video.
-- Flodoro — Local-first Pomodoro workspace (timer, tasks, history, preferences) with user-selected local music folders; no account or backend required.
+- AudioBench — I built this ASR evaluation workbench for Amplify Dental around hand-checked transcripts, reusable audio-preprocessing pipelines, and one results view for local and cloud speech-to-text systems.
+- Aftersight — I built this image search system because my own photo library was disorganised. It uses language models to find images by meaning, visible text, or metadata—not just filenames.
+- Ask Krishna — Ask Krishna has two modes. Reflect follows an old practice: hold a question in mind and open the Bhagavad Gita to up to five random passages for guidance; if none answers, take it as the Gita telling you to wait. The question is never typed or stored. The reading mode covers all 18 chapters.
+- Pixtyle — Inspired by my pollution-monitoring work, I built this image styliser to make colour clustering, Fourier filtering, and edge detection visual across photos, folders, and video.
+- Flodoro — I built this browser-based Pomodoro timer and task manager with session history and user-selected local music; no account or application server is required.
 - OS Toolkit — Python filesystem toolkit for storage analysis, directory trees, and reusable OS operations; benchmarked against copytree and robocopy.
-- Detecting AI Generated Images — Systematic PyTorch training and tuning workflow for distinguishing AI-generated from human images, preserving configs, metrics, plots, and checkpoints across runs.
-- Fuzzy Hybrid Model for Stock Trading — Coursework with Tristan Till. Domain-driven feature redesign cut the predictor’s market-input channels by over 70%; deep learning combined with fuzzy logic for trading decisions.
-- LazyResume — Start with an existing resume PDF, turn it into a structured profile, and regenerate a clean, consistently formatted resume without rebuilding everything by hand. Extraction is separated from generation, with schema normalization and review on ambiguous mappings.
+- Detecting AI Generated Images — I built this PyTorch workflow for Kaggle's Detect AI vs. Human-Generated Images competition; its best recorded validation accuracy was 87.9% with Swin V2 Tiny.
+- Fuzzy Hybrid Model for Stock Trading — Coursework with Tristan Till. I reduced the values fed into the predictor from 96 to 26, then combined deep learning with fuzzy buy, sell, or hold rules.
+- LazyResume — I built this for people who want to turn an existing resume PDF into a structured profile, correct it, and regenerate a consistently formatted resume.
 
 ## Credentials
 
