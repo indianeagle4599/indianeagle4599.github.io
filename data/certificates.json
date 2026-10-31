@@ -1,7 +1,7 @@
 {
     "categories": [
         {
-            "name": "AI & ML Engineering",
+            "name": "AI and machine-learning engineering",
             "certificates": [
                 {
                     "title": "AWS Machine Learning Foundations",
@@ -13,7 +13,7 @@
                 {
                     "title": "Structuring Machine Learning Projects",
                     "issuer": "Coursera / DeepLearning.AI",
-                    "description": "Andrew Ng's framework for scoping ML systems, diagnosing error, and iterating fast.",
+                    "description": "Andrew Ng's framework for scoping machine-learning systems, diagnosing error, and iterating fast.",
                     "link": "https://github.com/indianeagle4599/indianeagle4599/blob/main/Certificates/12%20Coursera%20-%20Structuring%20Machine%20Learning%20Projects.pdf",
                     "kind": "course",
                     "importance": "core"
