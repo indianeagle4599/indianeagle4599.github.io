@@ -1530,7 +1530,7 @@ function renderProjectCard(project) {
         ? `<ul class="project-card-highlights">${highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
         : '';
     const detailsHref = projectDetailsHref(project.slug);
-    const detailsBtn = `<a href="${detailsHref}" class="${actionButtonClass(true)}" aria-label="Learn more about ${escapeHtml(project.title)}">${escapeHtml(project.title)} details</a>`;
+    const detailsBtn = `<a href="${detailsHref}" class="${actionButtonClass(true)}" aria-label="${escapeHtml(project.title)} details">${escapeHtml(project.title)} details</a>`;
 
     return `
         <article class="project-card">
@@ -1553,7 +1553,7 @@ function renderOtherProject(project) {
         ? `<ul>${highlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
         : '';
     const detailsHref = projectDetailsHref(project.slug);
-    const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}" aria-label="Learn more about ${escapeHtml(project.title)}">${escapeHtml(project.title)} details</a>`;
+    const pageLink = `<a href="${detailsHref}" class="${actionButtonClass(!hasDemoLink(project.links))}" aria-label="${escapeHtml(project.title)} details">${escapeHtml(project.title)} details</a>`;
     const footerHTML = renderStackFooter(renderTags(projectDisplayTags(project)), renderLinks(project.links) + pageLink);
     const summaryHTML = project.summary ? `<p class="stack-summary is-clamped">${escapeHtml(project.summary)}</p>` : '';
     const hasBody = Boolean(highlightsHTML || summaryHTML);

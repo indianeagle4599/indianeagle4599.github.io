@@ -8,11 +8,11 @@
     const DESCRIPTORS = {
         audiobench: 'ASR evaluation workbench',
         'ask-krishna': 'Bhagavad Gita reflection app',
-        'media-search-engine': 'Photo library search',
-        pixtyle: 'Computer vision stylizer',
+        'media-search-engine': 'Semantic image search',
+        pixtyle: 'Computer vision image stylizer',
         flodoro: 'Pomodoro timer and task manager',
         'os-toolkit': 'Python filesystem toolkit',
-        'lazy-resume': 'LLM resume pipeline',
+        'lazy-resume': 'LLM resume parser',
         'ai-generated-image-classifier': 'PyTorch'
     };
 

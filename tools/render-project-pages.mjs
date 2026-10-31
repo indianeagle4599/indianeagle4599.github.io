@@ -213,9 +213,9 @@ function bootstrap(entries) {
 // Live apps deployed from other repos. Confirmed 200 on 2026-10-30.
 // Ask Krishna's reader canonical is pages/read.html (also listed in that app's sitemap).
 const EXTERNAL_APPS = [
-    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-10-31', priority: '0.7' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-10-31', priority: '0.7' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-05-25', priority: '0.7' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-05-25', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-05-25', priority: '0.7' },
     { loc: 'https://hiteshgoyal.me/msi-web/', lastmod: '2026-05-20', priority: '0.6' }
 ];
 

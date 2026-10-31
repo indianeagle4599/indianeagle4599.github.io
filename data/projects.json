@@ -380,6 +380,7 @@
         "logo": "./assets/pixtyle-logo.png",
         "featured": true,
         "summary": "Pixel Stylizer Toolkit for transforming photos and videos into stylized wallpapers using advanced computer vision techniques.",
+        "seoDescription": "Pixtyle, a computer vision image stylizer for photos and video using k-means palette reduction, Fourier transforms, edge effects and temporal smoothing.",
         "highlights": [
             "Process a photo, folder, or video into stylised stills or clips, with configurable looks built for posterised, wallpaper-like output.",
             "Choose between k-means palette reduction, clustered-and-edged styles, Fourier presets, edge effects, or a combined cartoon pipeline.",
