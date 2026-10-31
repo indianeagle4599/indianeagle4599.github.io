@@ -447,9 +447,27 @@ ${topics}
 // Live apps deployed from other repos. Confirmed 200 on 2026-10-30.
 // Ask Krishna's reader canonical is pages/read.html (also listed in that app's sitemap).
 const EXTERNAL_APPS = [
-    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-05-25', priority: '0.7' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-05-25', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-05-25', priority: '0.7' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-10-31', priority: '0.7' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-1.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-2.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-3.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-4.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-5.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-6.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-7.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-8.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-9.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-10.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-11.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-12.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-13.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-14.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-15.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-16.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-17.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-18.html', lastmod: '2026-10-31', priority: '0.6' },
+    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-10-31', priority: '0.7' },
     { loc: 'https://hiteshgoyal.me/msi-web/', lastmod: '2026-05-20', priority: '0.6' }
 ];
 
