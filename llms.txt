@@ -24,7 +24,7 @@
 
 ## Experience
 
-- Amplify Dental AI — Applied AI Engineer (Contract), remote. I built an ASR benchmark across AMI headset, AMI distant mic, VoxPopuli, Common Voice, VCTK, and LibriSpeech, comparing local and cloud systems with word error rate, character error rate, and real-time factor.
+- Amplify Dental AI — Applied AI Engineer (Contract), May 2026 – Aug 2026, remote. I built an ASR benchmark across AMI headset, AMI distant mic, VoxPopuli, Common Voice, VCTK, and LibriSpeech, comparing local and cloud systems with word error rate, character error rate, and real-time factor.
 - Hummingbird Bioscience (SGInnovate Deep-Tech Programme) — Machine Learning Engineer (Intern), Aug 2025 – Jan 2026. I built a biomarker-discovery pipeline on cell-line omics data that starts from a known target and statistically identifies linked genes that could act as biomarkers. Moving CPU-only Python loops to vectorised GPU code cut runtime from days to hours (about 50×), and a proprietary augmentation method multiplied the usable cell-line data almost exponentially.
 - Tata Elxsi — Computer Vision Engineer (Full-Time). I built computer-vision systems for effluent detection, 18+ content moderation, and live product-linked advertising. Video played at over 30 frames per second with the overlay, and batching per-object classification raised the tracker itself from 1 to 20 frames per second.
 - Samsung R&D (PRISM) — AI Researcher (Intern). I led a five-student frame-interpolation team that delivered 448×256-pixel Vimeo-90K output against a 128×128 target at 27.9 dB PSNR; the overall result beat the requested target by 1.5×.
