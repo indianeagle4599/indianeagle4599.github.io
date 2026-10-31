@@ -36,7 +36,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/30-results-leaderboard-crop.webp",
-                            "alt": "AudioBench results table with models sorted so the strongest sits at the top of a curated speech benchmark",
+                            "alt": "AudioBench ASR results leaderboard with speech-to-text models sorted so the strongest sits at the top of a curated benchmark",
                             "title": "Find the best model at a glance",
                             "caption": "Smartly sorted so the winner sits at the top. Read along the row to see where that model wins on the curated set — and where it does not."
                         }
@@ -63,7 +63,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/32-results-heatmap-by-model.webp",
-                            "alt": "AudioBench heatmap comparing audio-preprocessing pipelines with speech-to-text models",
+                            "alt": "AudioBench heatmap comparing audio-preprocessing pipelines across speech-to-text (ASR) models",
                             "title": "Insights a table would hide",
                             "caption": "The heatmap shows when an audio clean-up step that looks fine on average still hurts one speech-to-text model."
                         },
@@ -77,7 +77,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/13-wny-overview.webp",
-                            "alt": "Whole Nine Yards experiment overview showing a large benchmark stopped before every planned comparison finished",
+                            "alt": "AudioBench Whole Nine Yards experiment overview: an ASR benchmark of seven speech-to-text systems on six datasets, stopped before every planned comparison finished",
                             "title": "A question too big for a demo 2×2",
                             "caption": "The run used seven speech-to-text systems, 6 datasets, and four preprocessing options. It ran for about six hours and was stopped before every planned comparison finished."
                         }
@@ -97,7 +97,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/18-samples-library.webp",
-                            "alt": "AudioBench sample library table with annotated clips marked Complete",
+                            "alt": "AudioBench sample library table with hand-transcribed speech clips marked Complete",
                             "title": "Already labelled",
                             "caption": "Complete means a human already wrote the transcript. Nobody re-listens from scratch."
                         },
@@ -117,7 +117,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/01-prepare-lab.webp",
-                            "alt": "AudioBench Preprocess Lab showing The Works pipeline of seven audio processors in slot order",
+                            "alt": "AudioBench Preprocess Lab showing The Works, a reusable pipeline of seven audio-preprocessing steps in slot order",
                             "title": "A pipeline, not a file",
                             "caption": "Name the sequence of audio clean-up steps, run it on any clip, and compare the waveforms. The work is reusable."
                         },
@@ -157,7 +157,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/audiobench/03-servers-local-ready.webp",
-                            "alt": "AudioBench Servers page with a local Whisper Small bench server in the ready state",
+                            "alt": "AudioBench Servers page with a local Whisper Small speech-to-text server in the ready state",
                             "title": "Iterate on the laptop",
                             "caption": "A local Whisper Small server. Catch mistakes here so the team is not waiting on cloud for every code change."
                         },
@@ -222,7 +222,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/reflection-begin.png",
-                            "alt": "Ask Krishna opening screen with the Hare Krishna mahamantra and a Begin action",
+                            "alt": "Ask Krishna Bhagavad Gita app opening screen with the Hare Krishna mahamantra and a Begin action",
                             "title": "Begin",
                             "caption": "The opening screen starts from the Hare Krishna mahamantra."
                         },
@@ -243,7 +243,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/reflection-passage.png",
-                            "alt": "Ask Krishna passage screen with Sanskrit and English verses plus Read in Gita and Save actions",
+                            "alt": "Ask Krishna passage screen with a Bhagavad Gita verse in Sanskrit and English, plus Read in Gita and Save actions",
                             "title": "Receive a passage",
                             "caption": "A random passage opened while the question stays in your mind, with actions to read it in context or save it."
                         }
@@ -256,28 +256,28 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/read-index.png",
-                            "alt": "Ask Krishna Read Gita index showing a chapter picker and a numbered shloka grid",
+                            "alt": "Ask Krishna Read Gita index with a Bhagavad Gita chapter picker and a numbered shloka grid",
                             "title": "Chapter index",
                             "caption": "All 18 chapters are reachable from the verse index."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/read-reader.png",
-                            "alt": "Ask Krishna Read Gita reader showing Sanskrit and the English meaning of a shloka",
+                            "alt": "Ask Krishna Read Gita reader showing a Bhagavad Gita shloka in Sanskrit with its English meaning",
                             "title": "English meaning",
                             "caption": "A single shloka with Sanskrit and the English meaning."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/read-hindi.png",
-                            "alt": "Ask Krishna Read Gita reader in Hindi showing Sanskrit and the Hindi meaning of a shloka",
+                            "alt": "Ask Krishna Read Gita reader showing a Bhagavad Gita shloka in Sanskrit with its Hindi meaning",
                             "title": "Hindi meaning",
                             "caption": "The same reader with the Hindi meaning."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/ask-krishna/saved-card.png",
-                            "alt": "Exported Ask Krishna PNG card with Sanskrit verses and English translation",
+                            "alt": "Ask Krishna saved PNG card with a Bhagavad Gita verse in Sanskrit and its English translation",
                             "title": "Saved card",
                             "caption": "A passage or verse saved as a PNG generated in the browser."
                         }
@@ -343,7 +343,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/media-search-engine/upload-indexing.png",
-                            "alt": "Aftersight upload page showing media moving through store, describe, and index stages",
+                            "alt": "Aftersight AI image search upload page showing media moving through store, describe, and index stages",
                             "title": "Ingestion pipeline",
                             "caption": "Media moves through store, describe, and index stages before retrieval."
                         },
@@ -364,14 +364,14 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/media-search-engine/agreement-search.png",
-                            "alt": "Aftersight grid of image results returned for the search term Agreement",
+                            "alt": "Aftersight semantic image search results grid for the query Agreement",
                             "title": "Concept search",
                             "caption": "The same retrieval surface can present a compact visual overview for a broader concept."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/media-search-engine/agreement-detail.png",
-                            "alt": "Aftersight media detail view showing an agreement image, generated summary, and relevance controls",
+                            "alt": "Aftersight media detail view with an agreement image, its AI-generated summary, file metadata, and relevance controls",
                             "title": "Result inspection",
                             "caption": "A selected result exposes the source image, generated summary, file metadata, management actions, and relevance feedback."
                         }
@@ -430,42 +430,42 @@
                             "source": {
                                 "type": "image",
                                 "src": "./assets/projects/pixtyle/day-one-original.jpg",
-                                "alt": "Original daylight photograph of a carved landmark and surrounding architecture",
+                                "alt": "Original daylight photograph of a carved landmark and surrounding architecture, before Pixtyle styling",
                                 "title": "Original"
                             },
                             "variants": [
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-one-k-means.jpg",
-                                    "alt": "Daylight landmark transformed with K-means color clustering",
+                                    "alt": "Pixtyle K-means color clustering applied to a daylight photo of a carved landmark",
                                     "title": "K-means",
                                     "label": "K-means"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-one-enhanced.jpg",
-                                    "alt": "Daylight landmark transformed with enhanced color clustering",
+                                    "alt": "Pixtyle enhanced color clustering applied to a daylight photo of a carved landmark",
                                     "title": "Enhanced",
                                     "label": "Enhanced"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-one-edge-pop.jpg",
-                                    "alt": "Daylight landmark stylized with emphasized edges",
+                                    "alt": "Pixtyle Edge Pop style emphasizing the edges in a daylight photo of a carved landmark",
                                     "title": "Edge Pop",
                                     "label": "Edge Pop"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-one-fourier.jpg",
-                                    "alt": "Daylight landmark processed with the Fourier transform style",
+                                    "alt": "Pixtyle Fourier filtering style applied to a daylight photo of a carved landmark",
                                     "title": "Fourier",
                                     "label": "Fourier"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-one-combo.jpg",
-                                    "alt": "Daylight landmark processed with the combined cartoon transform",
+                                    "alt": "Pixtyle combined cartoon style applied to a daylight photo of a carved landmark",
                                     "title": "Combo",
                                     "label": "Combo"
                                 }
@@ -477,42 +477,42 @@
                             "source": {
                                 "type": "image",
                                 "src": "./assets/projects/pixtyle/day-two-original.jpg",
-                                "alt": "Original daylight photograph of prayer wheels and colorful flags",
+                                "alt": "Original daylight photograph of prayer wheels and colorful flags, before Pixtyle styling",
                                 "title": "Original"
                             },
                             "variants": [
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-two-k-means.jpg",
-                                    "alt": "Prayer wheels transformed with K-means color clustering",
+                                    "alt": "Pixtyle K-means color clustering applied to a photo of prayer wheels and colorful flags",
                                     "title": "K-means",
                                     "label": "K-means"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-two-enhanced.jpg",
-                                    "alt": "Prayer wheels transformed with enhanced color clustering",
+                                    "alt": "Pixtyle enhanced color clustering applied to a photo of prayer wheels and colorful flags",
                                     "title": "Enhanced",
                                     "label": "Enhanced"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-two-edge-pop.jpg",
-                                    "alt": "Prayer wheels stylized with emphasized edges",
+                                    "alt": "Pixtyle Edge Pop style emphasizing the edges in a photo of prayer wheels and colorful flags",
                                     "title": "Edge Pop",
                                     "label": "Edge Pop"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-two-fourier.jpg",
-                                    "alt": "Prayer wheels processed with the Fourier transform style",
+                                    "alt": "Pixtyle Fourier filtering style applied to a photo of prayer wheels and colorful flags",
                                     "title": "Fourier",
                                     "label": "Fourier"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/day-two-combo.jpg",
-                                    "alt": "Prayer wheels processed with the combined cartoon transform",
+                                    "alt": "Pixtyle combined cartoon style applied to a photo of prayer wheels and colorful flags",
                                     "title": "Combo",
                                     "label": "Combo"
                                 }
@@ -524,42 +524,42 @@
                             "source": {
                                 "type": "image",
                                 "src": "./assets/projects/pixtyle/night-original.jpg",
-                                "alt": "Original night photograph of a tree and grass under artificial light",
+                                "alt": "Original night photograph of a tree and grass under artificial light, before Pixtyle styling",
                                 "title": "Original"
                             },
                             "variants": [
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/night-k-means.jpg",
-                                    "alt": "Night landscape transformed with K-means color clustering",
+                                    "alt": "Pixtyle K-means color clustering applied to a night photo of a tree and grass",
                                     "title": "K-means",
                                     "label": "K-means"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/night-enhanced.jpg",
-                                    "alt": "Night landscape transformed with enhanced color clustering",
+                                    "alt": "Pixtyle enhanced color clustering applied to a night photo of a tree and grass",
                                     "title": "Enhanced",
                                     "label": "Enhanced"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/night-edge-pop.jpg",
-                                    "alt": "Night landscape stylized with emphasized edges",
+                                    "alt": "Pixtyle Edge Pop style emphasizing the edges in a night photo of a tree and grass",
                                     "title": "Edge Pop",
                                     "label": "Edge Pop"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/night-fourier.jpg",
-                                    "alt": "Night landscape processed with the Fourier transform style",
+                                    "alt": "Pixtyle Fourier filtering style applied to a night photo of a tree and grass",
                                     "title": "Fourier",
                                     "label": "Fourier"
                                 },
                                 {
                                     "type": "image",
                                     "src": "./assets/projects/pixtyle/night-combo.jpg",
-                                    "alt": "Night landscape processed with the combined cartoon transform",
+                                    "alt": "Pixtyle combined cartoon style applied to a night photo of a tree and grass",
                                     "title": "Combo",
                                     "label": "Combo"
                                 }
@@ -574,31 +574,31 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/pixtyle/deer-vs-kmeans.gif",
-                            "alt": "Deer clip with original on the left and K-means on the right, advancing on the same timeline",
+                            "alt": "Pixtyle video comparison of a deer clip: original on the left and K-means on the right, advancing on the same timeline",
                             "title": "Original vs K-means"
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/pixtyle/deer-vs-enhanced.gif",
-                            "alt": "Deer clip with original on the left and Enhanced on the right, advancing on the same timeline",
+                            "alt": "Pixtyle video comparison of a deer clip: original on the left and Enhanced on the right, advancing on the same timeline",
                             "title": "Original vs Enhanced"
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/pixtyle/deer-vs-edge-pop.gif",
-                            "alt": "Deer clip with original on the left and Edge Pop on the right, advancing on the same timeline",
+                            "alt": "Pixtyle video comparison of a deer clip: original on the left and Edge Pop on the right, advancing on the same timeline",
                             "title": "Original vs Edge Pop"
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/pixtyle/deer-vs-fourier.gif",
-                            "alt": "Deer clip with original on the left and Fourier on the right, advancing on the same timeline",
+                            "alt": "Pixtyle video comparison of a deer clip: original on the left and Fourier on the right, advancing on the same timeline",
                             "title": "Original vs Fourier"
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/pixtyle/deer-vs-combo.gif",
-                            "alt": "Deer clip with original on the left and Combo on the right, advancing on the same timeline",
+                            "alt": "Pixtyle video comparison of a deer clip: original on the left and Combo on the right, advancing on the same timeline",
                             "title": "Original vs Combo"
                         }
                     ]
@@ -662,42 +662,42 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/flodoro/ambient-audio.png",
-                            "alt": "Flodoro audio settings with playlist, track, transport, and volume controls",
+                            "alt": "Flodoro Pomodoro timer audio settings with playlist, track, transport, and volume controls for local music",
                             "title": "Local music controls",
                             "caption": "Playlist, track, transport, volume, and scrubbing stay inside the page for user-selected local audio."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/flodoro/playlist-manager.png",
-                            "alt": "Flodoro playlist manager for adding and managing local music folders",
+                            "alt": "Flodoro playlist manager for adding local music folders to the Pomodoro timer",
                             "title": "Playlist manager",
                             "caption": "Add a local music folder; Flodoro builds playlists from that folder and its first-level subfolders."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/flodoro/tasks.png",
-                            "alt": "Flodoro tasks panel for adding, completing, starring, and organizing focus tasks",
+                            "alt": "Flodoro task manager panel for adding, completing, starring, and organizing focus tasks",
                             "title": "Tasks",
                             "caption": "A local task list sits beside the timer and advances after completed work sessions."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/flodoro/history.png",
-                            "alt": "Flodoro history panel listing completed focus sessions",
+                            "alt": "Flodoro history panel listing completed Pomodoro focus sessions",
                             "title": "History",
                             "caption": "Completed sessions remain available locally for review."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/flodoro/statistics.png",
-                            "alt": "Flodoro statistics panel showing session and task counts",
+                            "alt": "Flodoro statistics panel with Pomodoro work-session, break, and task counts",
                             "title": "Statistics",
                             "caption": "Local counts of work sessions, breaks, and task activity."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/flodoro/notifications.png",
-                            "alt": "Flodoro notification settings for session alerts",
+                            "alt": "Flodoro notification settings for Pomodoro session-end alerts",
                             "title": "Notifications",
                             "caption": "Chime, toast, and browser alerts can fire at session end or a few minutes early."
                         }
@@ -861,7 +861,7 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/fuzzy-hybrid-stock-trading/model-architecture.png",
-                            "alt": "Architecture diagram showing a GRU-LSTM-Attention backbone feeding three objective-specific GenFIS heads and an aggregation layer",
+                            "alt": "Fuzzy hybrid stock-trading model architecture: a GRU-LSTM-Attention backbone feeding three objective-specific GenFIS fuzzy-inference heads and an aggregation layer",
                             "title": "Hybrid model architecture",
                             "caption": "A GRU-LSTM-Attention backbone feeds objective-specific GenFIS heads for cumulative reward, Sharpe ratio, and maximum drawdown before aggregation."
                         }
@@ -920,14 +920,14 @@
                         {
                             "type": "image",
                             "src": "./assets/projects/ai-generated-image-classifier/training-curves-swin-v2-t.png",
-                            "alt": "Loss, accuracy, and F1 curves for the train and validation splits across a 25-epoch Swin V2 Tiny experiment",
+                            "alt": "AI-generated image detection training curves: loss, accuracy, and F1 on train and validation splits across a 25-epoch Swin V2 Tiny run",
                             "title": "Training and validation curves",
                             "caption": "Monitoring record for a 25-epoch Swin V2 Tiny run: loss, accuracy, and F1 on train and validation, stored with that run so the experiment’s behaviour could be judged before the next configuration change."
                         },
                         {
                             "type": "image",
                             "src": "./assets/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t.png",
-                            "alt": "Train and validation confusion matrices for the best checkpoint of the Swin V2 Tiny experiment",
+                            "alt": "Confusion matrices for the best Swin V2 Tiny checkpoint classifying AI-generated vs human-made images, train and validation splits",
                             "title": "Best-checkpoint confusion matrices",
                             "caption": "Train and validation confusion matrices for the selected checkpoint of the same Swin V2 Tiny run — evaluation evidence for that experiment, used when deciding what to try next."
                         }
