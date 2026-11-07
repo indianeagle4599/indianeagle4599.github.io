@@ -9,7 +9,9 @@ const ProjectSeo = require('../scripts/project-seo.js');
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const shellPath = join(root, 'projects', 'index.html');
 const homePath = join(root, 'index.html');
-const LASTMOD = '2026-10-30';
+const LASTMOD = '2026-11-07';
+const LLMS_ALT = `    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary">
+`;
 const HUB_TITLE = 'AI, speech and computer vision projects | Hitesh Goyal';
 const HUB_DESCRIPTION = 'AI and machine learning projects by Hitesh Goyal across speech recognition, computer vision, LLM pipelines, retrieval, research and developer tools.';
 
@@ -87,7 +89,7 @@ function pageHtml(project, seo, projectMap) {
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#000000">
     <link rel="canonical" href="${escapeHtml(seo.url)}">
-
+${LLMS_ALT}
     <link rel="icon" type="image/svg+xml" href="/assets/hg-logo.svg">
     <link rel="apple-touch-icon" href="/assets/hg-logo.svg">
 
@@ -198,8 +200,8 @@ ${relatedHtml(project, projectMap)}
     </main>
 
     <script src="/scripts/project-seo.js"></script>
-    <script src="/scripts/lenis.min.js"></script>
-    <script src="/scripts/main.js"></script>
+    <script src="/scripts/lenis.min.js" defer></script>
+    <script src="/scripts/main.js" defer></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
         data-goatcounter-settings='{"allow_local": false}'
         async src="//gc.zgo.at/count.js"></script>
@@ -360,7 +362,7 @@ ${items}
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#000000">
     <link rel="canonical" href="${ProjectSeo.ORIGIN}/projects/">
-
+${LLMS_ALT}
     <link rel="icon" type="image/svg+xml" href="/assets/hg-logo.svg">
     <link rel="apple-touch-icon" href="/assets/hg-logo.svg">
 
@@ -433,8 +435,8 @@ ${topics}
         </footer>
     </main>
 
-    <script src="/scripts/lenis.min.js"></script>
-    <script src="/scripts/main.js"></script>
+    <script src="/scripts/lenis.min.js" defer></script>
+    <script src="/scripts/main.js" defer></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
         data-goatcounter-settings='{"allow_local": false}'
         async src="//gc.zgo.at/count.js"></script>
@@ -444,34 +446,19 @@ ${topics}
 `;
 }
 
-// Live apps deployed from other repos. Confirmed 200 on 2026-10-30.
-// Ask Krishna's reader canonical is pages/read.html (also listed in that app's sitemap).
+// Live apps on this domain without their own sitemap in the portfolio repo.
 const EXTERNAL_APPS = [
-    { loc: 'https://hiteshgoyal.me/ask-krishna/', lastmod: '2026-10-31', priority: '0.7' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/read.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-1.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-2.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-3.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-4.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-5.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-6.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-7.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-8.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-9.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-10.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-11.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-12.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-13.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-14.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-15.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-16.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-17.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/ask-krishna/pages/chapter-18.html', lastmod: '2026-10-31', priority: '0.6' },
-    { loc: 'https://hiteshgoyal.me/flodoro/', lastmod: '2026-10-31', priority: '0.7' },
     { loc: 'https://hiteshgoyal.me/msi-web/', lastmod: '2026-05-20', priority: '0.6' }
 ];
 
-function sitemap(projects) {
+// Sub-apps that publish their own sitemap.xml under the same host (other GitHub Pages paths).
+const CHILD_SITEMAPS = [
+    { loc: 'https://hiteshgoyal.me/sitemap-portfolio.xml', lastmod: LASTMOD },
+    { loc: 'https://hiteshgoyal.me/ask-krishna/sitemap.xml', lastmod: '2026-10-31' },
+    { loc: 'https://hiteshgoyal.me/flodoro/sitemap.xml', lastmod: '2026-10-31' }
+];
+
+function portfolioSitemap(projects) {
     const urls = [
         `    <url>
         <loc>https://hiteshgoyal.me/</loc>
@@ -485,6 +472,12 @@ function sitemap(projects) {
         <lastmod>${LASTMOD}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
+    </url>`);
+    urls.push(`    <url>
+        <loc>https://hiteshgoyal.me/llms.txt</loc>
+        <lastmod>${LASTMOD}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
     </url>`);
     projects.forEach(project => {
         const priority = PRIORITY[project.slug] || '0.6';
@@ -507,6 +500,18 @@ function sitemap(projects) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.join('\n')}
 </urlset>
+`;
+}
+
+function sitemapIndex() {
+    const entries = CHILD_SITEMAPS.map(item => `    <sitemap>
+        <loc>${item.loc}</loc>
+        <lastmod>${item.lastmod}</lastmod>
+    </sitemap>`);
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries.join('\n')}
+</sitemapindex>
 `;
 }
 
@@ -556,5 +561,6 @@ home = home.replace(
     `${recommendationStart}\n${recommendationFallback(recommendations)}\n            ${recommendationEnd}`
 );
 await writeFile(homePath, home);
-await writeFile(join(root, 'sitemap.xml'), sitemap(projects));
-console.log(`Wrote ${projects.length} project pages, project hub, homepage fallbacks, and sitemap.xml`);
+await writeFile(join(root, 'sitemap-portfolio.xml'), portfolioSitemap(projects));
+await writeFile(join(root, 'sitemap.xml'), sitemapIndex());
+console.log(`Wrote ${projects.length} project pages, project hub, homepage fallbacks, sitemap-portfolio.xml, and sitemap index`);

@@ -2,6 +2,15 @@
 
 > Applied AI Engineer based in Bangalore, India. Canonical public profile: https://hiteshgoyal.me/
 
+## Crawl hints
+
+- Sitemap index: https://hiteshgoyal.me/sitemap.xml
+- Portfolio sitemap: https://hiteshgoyal.me/sitemap-portfolio.xml
+- Ask Krishna sitemap: https://hiteshgoyal.me/ask-krishna/sitemap.xml
+- Flodoro sitemap: https://hiteshgoyal.me/flodoro/sitemap.xml
+- LLM summary (this file): https://hiteshgoyal.me/llms.txt
+- robots.txt: https://hiteshgoyal.me/robots.txt
+
 ## Profile
 
 - Name: Hitesh Goyal

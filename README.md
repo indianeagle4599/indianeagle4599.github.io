@@ -20,7 +20,7 @@ A data-driven static portfolio for AI engineering experience, projects, timeline
 2. Visit `http://localhost:8000`.
 3. Update JSON files to refresh content without touching markup.
 
-HTML metadata, `sitemap.xml`, and `llms.txt` are generated for crawlers that do not run JavaScript. After editing `data/projects.json`, run `node tools/render-project-pages.mjs` so each `projects/<slug>/index.html` and `sitemap.xml` stay in sync. The generator also keeps the live sub-path apps (`/ask-krishna/`, its Read Gita page, `/flodoro/`, and `/msi-web/`) in the sitemap. `robots.txt` points at the sitemap.
+HTML metadata, `sitemap.xml`, `sitemap-portfolio.xml`, and `llms.txt` are generated for crawlers that do not run JavaScript. After editing `data/projects.json`, run `node tools/render-project-pages.mjs` so each `projects/<slug>/index.html` and sitemaps stay in sync. Root `sitemap.xml` is a sitemap index that links the portfolio urlset plus live sub-app sitemaps (`/ask-krishna/sitemap.xml`, `/flodoro/sitemap.xml`). `msi-web/` has no app sitemap, so it stays only in `sitemap-portfolio.xml`. `robots.txt` lists the index and those child sitemaps.
 
 ## Customising
 - **Introduction/About:** Edit `data/profile.json`.
