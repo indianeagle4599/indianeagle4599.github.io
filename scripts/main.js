@@ -414,6 +414,67 @@ async function fetchJson(url) {
     return data;
 }
 
+let responsiveImageManifest = null;
+
+async function loadResponsiveImageManifest() {
+    if (responsiveImageManifest) return responsiveImageManifest;
+    try {
+        responsiveImageManifest = await fetchJson(dataUrl('responsive-images.json'));
+    } catch (error) {
+        responsiveImageManifest = { images: {} };
+    }
+    return responsiveImageManifest;
+}
+
+function responsiveImageKey(src) {
+    return String(src || '').trim().replace(/^\.\//, '').replace(/^\//, '');
+}
+
+function applySrcsetToSource(source, variants, format) {
+    const urls = variants
+        .filter(variant => variant[format])
+        .map(variant => `${assetUrl(variant[format])} ${variant.width}w`);
+    if (!urls.length) return false;
+    source.srcset = urls.join(', ');
+    source.sizes = typeof ResponsiveImages !== 'undefined'
+        ? ResponsiveImages.PROJECT_MEDIA_SIZES
+        : '(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)';
+    return true;
+}
+
+function createResponsivePicture(entry, { alt, className, loading }) {
+    const picture = document.createElement('picture');
+    const variants = Array.isArray(entry?.variants) ? entry.variants : [];
+    if (variants.length) {
+        const avif = document.createElement('source');
+        avif.type = 'image/avif';
+        if (applySrcsetToSource(avif, variants, 'avif')) picture.appendChild(avif);
+        const webp = document.createElement('source');
+        webp.type = 'image/webp';
+        if (applySrcsetToSource(webp, variants, 'webp')) picture.appendChild(webp);
+    }
+    const image = document.createElement('img');
+    image.className = className;
+    image.alt = alt;
+    image.decoding = 'async';
+    image.draggable = false;
+    if (loading) image.loading = loading;
+    if (variants.length) {
+        image.srcset = variants.filter(variant => variant.jpeg).map(variant => `${assetUrl(variant.jpeg)} ${variant.width}w`).join(', ');
+        image.sizes = typeof ResponsiveImages !== 'undefined' ? ResponsiveImages.PROJECT_MEDIA_SIZES : entry.sizes;
+        const fallbackVariant = variants[Math.floor(variants.length / 2)] || variants[0];
+        image.src = assetUrl(fallbackVariant.jpeg || entry.fallback);
+        if (entry.width && entry.height) {
+            image.width = entry.width;
+            image.height = entry.height;
+        }
+    } else {
+        image.src = assetUrl(entry?.fallback || '');
+    }
+    picture.appendChild(image);
+    return picture;
+}
+
 function escapeHtml(text) {
     return String(text || '')
         .replace(/&/g, '&amp;')
@@ -2417,14 +2478,25 @@ function createProjectMediaLeaf(item, projectTitle, ancestry) {
         link.href = src;
         link.target = '_blank';
         link.rel = 'noopener';
-        const image = document.createElement('img');
-        image.className = 'project-media-image';
-        if (isAnimatedGif(item.src)) image.dataset.src = src;
-        else image.src = src;
-        image.alt = item.alt.trim();
-        image.decoding = 'async';
-        image.draggable = false;
-        link.appendChild(image);
+        const manifestKey = responsiveImageKey(item.src);
+        const manifestEntry = responsiveImageManifest?.images?.[manifestKey];
+        if (manifestEntry?.variants?.length && !isAnimatedGif(item.src)) {
+            link.appendChild(createResponsivePicture(manifestEntry, {
+                alt: item.alt.trim(),
+                className: 'project-media-image',
+                loading: 'lazy'
+            }));
+        } else {
+            const image = document.createElement('img');
+            image.className = 'project-media-image';
+            if (isAnimatedGif(item.src)) image.dataset.src = src;
+            else image.src = src;
+            image.alt = item.alt.trim();
+            image.decoding = 'async';
+            if (!isAnimatedGif(item.src)) image.loading = 'lazy';
+            image.draggable = false;
+            link.appendChild(image);
+        }
         figure.appendChild(link);
     } else if (item.type === 'video') {
         const video = document.createElement('video');
@@ -3046,6 +3118,12 @@ function updateProjectSeo(project) {
         setMeta('meta[property="og:image:alt"]', seo.imageAlt);
         setMeta('meta[name="twitter:image:alt"]', seo.imageAlt);
     }
+    if (seo?.imageWidth) {
+        setMeta('meta[property="og:image:width"]', String(seo.imageWidth));
+        setMeta('meta[property="og:image:height"]', String(seo.imageHeight));
+    } else {
+        document.querySelectorAll('meta[property="og:image:width"], meta[property="og:image:height"]').forEach(el => el.remove());
+    }
     if (seo?.jsonLd) upsertProjectJsonLd(seo.jsonLd);
 }
 
@@ -3204,6 +3282,7 @@ function initProjectBackLink() {
 
 async function initProjectPage() {
     initProjectBackLink();
+    await loadResponsiveImageManifest();
     const slug = projectSlugFromLocation();
     if (!slug) {
         window.location.replace('/#projects');

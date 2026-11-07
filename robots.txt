@@ -14,4 +14,9 @@ Allow: /
 User-agent: *
 Allow: /
 
+# Machine-readable profile for AI agents: https://hiteshgoyal.me/llms.txt
+
 Sitemap: https://hiteshgoyal.me/sitemap.xml
+Sitemap: https://hiteshgoyal.me/sitemap-portfolio.xml
+Sitemap: https://hiteshgoyal.me/ask-krishna/sitemap.xml
+Sitemap: https://hiteshgoyal.me/flodoro/sitemap.xml

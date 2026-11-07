@@ -1,0 +1,2465 @@
+{
+  "generatedAt": "2026-11-07",
+  "images": {
+    "assets/hitesh-goyal-portrait.jpg": {
+      "id": "assets/hitesh-goyal-portrait.jpg",
+      "width": 800,
+      "height": 1000,
+      "sizes": "(max-width: 640px) min(72vw, 14.5rem), 16.5rem",
+      "fallback": "assets/hitesh-goyal-portrait.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/hitesh-goyal-portrait/w260.avif",
+          "webp": "assets/_responsive/hitesh-goyal-portrait/w260.webp",
+          "jpeg": "assets/_responsive/hitesh-goyal-portrait/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/hitesh-goyal-portrait/w320.avif",
+          "webp": "assets/_responsive/hitesh-goyal-portrait/w320.webp",
+          "jpeg": "assets/_responsive/hitesh-goyal-portrait/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/hitesh-goyal-portrait/w480.avif",
+          "webp": "assets/_responsive/hitesh-goyal-portrait/w480.webp",
+          "jpeg": "assets/_responsive/hitesh-goyal-portrait/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/hitesh-goyal-portrait/w640.avif",
+          "webp": "assets/_responsive/hitesh-goyal-portrait/w640.webp",
+          "jpeg": "assets/_responsive/hitesh-goyal-portrait/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/hitesh-goyal-portrait/w800.avif",
+          "webp": "assets/_responsive/hitesh-goyal-portrait/w800.webp",
+          "jpeg": "assets/_responsive/hitesh-goyal-portrait/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t.png": {
+      "id": "assets/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t.png",
+      "width": 2000,
+      "height": 800,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w260.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w260.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w320.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w320.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w480.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w480.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w640.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w640.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w800.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w800.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w960.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w960.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1200.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1600.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1600.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1920.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1920.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w1920.jpg"
+        },
+        {
+          "width": 2000,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w2000.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w2000.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/confusion-matrix-swin-v2-t/w2000.jpg"
+        }
+      ]
+    },
+    "assets/projects/ai-generated-image-classifier/training-curves-swin-v2-t.png": {
+      "id": "assets/projects/ai-generated-image-classifier/training-curves-swin-v2-t.png",
+      "width": 1800,
+      "height": 500,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ai-generated-image-classifier/training-curves-swin-v2-t.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w260.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w260.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w320.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w320.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w480.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w480.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w640.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w640.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w800.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w800.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w960.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w960.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1200.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1600.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1600.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1600.jpg"
+        },
+        {
+          "width": 1800,
+          "avif": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1800.avif",
+          "webp": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1800.webp",
+          "jpeg": "assets/_responsive/projects/ai-generated-image-classifier/training-curves-swin-v2-t/w1800.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/read-hindi.png": {
+      "id": "assets/projects/ask-krishna/read-hindi.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/read-hindi.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/read-hindi/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-hindi/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-hindi/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/read-index.png": {
+      "id": "assets/projects/ask-krishna/read-index.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/read-index.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/read-index/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-index/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-index/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/read-reader.png": {
+      "id": "assets/projects/ask-krishna/read-reader.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/read-reader.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/read-reader/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/read-reader/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/read-reader/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/reflection-begin.png": {
+      "id": "assets/projects/ask-krishna/reflection-begin.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/reflection-begin.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-begin/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-begin/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-begin/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/reflection-passage.png": {
+      "id": "assets/projects/ask-krishna/reflection-passage.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/reflection-passage.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-passage/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-passage/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-passage/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/reflection-purification.png": {
+      "id": "assets/projects/ask-krishna/reflection-purification.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/reflection-purification.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-purification/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-purification/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-purification/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/reflection-question.png": {
+      "id": "assets/projects/ask-krishna/reflection-question.png",
+      "width": 1280,
+      "height": 960,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/reflection-question.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w1200.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w1200.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w1200.jpg"
+        },
+        {
+          "width": 1280,
+          "avif": "assets/_responsive/projects/ask-krishna/reflection-question/w1280.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/reflection-question/w1280.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/reflection-question/w1280.jpg"
+        }
+      ]
+    },
+    "assets/projects/ask-krishna/saved-card.png": {
+      "id": "assets/projects/ask-krishna/saved-card.png",
+      "width": 1080,
+      "height": 1502,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/ask-krishna/saved-card.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w260.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w260.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w320.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w320.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w480.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w480.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w640.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w640.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w800.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w800.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w960.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w960.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w960.jpg"
+        },
+        {
+          "width": 1080,
+          "avif": "assets/_responsive/projects/ask-krishna/saved-card/w1080.avif",
+          "webp": "assets/_responsive/projects/ask-krishna/saved-card/w1080.webp",
+          "jpeg": "assets/_responsive/projects/ask-krishna/saved-card/w1080.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/01-prepare-lab.webp": {
+      "id": "assets/projects/audiobench/01-prepare-lab.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/01-prepare-lab.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/01-prepare-lab/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/01-prepare-lab/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/01-prepare-lab/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/03-servers-local-ready.webp": {
+      "id": "assets/projects/audiobench/03-servers-local-ready.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/03-servers-local-ready.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/03-servers-local-ready/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/13-wny-overview.webp": {
+      "id": "assets/projects/audiobench/13-wny-overview.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/13-wny-overview.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/13-wny-overview/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/13-wny-overview/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/13-wny-overview/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/18-samples-library-tags.webp": {
+      "id": "assets/projects/audiobench/18-samples-library-tags.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/18-samples-library-tags.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library-tags/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/18-samples-library.webp": {
+      "id": "assets/projects/audiobench/18-samples-library.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/18-samples-library.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/18-samples-library/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/18-samples-library/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/18-samples-library/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/24-datasets.webp": {
+      "id": "assets/projects/audiobench/24-datasets.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/24-datasets.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/24-datasets/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/24-datasets/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/24-datasets/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/30-results-leaderboard-crop.webp": {
+      "id": "assets/projects/audiobench/30-results-leaderboard-crop.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/30-results-leaderboard-crop.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/30-results-leaderboard-crop/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/audiobench/32-results-heatmap-by-model.webp": {
+      "id": "assets/projects/audiobench/32-results-heatmap-by-model.webp",
+      "width": 1920,
+      "height": 1080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/audiobench/32-results-heatmap-by-model.webp",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w260.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w260.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w320.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w320.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w480.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w480.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w640.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w640.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w800.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w800.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w960.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w960.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1200.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1200.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1600.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1600.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1920.avif",
+          "webp": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1920.webp",
+          "jpeg": "assets/_responsive/projects/audiobench/32-results-heatmap-by-model/w1920.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/ambient-audio.png": {
+      "id": "assets/projects/flodoro/ambient-audio.png",
+      "width": 460,
+      "height": 580,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/ambient-audio.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/ambient-audio/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/ambient-audio/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/ambient-audio/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/ambient-audio/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/ambient-audio/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/ambient-audio/w320.jpg"
+        },
+        {
+          "width": 460,
+          "avif": "assets/_responsive/projects/flodoro/ambient-audio/w460.avif",
+          "webp": "assets/_responsive/projects/flodoro/ambient-audio/w460.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/ambient-audio/w460.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/history.png": {
+      "id": "assets/projects/flodoro/history.png",
+      "width": 460,
+      "height": 580,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/history.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/history/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/history/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/history/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/history/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/history/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/history/w320.jpg"
+        },
+        {
+          "width": 460,
+          "avif": "assets/_responsive/projects/flodoro/history/w460.avif",
+          "webp": "assets/_responsive/projects/flodoro/history/w460.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/history/w460.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/notifications.png": {
+      "id": "assets/projects/flodoro/notifications.png",
+      "width": 460,
+      "height": 580,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/notifications.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/notifications/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/notifications/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/notifications/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/notifications/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/notifications/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/notifications/w320.jpg"
+        },
+        {
+          "width": 460,
+          "avif": "assets/_responsive/projects/flodoro/notifications/w460.avif",
+          "webp": "assets/_responsive/projects/flodoro/notifications/w460.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/notifications/w460.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/playlist-manager.png": {
+      "id": "assets/projects/flodoro/playlist-manager.png",
+      "width": 460,
+      "height": 580,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/playlist-manager.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/playlist-manager/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/playlist-manager/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/playlist-manager/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/playlist-manager/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/playlist-manager/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/playlist-manager/w320.jpg"
+        },
+        {
+          "width": 460,
+          "avif": "assets/_responsive/projects/flodoro/playlist-manager/w460.avif",
+          "webp": "assets/_responsive/projects/flodoro/playlist-manager/w460.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/playlist-manager/w460.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/statistics.png": {
+      "id": "assets/projects/flodoro/statistics.png",
+      "width": 460,
+      "height": 580,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/statistics.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/statistics/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/statistics/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/statistics/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/statistics/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/statistics/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/statistics/w320.jpg"
+        },
+        {
+          "width": 460,
+          "avif": "assets/_responsive/projects/flodoro/statistics/w460.avif",
+          "webp": "assets/_responsive/projects/flodoro/statistics/w460.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/statistics/w460.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/tasks.png": {
+      "id": "assets/projects/flodoro/tasks.png",
+      "width": 460,
+      "height": 580,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/tasks.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/tasks/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/tasks/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/tasks/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/tasks/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/tasks/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/tasks/w320.jpg"
+        },
+        {
+          "width": 460,
+          "avif": "assets/_responsive/projects/flodoro/tasks/w460.avif",
+          "webp": "assets/_responsive/projects/flodoro/tasks/w460.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/tasks/w460.jpg"
+        }
+      ]
+    },
+    "assets/projects/flodoro/timer.png": {
+      "id": "assets/projects/flodoro/timer.png",
+      "width": 1440,
+      "height": 1000,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/flodoro/timer.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/flodoro/timer/w260.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w260.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/flodoro/timer/w320.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w320.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/flodoro/timer/w480.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w480.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/flodoro/timer/w640.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w640.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/flodoro/timer/w800.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w800.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/flodoro/timer/w960.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w960.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/flodoro/timer/w1200.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w1200.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w1200.jpg"
+        },
+        {
+          "width": 1440,
+          "avif": "assets/_responsive/projects/flodoro/timer/w1440.avif",
+          "webp": "assets/_responsive/projects/flodoro/timer/w1440.webp",
+          "jpeg": "assets/_responsive/projects/flodoro/timer/w1440.jpg"
+        }
+      ]
+    },
+    "assets/projects/fuzzy-hybrid-stock-trading/model-architecture.png": {
+      "id": "assets/projects/fuzzy-hybrid-stock-trading/model-architecture.png",
+      "width": 3470,
+      "height": 1698,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/fuzzy-hybrid-stock-trading/model-architecture.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w260.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w260.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w320.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w320.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w480.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w480.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w640.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w640.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w800.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w800.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w960.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w960.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1200.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1200.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1600.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1600.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1920.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1920.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w1920.jpg"
+        },
+        {
+          "width": 3470,
+          "avif": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w3470.avif",
+          "webp": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w3470.webp",
+          "jpeg": "assets/_responsive/projects/fuzzy-hybrid-stock-trading/model-architecture/w3470.jpg"
+        }
+      ]
+    },
+    "assets/projects/media-search-engine/agreement-detail.png": {
+      "id": "assets/projects/media-search-engine/agreement-detail.png",
+      "width": 3189,
+      "height": 1722,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/media-search-engine/agreement-detail.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w260.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w260.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w320.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w320.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w480.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w480.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w640.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w640.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w800.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w800.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w960.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w960.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w1200.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w1200.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w1600.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w1600.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w1920.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w1920.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w1920.jpg"
+        },
+        {
+          "width": 3189,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-detail/w3189.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-detail/w3189.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-detail/w3189.jpg"
+        }
+      ]
+    },
+    "assets/projects/media-search-engine/agreement-search.png": {
+      "id": "assets/projects/media-search-engine/agreement-search.png",
+      "width": 3199,
+      "height": 1726,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/media-search-engine/agreement-search.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w260.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w260.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w320.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w320.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w480.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w480.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w640.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w640.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w800.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w800.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w960.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w960.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w1200.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w1200.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w1600.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w1600.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w1920.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w1920.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w1920.jpg"
+        },
+        {
+          "width": 3199,
+          "avif": "assets/_responsive/projects/media-search-engine/agreement-search/w3199.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/agreement-search/w3199.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/agreement-search/w3199.jpg"
+        }
+      ]
+    },
+    "assets/projects/media-search-engine/public-building-search.png": {
+      "id": "assets/projects/media-search-engine/public-building-search.png",
+      "width": 3199,
+      "height": 1736,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/media-search-engine/public-building-search.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w260.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w260.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w320.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w320.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w480.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w480.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w640.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w640.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w800.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w800.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w960.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w960.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w1200.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w1200.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w1600.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w1600.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w1920.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w1920.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w1920.jpg"
+        },
+        {
+          "width": 3199,
+          "avif": "assets/_responsive/projects/media-search-engine/public-building-search/w3199.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/public-building-search/w3199.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/public-building-search/w3199.jpg"
+        }
+      ]
+    },
+    "assets/projects/media-search-engine/source-building.jpg": {
+      "id": "assets/projects/media-search-engine/source-building.jpg",
+      "width": 4160,
+      "height": 2080,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/media-search-engine/source-building.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w260.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w260.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w320.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w320.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w480.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w480.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w640.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w640.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w800.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w800.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w960.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w960.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w1200.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w1200.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w1600.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w1600.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w1920.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w1920.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w1920.jpg"
+        },
+        {
+          "width": 4160,
+          "avif": "assets/_responsive/projects/media-search-engine/source-building/w4160.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/source-building/w4160.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/source-building/w4160.jpg"
+        }
+      ]
+    },
+    "assets/projects/media-search-engine/upload-indexing.png": {
+      "id": "assets/projects/media-search-engine/upload-indexing.png",
+      "width": 3199,
+      "height": 1732,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/media-search-engine/upload-indexing.png",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w260.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w260.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w320.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w320.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w480.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w480.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w640.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w640.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w800.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w800.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w800.jpg"
+        },
+        {
+          "width": 960,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w960.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w960.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w960.jpg"
+        },
+        {
+          "width": 1200,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w1200.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w1200.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w1200.jpg"
+        },
+        {
+          "width": 1600,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w1600.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w1600.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w1600.jpg"
+        },
+        {
+          "width": 1920,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w1920.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w1920.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w1920.jpg"
+        },
+        {
+          "width": 3199,
+          "avif": "assets/_responsive/projects/media-search-engine/upload-indexing/w3199.avif",
+          "webp": "assets/_responsive/projects/media-search-engine/upload-indexing/w3199.webp",
+          "jpeg": "assets/_responsive/projects/media-search-engine/upload-indexing/w3199.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-one-combo.jpg": {
+      "id": "assets/projects/pixtyle/day-one-combo.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-one-combo.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-combo/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-combo/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-combo/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-combo/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-combo/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-combo/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-combo/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-combo/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-combo/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-combo/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-combo/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-combo/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-combo/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-combo/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-combo/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-one-edge-pop.jpg": {
+      "id": "assets/projects/pixtyle/day-one-edge-pop.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-one-edge-pop.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-edge-pop/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-one-enhanced.jpg": {
+      "id": "assets/projects/pixtyle/day-one-enhanced.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-one-enhanced.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-enhanced/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-enhanced/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-enhanced/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-enhanced/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-enhanced/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-enhanced/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-enhanced/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-enhanced/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-enhanced/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-enhanced/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-enhanced/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-enhanced/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-enhanced/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-enhanced/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-enhanced/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-one-fourier.jpg": {
+      "id": "assets/projects/pixtyle/day-one-fourier.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-one-fourier.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-fourier/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-fourier/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-fourier/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-fourier/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-fourier/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-fourier/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-fourier/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-fourier/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-fourier/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-fourier/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-fourier/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-fourier/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-fourier/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-fourier/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-fourier/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-one-k-means.jpg": {
+      "id": "assets/projects/pixtyle/day-one-k-means.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-one-k-means.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-k-means/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-k-means/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-k-means/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-k-means/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-k-means/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-k-means/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-k-means/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-k-means/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-k-means/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-k-means/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-k-means/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-k-means/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-k-means/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-k-means/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-k-means/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-one-original.jpg": {
+      "id": "assets/projects/pixtyle/day-one-original.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-one-original.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-original/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-original/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-original/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-original/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-original/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-original/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-original/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-original/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-original/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-original/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-original/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-original/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-one-original/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-one-original/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-one-original/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-two-combo.jpg": {
+      "id": "assets/projects/pixtyle/day-two-combo.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-two-combo.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-combo/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-combo/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-combo/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-combo/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-combo/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-combo/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-combo/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-combo/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-combo/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-combo/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-combo/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-combo/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-combo/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-combo/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-combo/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-two-edge-pop.jpg": {
+      "id": "assets/projects/pixtyle/day-two-edge-pop.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-two-edge-pop.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-edge-pop/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-two-enhanced.jpg": {
+      "id": "assets/projects/pixtyle/day-two-enhanced.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-two-enhanced.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-enhanced/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-enhanced/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-enhanced/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-enhanced/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-enhanced/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-enhanced/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-enhanced/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-enhanced/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-enhanced/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-enhanced/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-enhanced/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-enhanced/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-enhanced/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-enhanced/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-enhanced/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-two-fourier.jpg": {
+      "id": "assets/projects/pixtyle/day-two-fourier.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-two-fourier.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-fourier/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-fourier/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-fourier/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-fourier/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-fourier/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-fourier/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-fourier/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-fourier/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-fourier/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-fourier/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-fourier/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-fourier/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-fourier/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-fourier/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-fourier/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-two-k-means.jpg": {
+      "id": "assets/projects/pixtyle/day-two-k-means.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-two-k-means.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-k-means/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-k-means/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-k-means/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-k-means/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-k-means/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-k-means/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-k-means/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-k-means/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-k-means/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-k-means/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-k-means/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-k-means/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-k-means/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-k-means/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-k-means/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/day-two-original.jpg": {
+      "id": "assets/projects/pixtyle/day-two-original.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/day-two-original.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-original/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-original/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-original/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-original/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-original/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-original/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-original/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-original/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-original/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-original/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-original/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-original/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/day-two-original/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/day-two-original/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/day-two-original/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/night-combo.jpg": {
+      "id": "assets/projects/pixtyle/night-combo.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/night-combo.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/night-combo/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-combo/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-combo/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/night-combo/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-combo/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-combo/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/night-combo/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-combo/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-combo/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/night-combo/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-combo/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-combo/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/night-combo/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-combo/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-combo/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/night-edge-pop.jpg": {
+      "id": "assets/projects/pixtyle/night-edge-pop.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/night-edge-pop.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/night-edge-pop/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-edge-pop/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-edge-pop/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/night-edge-pop/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-edge-pop/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-edge-pop/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/night-edge-pop/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-edge-pop/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-edge-pop/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/night-edge-pop/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-edge-pop/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-edge-pop/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/night-edge-pop/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-edge-pop/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-edge-pop/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/night-enhanced.jpg": {
+      "id": "assets/projects/pixtyle/night-enhanced.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/night-enhanced.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/night-enhanced/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-enhanced/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-enhanced/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/night-enhanced/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-enhanced/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-enhanced/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/night-enhanced/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-enhanced/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-enhanced/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/night-enhanced/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-enhanced/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-enhanced/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/night-enhanced/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-enhanced/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-enhanced/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/night-fourier.jpg": {
+      "id": "assets/projects/pixtyle/night-fourier.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/night-fourier.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/night-fourier/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-fourier/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-fourier/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/night-fourier/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-fourier/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-fourier/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/night-fourier/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-fourier/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-fourier/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/night-fourier/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-fourier/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-fourier/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/night-fourier/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-fourier/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-fourier/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/night-k-means.jpg": {
+      "id": "assets/projects/pixtyle/night-k-means.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/night-k-means.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/night-k-means/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-k-means/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-k-means/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/night-k-means/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-k-means/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-k-means/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/night-k-means/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-k-means/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-k-means/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/night-k-means/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-k-means/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-k-means/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/night-k-means/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-k-means/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-k-means/w800.jpg"
+        }
+      ]
+    },
+    "assets/projects/pixtyle/night-original.jpg": {
+      "id": "assets/projects/pixtyle/night-original.jpg",
+      "width": 800,
+      "height": 600,
+      "sizes": "(min-width: 900px) min(1100px, calc(100vw - 5rem)), calc(100vw - 2.5rem)",
+      "fallback": "assets/projects/pixtyle/night-original.jpg",
+      "variants": [
+        {
+          "width": 260,
+          "avif": "assets/_responsive/projects/pixtyle/night-original/w260.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-original/w260.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-original/w260.jpg"
+        },
+        {
+          "width": 320,
+          "avif": "assets/_responsive/projects/pixtyle/night-original/w320.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-original/w320.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-original/w320.jpg"
+        },
+        {
+          "width": 480,
+          "avif": "assets/_responsive/projects/pixtyle/night-original/w480.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-original/w480.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-original/w480.jpg"
+        },
+        {
+          "width": 640,
+          "avif": "assets/_responsive/projects/pixtyle/night-original/w640.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-original/w640.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-original/w640.jpg"
+        },
+        {
+          "width": 800,
+          "avif": "assets/_responsive/projects/pixtyle/night-original/w800.avif",
+          "webp": "assets/_responsive/projects/pixtyle/night-original/w800.webp",
+          "jpeg": "assets/_responsive/projects/pixtyle/night-original/w800.jpg"
+        }
+      ]
+    }
+  }
+}

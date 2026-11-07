@@ -98,6 +98,18 @@
             .filter(url => /^https:\/\//i.test(url));
     }
 
+    function githubRepository(project) {
+        return httpsLinks(project).find(url => /^https:\/\/github\.com\/[^/]+\/[^/]+/i.test(url));
+    }
+
+    function primaryProgrammingLanguage(project) {
+        const tags = Array.isArray(project.tags) ? project.tags : [];
+        if (tags.includes('Python')) return 'Python';
+        if (tags.includes('JavaScript')) return 'JavaScript';
+        if (tags.includes('TypeScript')) return 'TypeScript';
+        return '';
+    }
+
     function forProject(project) {
         const slug = String(project.slug || '').trim();
         const name = slug === 'ai-generated-image-classifier'
@@ -135,6 +147,15 @@
         if (schema.applicationCategory) work.applicationCategory = schema.applicationCategory;
         if (typeof project.license === 'string' && project.license.trim()) work.license = project.license.trim();
         if (sameAs.length) work.sameAs = sameAs;
+        const codeRepository = githubRepository(project);
+        if (codeRepository) {
+            work.codeRepository = codeRepository;
+            const language = primaryProgrammingLanguage(project);
+            if (language) work.programmingLanguage = language;
+            work['@type'] = schema.type === 'SoftwareSourceCode'
+                ? 'SoftwareSourceCode'
+                : [schema.type, 'SoftwareSourceCode'];
+        }
         if (slug === 'audiobench') {
             work.sourceOrganization = {
                 '@type': 'Organization',

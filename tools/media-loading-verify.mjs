@@ -65,8 +65,8 @@ async function runSource() {
     if (!/if \(isAnimatedGif\(item\.src\)\) image\.dataset\.src = src;\s*else image\.src = src;/.test(leafBody)) {
         throw new Error('static/GIF defer decision is no longer keyed on isAnimatedGif(item.src)');
     }
-    if (/image\.loading = ['"]lazy['"]/.test(leafBody)) {
-        throw new Error('project-media images still set loading="lazy" (blocks eager static + anticipatory GIF loading)');
+    if (/image\.loading = ['"]lazy['"]/.test(leafBody) && !/!isAnimatedGif\(item\.src\)/.test(leafBody)) {
+        throw new Error('project-media images still set loading="lazy" for GIFs (blocks anticipatory GIF loading)');
     }
     if (!/\[-1, 0, 1\]\.forEach/.test(js)) {
         throw new Error('warmAdjacentMediaLeaves no longer warms a prev/current/next window');

@@ -17,6 +17,7 @@
     <meta name="geo.region" content="IN-KA">
     <meta name="geo.placename" content="Bangalore">
     <link rel="canonical" href="https://hiteshgoyal.me/">
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary">
     <link rel="author" href="https://www.linkedin.com/in/hitesh-goyal-5732bb208/">
     <link rel="icon" type="image/svg+xml" href="assets/hg-logo.svg">
     <link rel="apple-touch-icon" href="assets/hg-logo.svg">
@@ -27,10 +28,13 @@
     <meta property="og:description"
         content="Hitesh Goyal is an Applied AI Engineer in Bangalore working on speech recognition (ASR), computer vision and LLM pipelines. MSc AI, NTU Singapore.">
     <meta property="og:url" content="https://hiteshgoyal.me/">
+    <meta property="og:locale" content="en_IN">
     <meta property="og:image" content="https://hiteshgoyal.me/assets/hitesh-goyal-portrait.jpg">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="1000">
     <meta property="og:image:alt" content="Portrait of Hitesh Goyal, Applied AI Engineer">
 
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Hitesh Goyal | Applied AI Engineer in Bangalore">
     <meta name="twitter:description"
         content="Hitesh Goyal is an Applied AI Engineer in Bangalore working on speech recognition (ASR), computer vision and LLM pipelines. MSc AI, NTU Singapore.">
@@ -74,8 +78,16 @@
                     "Hitesh Goyal Portfolio"
                 ],
                 "description": "Hitesh Goyal is an Applied AI Engineer in Bangalore working on speech recognition (ASR), computer vision and LLM pipelines. MSc AI, NTU Singapore.",
+                "inLanguage": "en",
+                "relatedLink": "https://hiteshgoyal.me/llms.txt",
                 "publisher": {
                     "@id": "https://hiteshgoyal.me/#hitesh-goyal"
+                },
+                "hasPart": {
+                    "@type": "WebPage",
+                    "@id": "https://hiteshgoyal.me/projects/#collection",
+                    "url": "https://hiteshgoyal.me/projects/",
+                    "name": "AI and machine learning projects"
                 }
             },
             {
@@ -205,7 +217,13 @@
         <div class="about-layout fade-in" aria-live="polite">
             <div class="about-media">
                 <figure class="about-portrait">
-                    <img src="assets/hitesh-goyal-portrait.jpg" alt="Portrait of Hitesh Goyal, Applied AI Engineer" width="800" height="1000" decoding="async">
+                    <!-- portrait-responsive:start -->
+                <picture>
+                    <source type="image/avif" srcset="assets/_responsive/hitesh-goyal-portrait/w260.avif 260w, assets/_responsive/hitesh-goyal-portrait/w320.avif 320w, assets/_responsive/hitesh-goyal-portrait/w480.avif 480w, assets/_responsive/hitesh-goyal-portrait/w640.avif 640w, assets/_responsive/hitesh-goyal-portrait/w800.avif 800w" sizes="(max-width: 640px) min(72vw, 14.5rem), 16.5rem">
+                    <source type="image/webp" srcset="assets/_responsive/hitesh-goyal-portrait/w260.webp 260w, assets/_responsive/hitesh-goyal-portrait/w320.webp 320w, assets/_responsive/hitesh-goyal-portrait/w480.webp 480w, assets/_responsive/hitesh-goyal-portrait/w640.webp 640w, assets/_responsive/hitesh-goyal-portrait/w800.webp 800w" sizes="(max-width: 640px) min(72vw, 14.5rem), 16.5rem">
+                    <img src="assets/hitesh-goyal-portrait.jpg" srcset="assets/_responsive/hitesh-goyal-portrait/w260.jpg 260w, assets/_responsive/hitesh-goyal-portrait/w320.jpg 320w, assets/_responsive/hitesh-goyal-portrait/w480.jpg 480w, assets/_responsive/hitesh-goyal-portrait/w640.jpg 640w, assets/_responsive/hitesh-goyal-portrait/w800.jpg 800w" sizes="(max-width: 640px) min(72vw, 14.5rem), 16.5rem" alt="Portrait of Hitesh Goyal, Applied AI Engineer" width="800" height="1000" decoding="async">
+                </picture>
+                <!-- portrait-responsive:end -->
                     <div class="about-socials">
                         <a id="about-github" href="https://github.com/indianeagle4599" target="_blank" rel="noopener" class="about-social" aria-label="GitHub">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -249,6 +267,7 @@
         <div class="section-header fade-in">
             <p class="section-eyebrow">PROJECTS</p>
             <h2 class="section-title">Selected projects</h2>
+            <p class="visually-hidden"><a href="/projects/">Browse all projects</a></p>
         </div>
         <div class="carousel projects-carousel fade-in" role="region" aria-roledescription="carousel" aria-label="Selected projects">
             <div class="carousel-stage">
@@ -566,8 +585,9 @@
         </div>
     </div>
 
-    <script src="scripts/lenis.min.js"></script>
-    <script src="scripts/main.js"></script>
+    <script src="scripts/lenis.min.js" defer></script>
+    <script src="scripts/responsive-images.js" defer></script>
+    <script src="scripts/main.js" defer></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
         data-goatcounter-settings='{"allow_local": false}'
         async src="//gc.zgo.at/count.js"></script>

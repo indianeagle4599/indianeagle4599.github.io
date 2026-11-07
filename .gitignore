@@ -11,3 +11,5 @@ TODO.md
 
 # Local source/reference intake; publish curated derivatives from assets/projects/.
 data/media/
+
+tools/node_modules/
