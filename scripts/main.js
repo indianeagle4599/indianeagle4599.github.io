@@ -2423,6 +2423,7 @@ function createProjectMediaLeaf(item, projectTitle, ancestry) {
         else image.src = src;
         image.alt = item.alt.trim();
         image.decoding = 'async';
+        image.loading = 'lazy';
         image.draggable = false;
         link.appendChild(image);
         figure.appendChild(link);
@@ -3045,6 +3046,12 @@ function updateProjectSeo(project) {
     if (seo?.imageAlt) {
         setMeta('meta[property="og:image:alt"]', seo.imageAlt);
         setMeta('meta[name="twitter:image:alt"]', seo.imageAlt);
+    }
+    if (seo?.imageWidth) {
+        setMeta('meta[property="og:image:width"]', String(seo.imageWidth));
+        setMeta('meta[property="og:image:height"]', String(seo.imageHeight));
+    } else {
+        document.querySelectorAll('meta[property="og:image:width"], meta[property="og:image:height"]').forEach(el => el.remove());
     }
     if (seo?.jsonLd) upsertProjectJsonLd(seo.jsonLd);
 }
