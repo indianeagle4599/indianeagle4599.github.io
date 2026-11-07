@@ -20,7 +20,9 @@ A data-driven static portfolio for AI engineering experience, projects, timeline
 2. Visit `http://localhost:8000`.
 3. Update JSON files to refresh content without touching markup.
 
-HTML metadata, `sitemap.xml`, `sitemap-portfolio.xml`, and `llms.txt` are generated for crawlers that do not run JavaScript. After editing `data/projects.json`, run `node tools/render-project-pages.mjs` so each `projects/<slug>/index.html` and sitemaps stay in sync. Root `sitemap.xml` is a sitemap index that links the portfolio urlset plus live sub-app sitemaps (`/ask-krishna/sitemap.xml`, `/flodoro/sitemap.xml`). `msi-web/` has no app sitemap, so it stays only in `sitemap-portfolio.xml`. `robots.txt` lists the index and those child sitemaps.
+HTML metadata, `sitemap.xml`, `sitemap-portfolio.xml`, and `llms.txt` are generated for crawlers that do not run JavaScript. After editing `data/projects.json`, run `node tools/render-project-pages.mjs` so each `projects/<slug>/index.html` and sitemaps stay in sync.
+
+Raster images used on the home portrait and project galleries have AVIF/WebP/JPEG variants under `assets/_responsive/`, driven by `data/responsive-images.json`. After adding or replacing gallery assets, run `npm install` in `tools/` once, then `node tools/generate-responsive-images.mjs` from the repo root (this refreshes the manifest, portrait `<picture>` markup, and variant files). Root `sitemap.xml` is a sitemap index that links the portfolio urlset plus live sub-app sitemaps (`/ask-krishna/sitemap.xml`, `/flodoro/sitemap.xml`). `msi-web/` has no app sitemap, so it stays only in `sitemap-portfolio.xml`. `robots.txt` lists the index and those child sitemaps.
 
 ## Customising
 - **Introduction/About:** Edit `data/profile.json`.

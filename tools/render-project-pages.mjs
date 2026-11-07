@@ -201,6 +201,7 @@ ${relatedHtml(project, projectMap)}
 
     <script src="/scripts/project-seo.js"></script>
     <script src="/scripts/lenis.min.js" defer></script>
+    <script src="/scripts/responsive-images.js" defer></script>
     <script src="/scripts/main.js" defer></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
         data-goatcounter-settings='{"allow_local": false}'
@@ -436,6 +437,7 @@ ${topics}
     </main>
 
     <script src="/scripts/lenis.min.js" defer></script>
+    <script src="/scripts/responsive-images.js" defer></script>
     <script src="/scripts/main.js" defer></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
         data-goatcounter-settings='{"allow_local": false}'

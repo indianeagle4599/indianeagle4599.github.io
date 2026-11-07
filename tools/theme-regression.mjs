@@ -668,7 +668,7 @@ async function runE2E(session) {
     const portraitOk = portraitLayouts.every(row => {
         const ratioOk = Math.abs(row.ratio - 0.8) <= 0.02;
         const filterOk = row.filter === 'none';
-        const srcOk = row.src.includes('hitesh-goyal-portrait.jpg');
+        const srcOk = row.src.includes('hitesh-goyal-portrait');
         const coverOk = row.objectFit === 'cover';
         const once = !row.homePortrait && row.portraitCount === 1;
         const locationOk = row.locationText === 'Based in Bangalore, India. IST'
@@ -1476,13 +1476,13 @@ async function runSource() {
     await readFile(join(ROOT, 'assets', 'hitesh-goyal-portrait.jpg'));
     const homeHtml = html.slice(html.indexOf('id="home"'), html.indexOf('id="about"'));
     const aboutMarkup = html.slice(html.indexOf('id="about"'), html.indexOf('id="projects"'));
-    if ((html.split('assets/hitesh-goyal-portrait.jpg').length - 1) !== 1 || /src="assets\/hitesh-goyal\.jpg"/.test(html)) {
+    if (!aboutMarkup.includes('about-portrait') || !aboutMarkup.includes('<picture') || !aboutMarkup.includes('hitesh-goyal-portrait') || /src="assets\/hitesh-goyal\.jpg"/.test(html)) {
         contactGaps.push('portrait-asset');
     }
     if (/src="assets\/hitesh-goyal/.test(homeHtml) || homeHtml.includes('introduction-portrait') || homeHtml.includes('introduction-layout')) {
         contactGaps.push('home-portrait-removed');
     }
-    if (!aboutMarkup.includes('class="about-portrait"') || !/class="about-portrait"[\s\S]*width="800"[\s\S]*height="1000"/.test(aboutMarkup)) {
+    if (!aboutMarkup.includes('class="about-portrait"') || !/class="about-portrait"[\s\S]*<picture[\s\S]*width="800"[\s\S]*height="1000"/.test(aboutMarkup)) {
         contactGaps.push('portrait-dimensions');
     }
     if (aboutMarkup.includes('about-minimal') || aboutMarkup.includes('about-list') || /<ul id="about-highlights"/.test(aboutMarkup)) {
