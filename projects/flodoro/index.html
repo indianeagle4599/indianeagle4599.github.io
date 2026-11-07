@@ -11,6 +11,7 @@
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#000000">
     <link rel="canonical" href="https://hiteshgoyal.me/projects/flodoro/">
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary">
 
     <link rel="icon" type="image/svg+xml" href="/assets/hg-logo.svg">
     <link rel="apple-touch-icon" href="/assets/hg-logo.svg">
@@ -78,7 +79,10 @@
             "primaryImageOfPage": "https://hiteshgoyal.me/assets/projects/flodoro/timer.png"
         },
         {
-            "@type": "SoftwareApplication",
+            "@type": [
+                "SoftwareApplication",
+                "SoftwareSourceCode"
+            ],
             "@id": "https://hiteshgoyal.me/projects/flodoro/#work",
             "name": "Flodoro",
             "description": "I built Flodoro for people who want a Pomodoro timer, tasks, session history, and local music on one page without an account or application server.",
@@ -96,7 +100,9 @@
             "sameAs": [
                 "https://github.com/indianeagle4599/flodoro",
                 "https://hiteshgoyal.me/flodoro/"
-            ]
+            ],
+            "codeRepository": "https://github.com/indianeagle4599/flodoro",
+            "programmingLanguage": "JavaScript"
         },
         {
             "@type": "BreadcrumbList",
@@ -197,8 +203,8 @@
     </main>
 
     <script src="/scripts/project-seo.js"></script>
-    <script src="/scripts/lenis.min.js"></script>
-    <script src="/scripts/main.js"></script>
+    <script src="/scripts/lenis.min.js" defer></script>
+    <script src="/scripts/main.js" defer></script>
     <script data-goatcounter="https://hiteshgoyal.goatcounter.com/count"
         data-goatcounter-settings='{"allow_local": false}'
         async src="//gc.zgo.at/count.js"></script>
