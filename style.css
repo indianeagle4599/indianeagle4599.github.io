@@ -580,6 +580,18 @@ p {
     box-shadow: 0 1px 2px color-mix(in srgb, var(--text-main) 5%, transparent);
 }
 
+/* Short phone landscape: a fixed bar covers the heading as soon as the page moves.
+   Keep the bar in document flow so it scrolls away instead of sitting on the content. */
+@media (max-height: 500px) and (orientation: landscape) {
+    #navbar {
+        position: absolute;
+    }
+
+    html {
+        scroll-padding-top: 0;
+    }
+}
+
 body.nav-open {
     overflow: hidden;
 }
