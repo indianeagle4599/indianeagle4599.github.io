@@ -3462,13 +3462,20 @@ body.project-page main > .section .project-demo-grid--lead-gallery .project-medi
 @media (max-width: 399px) {
     .project-media-gallery--many .carousel-controls {
         display: grid;
-        grid-template-columns: var(--touch) calc(3 * var(--touch)) var(--touch);
+        grid-template-columns: var(--touch) minmax(0, 1fr) var(--touch);
         justify-items: center;
     }
 
     .project-media-gallery--many .carousel-dots {
         flex-wrap: wrap;
         min-width: 0;
+    }
+
+    .project-media-gallery--many .carousel-dot {
+        flex: 0 0 24px;
+        width: 24px;
+        min-width: 24px;
+        height: var(--touch);
     }
 }
 
