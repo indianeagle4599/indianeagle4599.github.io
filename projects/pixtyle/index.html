@@ -153,30 +153,67 @@
             </div>
             <p id="project-description" class="project-summary">I built Pixtyle to turn photos and videos into wallpaper-like or cartoon-like images using colour clustering, Fourier filtering, and edge detection.</p>
             <div id="project-tags" class="node-tags" hidden></div>
-            <div id="project-links" class="node-links-bar" hidden></div>
+            <div id="project-links" class="node-links-bar"><a href="https://github.com/indianeagle4599/Pixtyle" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>GitHub</a></div>
+        </section>
+
+        <section id="project-writeup-section" class="section project-writeup-section">
+            <div id="project-writeup" class="project-writeup"><h2>What it is</h2>
+<p>My pollution-monitoring work showed me how strongly image filters change what a vision system sees. I built Pixtyle to make those signal-processing effects visual, controllable, and easier to reason about. It supports single images, folders, and video through colour clustering, frequency filtering, edge stylisation, and combined pipelines.</p>
+<p>Many image filters create recognisable visual styles, which makes exploring signal processing more intuitive. Because convolutional neural networks also respond to image structure and edges, seeing what a filter changes helps me reason about what a model receives.</p></div>
         </section>
 
         <section id="project-media" class="section project-demos" hidden>
             <div id="project-media-grid" class="project-demo-grid"></div>
         </section>
 
-        <section id="project-results" class="section project-results" hidden></section>
-
-        <section id="project-writeup-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup" class="project-writeup"></div>
-        </section>
-
-        <section id="project-writeup-after-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup-after" class="project-writeup"></div>
-        </section>
-
-        <section id="project-writeup-mid-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup-mid" class="project-writeup"></div>
+        <section id="project-writeup-mid-section" class="section project-writeup-section">
+            <div id="project-writeup-mid" class="project-writeup"><h2>How the styles work</h2>
+<p>Each run selects one transform. The names below are the project’s own style names; the paragraphs explain what they do.</p>
+<h3>K-means</h3>
+<p><code>kmeans_cluster</code> reduces the image to a compact colour palette. Pixels are clustered on colour, optionally weighted with spatial position, then replaced with their centroids and optionally blended back toward the original with edge enhancement. The visual aim is posterised, region-like colour rather than line-first stylisation.</p>
+<h3>Enhanced</h3>
+<p><code>enhanced_cluster</code> blends Euclidean and angular distance at reduced resolution, then overlays a Sobel edge tint and colour-pop finishing. It is the stronger segmented-and-outlined alternative when K-means looks too soft on a busy scene.</p>
+<h3>Edge Pop</h3>
+<p><code>edge_pop</code> is a standalone edge styliser. Sobel and Canny can run on GPU through the Torch backend; Scharr, Prewitt, and Laplacian are OpenCV-only. Thresholds and blend modes (<code>ink</code>, <code>glow</code>) push outline or glow over the pixels you already have.</p>
+<h3>Fourier</h3>
+<p><code>fourier_animate</code> stylises in the frequency domain: FFT band-stop and radial masks with presets (<code>anime_soft</code>, <code>anime_bold</code>, <code>cartoon</code>, <code>watercolor</code>, <code>graphic_novel</code>), then colour finishing. The look comes from which frequency bands survive, not from palette size.</p>
+<h3>Combo</h3>
+<p><code>cartoon_combo</code> composes optional Fourier-derived detail maps as an auxiliary extractor (not a destructive first pass), K-means colour flattening, Edge Pop lines, then colour-pop or contrast finishing. On video, the edge mask can be EMA-smoothed across frames.</p>
+<p>One transform is selected per run. Defaults live in <code>pixtyle_config.py</code>; CLI flags override them.</p>
+<h2>Video stability</h2>
+<p>Clustering each video frame independently can make palettes flicker from frame to frame. Pixtyle carries cluster centroids across neighbouring frames (temporal centroid smoothing) so colours stay more stable on a continuous shot. Scene changes are detected by comparing per-channel histograms with an L1 distance and hysteresis (<code>SceneChangeDetector</code>, method <code>hist</code>). A detected cut calls <code>reset_state</code>, so the previous shot’s palette is not blended into the next.</p></div>
         </section>
 
         <section id="project-media-after" class="section project-demos" hidden>
             <div id="project-media-after-grid" class="project-demo-grid"></div>
         </section>
+
+        <section id="project-writeup-after-section" class="section project-writeup-section">
+            <div id="project-writeup-after" class="project-writeup"><h2>Technical implementation</h2>
+<h3>Transform architecture</h3>
+<p>Showcase stylisers subclass <code>TransformBase</code> and implement the same interface: <code>process_numpy</code>, <code>process_torch</code>, <code>reset_state</code>, and <code>describe</code>. They register in <code>processors/registry.py</code>. A run selects one transform; <code>pixtyle_config.py</code> holds defaults and CLI flags override them.</p>
+<p>That isolation is the point: decode, batch, write, and (for video) temporal hooks stay the same while the styliser is swapped.</p>
+<h3>Processing pipeline</h3>
+<p><strong>Input</strong> is a single image, a folder, or a video.</p>
+<p>OpenCV decodes frames. Image folders are grouped into uniform-shape batches so tensors stay consistent. The selected transform runs on each batch. Video then encodes the stylised clip; when <code>audio_merge</code> is enabled, ffmpeg remuxes the original audio onto the processed picture.</p>
+<p>Route: input → decode / batch → selected transform → temporal handling where the styliser keeps state → encode → optional audio remux.</p>
+<h3>Acceleration and backends</h3>
+<p>Torch is a hard dependency. Every showcase transform has both NumPy and Torch implementations; the CLI auto-selects a GPU when <code>detect_torch_device</code> finds one.</p>
+<p>GPU execution applies to the Torch paths for clustering, Fourier processing, and Sobel/Canny edges. Scharr, Prewitt, and Laplacian remain OpenCV-only. GPU is not claimed for the whole toolkit.</p>
+<h3>Image-processing primitives</h3>
+<p><strong>Colour / clustering.</strong> K-means groups pixels by colour (optionally with spatial weighting) and replaces them with centroids — palette reduction / posterisation. Enhanced clustering uses blended Euclidean and angular distance at reduced resolution, then colour-pop finishing.</p>
+<p><strong>Frequency.</strong> Fourier helpers build a radius grid and apply band-stop / radial masks in FFT space, then colour finishing. Presets (<code>anime_soft</code>, <code>anime_bold</code>, <code>cartoon</code>, <code>watercolor</code>, <code>graphic_novel</code>) choose which bands survive.</p>
+<p><strong>Edges.</strong> Shared extractors cover Sobel, Canny, and FFT edges (NumPy and Torch). Edge Pop also exposes Scharr, Prewitt, and Laplacian through OpenCV, with <code>ink</code> and <code>glow</code> blend modes.</p>
+<p><strong>Combined pipeline.</strong> Combo uses optional Fourier-derived detail as a cue, K-means for colour regions, Edge Pop for lines, then colour-pop or contrast finishing (including YUV luminance restore). It does not treat Fourier as a destructive first pass.</p>
+<h3>Video-specific state</h3>
+<p>Temporal centroid smoothing carries cluster centres across neighbouring frames so a continuous shot does not re-seed a new palette every frame.</p>
+<p>Combo can EMA-smooth the edge mask across frames (<code>edge_mask_ema</code>).</p>
+<p><code>SceneChangeDetector</code> compares concatenated per-channel histograms with L1 distance and hysteresis. On a cut, <code>reset_state</code> clears centroid history (and Combo’s edge-mask cache) so the next shot starts clean.</p>
+<h3>Optional super-resolution</h3>
+<p>An image-only TensorFlow SavedModel step (<code>--sr</code>) can upscale after stylisation. TensorFlow is not required for the main pipeline. The vendored <code>sr/</code> training project is a separate environment, not Pixtyle’s core architecture.</p></div>
+        </section>
+
+        <section id="project-results" class="section project-results" hidden></section>
 
         <section id="project-coming-soon" class="section project-coming-soon" hidden>
             <p>More info coming soon</p>
@@ -196,7 +233,7 @@
 
 
         <footer class="section project-footer">
-            <div id="project-footer-links" class="node-links-bar" hidden></div>
+            <div id="project-footer-links" class="node-links-bar"><a href="https://github.com/indianeagle4599/Pixtyle" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>GitHub</a></div>
             <a class="back-button" href="/#projects" aria-label="Back">← Back</a>
         </footer>
     </main>

@@ -52,7 +52,7 @@ async function encodeVariant(sharpImage, width, outDir) {
     const webpPath = join(outDir, `w${actualWidth}.webp`);
     const jpegPath = join(outDir, `w${actualWidth}.jpg`);
 
-    await sharp(data).avif({ quality: 50, effort: 4 }).toFile(avifPath);
+    await sharp(data).avif({ quality: 70, effort: 4 }).toFile(avifPath);
     await sharp(data).webp({ quality: 82 }).toFile(webpPath);
     await sharp(data).jpeg({ quality: 82, mozjpeg: true }).toFile(jpegPath);
 

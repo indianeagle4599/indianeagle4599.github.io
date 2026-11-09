@@ -2741,21 +2741,27 @@ function renderProjectMediaGallery(block, media, projectTitle, blockIndex) {
     }
 
     const firstImage = leaves[0].element.querySelector('img');
+    const originalImageSize = image => {
+        const width = Number(image?.getAttribute('width'));
+        const height = Number(image?.getAttribute('height'));
+        if (width > 0 && height > 0) return { width, height };
+        if (image?.naturalWidth > 0 && image?.naturalHeight > 0) {
+            return { width: image.naturalWidth, height: image.naturalHeight };
+        }
+        return null;
+    };
     const syncViewport = () => {
-        if (firstImage?.naturalWidth && firstImage.naturalHeight) {
-            gallery.style.setProperty('--project-media-aspect', `${firstImage.naturalWidth} / ${firstImage.naturalHeight}`);
-            gallery.classList.toggle('project-media-gallery--portrait', firstImage.naturalHeight > firstImage.naturalWidth);
+        const size = firstImage ? originalImageSize(firstImage) : null;
+        if (size) {
+            gallery.style.setProperty('--project-media-aspect', `${size.width} / ${size.height}`);
+            gallery.classList.toggle('project-media-gallery--portrait', size.height > size.width);
         } else if (!firstImage) {
             gallery.style.setProperty('--project-media-aspect', '16 / 9');
         }
         view?.motion?.setOffset(false);
     };
-    if (firstImage) {
-        firstImage.addEventListener('load', syncViewport, { once: true });
-        if (firstImage.hasAttribute('src') && firstImage.complete) syncViewport();
-    } else {
-        syncViewport();
-    }
+    if (firstImage) firstImage.addEventListener('load', syncViewport, { once: true });
+    syncViewport();
     return gallery;
 }
 
