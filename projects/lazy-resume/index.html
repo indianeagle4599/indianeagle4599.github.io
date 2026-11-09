@@ -154,8 +154,17 @@
 
         <section id="project-results" class="section project-results" hidden></section>
 
-        <section id="project-writeup-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup" class="project-writeup"></div>
+        <section id="project-writeup-section" class="section project-writeup-section">
+            <div id="project-writeup" class="project-writeup"><h2>What it is</h2>
+<p>LazyResume turns an existing resume PDF into a structured profile that can be reviewed, corrected, and regenerated into a consistently formatted resume. By separating the resume’s underlying information from its original layout, the same structured data can be reused to produce clean Markdown and PDF output without rebuilding the resume from scratch.</p>
+<h2>From PDF to structured profile</h2>
+<p>The pipeline extracts text from a resume PDF, then uses an LLM to fill a <strong>canonical JSON schema</strong>—personal details, education, experience, and related fields. Source layout is treated as input to extract from, not as the final data model. Resume content becomes structured data before anything is regenerated.</p>
+<h2>Making inconsistent documents usable</h2>
+<p>Different resumes name and organize the same information differently. The improved ingestion path maps extracted fields onto the canonical schema, including when field names do not match exactly. Clear mappings can be applied automatically; ambiguous or conflicting ones ask for confirmation before they change the profile.</p>
+<h2>From structured data back to a resume</h2>
+<p>The normalized profile is the source for generation. You can correct or enrich that profile before regenerating. Template guidelines produce Markdown from the profile, then Markdown is exported to PDF—so output formatting stays independent of the source PDF’s layout.</p>
+<h2>How it is built</h2>
+<p>Python pipeline with LLM-assisted extraction and generation, PDF text extraction, a canonical JSON/profile representation, local per-user persistence, and template-driven Markdown/PDF generation.</p></div>
         </section>
 
         <section id="project-writeup-after-section" class="section project-writeup-section" hidden>

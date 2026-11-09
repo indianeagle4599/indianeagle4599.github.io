@@ -21,7 +21,11 @@
         'ask-krishna': { type: 'SoftwareApplication', applicationCategory: 'ReferenceApplication' },
         'media-search-engine': { type: 'SoftwareApplication', applicationCategory: 'MultimediaApplication' },
         pixtyle: { type: 'SoftwareApplication', applicationCategory: 'MultimediaApplication' },
-        flodoro: { type: 'SoftwareApplication', applicationCategory: 'LifestyleApplication' },
+        flodoro: {
+            type: 'SoftwareApplication',
+            applicationCategory: 'ProductivityApplication',
+            alternateName: ['Flodoro Pomodoro', 'Flodoro Timer', 'Flomodoro', 'Flowmodoro', 'Floro', 'Florodo']
+        },
         'os-toolkit': { type: 'SoftwareApplication', applicationCategory: 'DeveloperApplication' },
         'lazy-resume': { type: 'SoftwareApplication', applicationCategory: 'BusinessApplication' },
         'fuzzy-hybrid-stock-trading': { type: 'CreativeWork' },
@@ -145,6 +149,7 @@
             keywords: keywords(project).join(', ')
         };
         if (schema.applicationCategory) work.applicationCategory = schema.applicationCategory;
+        if (Array.isArray(schema.alternateName) && schema.alternateName.length) work.alternateName = schema.alternateName;
         if (typeof project.license === 'string' && project.license.trim()) work.license = project.license.trim();
         if (sameAs.length) work.sameAs = sameAs;
         const codeRepository = githubRepository(project);

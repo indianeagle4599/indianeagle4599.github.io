@@ -152,30 +152,45 @@
             </div>
             <p id="project-description" class="project-summary">I built AudioBench for Amplify Dental to choose the right speech-to-text model. It tests models on noisy, accented, and distant-microphone audio and keeps the hand-checked transcripts and test setups, so the team never redoes that work.</p>
             <div id="project-tags" class="node-tags" hidden></div>
-            <div id="project-links" class="node-links-bar" hidden></div>
+            <div id="project-links" class="node-links-bar"><a href="https://amplifydental.ai/" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Amplify Dental</a></div>
+        </section>
+
+        <section id="project-writeup-section" class="section project-writeup-section" hidden>
+            <div id="project-writeup" class="project-writeup"></div>
         </section>
 
         <section id="project-media" class="section project-demos" hidden>
             <div id="project-media-grid" class="project-demo-grid"></div>
         </section>
 
-        <section id="project-results" class="section project-results" hidden></section>
-
-        <section id="project-writeup-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup" class="project-writeup"></div>
-        </section>
-
-        <section id="project-writeup-after-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup-after" class="project-writeup"></div>
-        </section>
-
-        <section id="project-writeup-mid-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup-mid" class="project-writeup"></div>
+        <section id="project-writeup-mid-section" class="section project-writeup-section">
+            <div id="project-writeup-mid" class="project-writeup"><h2>Built for Amplify Dental</h2>
+<p>AudioBench is the evaluation and annotation workbench I built for Amplify Dental's transcription work. On a small team, every hour spent repeating transcription, labelling, or benchmark setup is an hour not spent on the product. I built each part to be reused.</p>
+<p>Distant speech, room noise, accents, and microphones can change which model performs best. AudioBench keeps hand-checked reference audio, named preprocessing pipelines, and local or cloud speech-to-text systems in one results view so the team can compare them without repeating setup.</p>
+<p>Models are sorted so the strongest overall result appears first. Heatmaps and a complete results table show interactions between models, datasets, and audio treatments that one average score would hide.</p>
+<h2>Solve it once, then reuse it</h2>
+<p>I built the annotation interface around the audio instead of keeping transcripts in a separate spreadsheet. It shows the waveform, compares original and cleaned audio, changes playback speed, and saves the hand-written reference transcript. The sample library keeps the same reference audio and transcripts with condition tags and completion status. The live test runs one ready speech-to-text system on a hand-checked sample before the team starts a full benchmark.</p>
+<p>Each audio-preprocessing workflow is saved by name instead of applied as a one-off file edit. Experiments start from a reusable preset and a preview of the planned model, dataset, and preprocessing combinations. A local Whisper Small server catches setup mistakes before cloud resources are used; cloud GPUs run the same work when an experiment contains many combinations.</p></div>
         </section>
 
         <section id="project-media-after" class="section project-demos" hidden>
             <div id="project-media-after-grid" class="project-demo-grid"></div>
         </section>
+
+        <section id="project-writeup-after-section" class="section project-writeup-section">
+            <div id="project-writeup-after" class="project-writeup"><h2>How it is built</h2>
+<p>I built AudioBench so new datasets, speech-to-text models, preprocessing steps, and computing machines can be added through configuration. Python and FastAPI run locally first, and one shared config file lists every local and cloud speech-to-text model, so swapping one is a config change.</p>
+<h3>Public data and models</h3>
+<p>The suite contains 6 public speech datasets: AMI headset (IHM), AMI distant mic (SDM), VoxPopuli, Common Voice, VCTK, and LibriSpeech. Together they cover distant microphones, accented English, varied speakers, and clean read speech.</p>
+<p>The recorded interface includes Whisper Large v3 through Hugging Face and Faster-Whisper, Whisper Small, Kyutai STT, Google MedASR, Moonshine Base, and Qwen3-ASR. Its audio options include unchanged audio, audio adjusted for speech recognition, audio adjusted for human review, cleaned audio, and longer sequences of clean-up steps assembled in the lab.</p>
+<p>Word error rate is the share of words the model got wrong. Character error rate is the same at the letter level. Real-time factor is processing time divided by audio length.</p>
+<h3>Thanks</h3>
+<p>Special thanks to David Griswold for generously allowing me to showcase this product.</p>
+<h3>About this recording</h3>
+<p>The listening and annotation screenshots use public LibriSpeech recordings, not dental-clinic audio. This is the evaluation bench, not Amplify's dental product UI. The 'Whole Nine Yards' benchmark was stopped before every planned comparison finished. The cloud recording shows two GPU virtual machines starting alongside the local speech-to-text server.</p></div>
+        </section>
+
+        <section id="project-results" class="section project-results" hidden></section>
 
         <section id="project-coming-soon" class="section project-coming-soon" hidden>
             <p>More info coming soon</p>
@@ -195,7 +210,7 @@
 
 
         <footer class="section project-footer">
-            <div id="project-footer-links" class="node-links-bar" hidden></div>
+            <div id="project-footer-links" class="node-links-bar"><a href="https://amplifydental.ai/" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Amplify Dental</a></div>
             <a class="back-button" href="/#projects" aria-label="Back">← Back</a>
         </footer>
     </main>

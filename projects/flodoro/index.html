@@ -96,7 +96,15 @@
                 "url": "https://hiteshgoyal.me/"
             },
             "keywords": "JavaScript, Productivity, Local-first",
-            "applicationCategory": "LifestyleApplication",
+            "applicationCategory": "ProductivityApplication",
+            "alternateName": [
+                "Flodoro Pomodoro",
+                "Flodoro Timer",
+                "Flomodoro",
+                "Flowmodoro",
+                "Floro",
+                "Florodo"
+            ],
             "sameAs": [
                 "https://github.com/indianeagle4599/flodoro",
                 "https://hiteshgoyal.me/flodoro/"
@@ -154,7 +162,22 @@
             </div>
             <p id="project-description" class="project-summary">I built Flodoro for people who want a Pomodoro timer, tasks, session history, and local music on one page without an account or application server.</p>
             <div id="project-tags" class="node-tags" hidden></div>
-            <div id="project-links" class="node-links-bar" hidden></div>
+            <div id="project-links" class="node-links-bar"><a href="https://github.com/indianeagle4599/flodoro" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>GitHub</a><a href="https://hiteshgoyal.me/flodoro/" target="_blank" rel="noopener" class="btn btn-primary btn-tiny"><svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Live Demo</a></div>
+        </section>
+
+        <section id="project-writeup-section" class="section project-writeup-section">
+            <div id="project-writeup" class="project-writeup"><h2>What it is</h2>
+<p>Flodoro is a Pomodoro timer and lightweight task manager that runs as a single static webpage. Work and break settings, tasks, history, themes, and notification preferences stay in the browser, while music is optional and comes from folders the user selects on their own machine.</p>
+<p>The goal is a focused workspace without accounts, sync, or a backend.</p>
+<h2>Why music belongs here</h2>
+<p>Timer, current task, and local playback live on the same surface so a focus session does not require switching to a separate music player. Playback remains user-controlled — starting the timer does not start a track — while notification chimes briefly lower the music volume so session alerts are still audible.</p>
+<h2>How a session works</h2>
+<p>Flodoro supports work, short-break, and long-break sessions with configurable durations. A completed work session moves into the next break automatically; after the break, the next work session is started manually. A break can be postponed once, returning to work with five extra minutes.</p>
+<p>Tasks can be kept alongside the timer, with completed sessions contributing to the local history and statistics views. Preferences, tasks, and history survive reloads; the live countdown itself does not.</p>
+<h2>Local music</h2>
+<p>Flodoro does not ship a music catalogue or require a streaming login. The user selects a local music folder, and the app builds playlists from that folder and its first-level subfolders.</p>
+<p>Playback stays inside the page through the browser audio element, with play/pause, previous/next, mute, volume, and scrubbing controls.</p>
+<p>On Chromium browsers, Flodoro can remember the selected folder handle in IndexedDB so it can be reconnected later. The audio files themselves are never copied into browser storage. Other browsers can use the directory file-input fallback for the current session.</p></div>
         </section>
 
         <section id="project-media" class="section project-demos" hidden>
@@ -163,12 +186,19 @@
 
         <section id="project-results" class="section project-results" hidden></section>
 
-        <section id="project-writeup-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup" class="project-writeup"></div>
-        </section>
-
-        <section id="project-writeup-after-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup-after" class="project-writeup"></div>
+        <section id="project-writeup-after-section" class="section project-writeup-section">
+            <div id="project-writeup-after" class="project-writeup"><h2>Local-first implementation</h2>
+<h3>Static architecture</h3>
+<p>Flodoro is built with vanilla HTML, CSS, and JavaScript and runs without an application backend. The hosted page is the same static app.</p>
+<h3>Browser storage</h3>
+<p>Tasks, history, preferences, notification settings, themes, and selected music/track identifiers are stored locally in the browser. Chromium folder handles use IndexedDB so access can be remembered without storing the underlying audio files.</p>
+<h3>Music playback</h3>
+<p>Selected files are played through the browser's <code>&lt;audio&gt;</code> element. Folder selection uses the File System Access API where available, with the existing directory-input fallback elsewhere. Music playback remains independent from the Pomodoro timer except for volume ducking during notification chimes.</p>
+<h3>Timer behavior</h3>
+<p>The timer manages work, short-break, and long-break state in the page, with pause, reset, duration adjustments, session transitions, and notifications.</p>
+<p>Preferences, tasks, and history persist across reloads; the active countdown does not.</p>
+<h2>Design constraint</h2>
+<p>Flodoro is intentionally serverless. Accounts, cloud sync, and a shipped music catalogue stay out of scope; features are designed to work from the static page and the user's own browser/device.</p></div>
         </section>
 
         <section id="project-writeup-mid-section" class="section project-writeup-section" hidden>
@@ -197,7 +227,7 @@
 
 
         <footer class="section project-footer">
-            <div id="project-footer-links" class="node-links-bar" hidden></div>
+            <div id="project-footer-links" class="node-links-bar"><a href="https://github.com/indianeagle4599/flodoro" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>GitHub</a><a href="https://hiteshgoyal.me/flodoro/" target="_blank" rel="noopener" class="btn btn-primary btn-tiny"><svg class="action-icon action-icon--stroke" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Live Demo</a></div>
             <a class="back-button" href="/#projects" aria-label="Back">← Back</a>
         </footer>
     </main>

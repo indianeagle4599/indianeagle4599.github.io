@@ -152,7 +152,40 @@
             </div>
             <p id="project-description" class="project-summary">In this stock-trading research project, I reduced the predictor's inputs from 96 values to 26, then combined a deep-learning price predictor with fuzzy buy, sell, or hold rules.</p>
             <div id="project-tags" class="node-tags" hidden></div>
-            <div id="project-links" class="node-links-bar" hidden></div>
+            <div id="project-links" class="node-links-bar"><a href="https://github.com/tristan-till/ai6124-project/tree/main" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>GitHub</a></div>
+        </section>
+
+        <section id="project-writeup-section" class="section project-writeup-section">
+            <div id="project-writeup" class="project-writeup"><h2>What it is</h2>
+<p>Coursework project with Tristan Till. The system predicts next-day stock direction, then uses a fuzzy trading head to convert market signals into buy, sell, or hold actions for a simulated portfolio.</p>
+<p>Primary reported stock: Exxon Mobil (XOM). Market data came from Yahoo Finance, with a chronological train / validation / test split.</p>
+<h2>My contribution: feature-space redesign</h2>
+<p>Early versions fed the sequence model a broad input table: 16 engineered columns across 6 market series, producing <strong>96 backbone input channels</strong>.</p>
+<p>Through domain analysis and feature engineering, I redesigned that into a smaller, more targeted representation that shipped in the final system:</p>
+<ul><li><strong>13</strong> engineered features per ticker, emphasizing relative price and volume changes and multi-scale momentum / trend signals (including RSI and volume-aware RSI across short, medium, and longer windows, plus ROC, MACD, and a volume MACD signal)</li><li><strong>Target stock + S&amp;P 500 only</strong></li><li><strong>26 backbone input channels</strong> total</li></ul>
+<p>Exact change: <strong>96 → 26 channels (~72.9% fewer)</strong>. The redesign replaced a broad, weakly focused representation with a smaller set of targeted market and momentum signals.</p>
+<h2>Why the redesign mattered</h2>
+<p>The predictor received far fewer channels at each timestep, reducing input complexity. The final system also used a much smaller recurrent configuration than the early oversized stack. Together, that made training and iteration substantially lighter. No exact runtime multiplier is claimed.</p>
+<h2>How the full system worked</h2>
+<p>At a high level:</p>
+<p><strong>26-channel market representation → GRU-LSTM-Attention predictor → next-day price-change signal → fuzzy trading head → buy / sell / hold</strong></p>
+<p>The predictor reads a 60-day window of the 26 channels and estimates next-day price change.</p>
+<p>The trading head is separate. It does not take the full sequence tensor. It receives a compact set of <strong>8 scalars</strong> (momentum and trend-style signals for the target and S&amp;P 500, the predictor’s output, and portfolio liquidity).</p>
+<p>Instead of hard thresholds, the fuzzy head maps continuous signals into degrees such as low, medium, and high, then combines them through learned rules. Each of the 8 inputs is scored by three triangular membership functions (<strong>24 membership grades</strong>). Three objective-specific fuzzy heads (return, risk-adjusted return, and drawdown) vote by majority for the final action.</p>
+<p><strong>96 → 26</strong> is the backbone input reduction. <strong>8 → 24 membership grades</strong> is a later fuzzy expansion. They are different stages.</p>
+<h2>Results</h2>
+<p><strong>Directional hit rate</strong> means how often the predictor got the next-day up/down direction correct.</p>
+<p><strong>Exxon Mobil (final reported system):</strong></p>
+<ul><li>Reported baselines (zero-change / LSTM): <strong>47.74%</strong></li><li>Final GRU-LSTM-Attention system: <strong>61.29%</strong></li><li>Difference: <strong>+13.55 percentage points</strong></li></ul>
+<p>These are final-system results. The redesigned representation is what that system trained on; the repository does not preserve a controlled old-96-channel versus new-26-channel comparison proving the feature redesign alone caused the entire gain.</p>
+<h2>Transfer to Chevron</h2>
+<p>The backbone was fine-tuned for Chevron (CVX) while the fuzzy logic was retained, as a check beyond Exxon. Directional performance there did not beat the LSTM baseline (hybrid <strong>53.55%</strong> vs LSTM <strong>56.13%</strong>). Transfer is supporting context, not the headline.</p>
+<h2>What the experiments suggested</h2>
+<p>Ablations suggested the fuzzy trading head relied meaningfully on engineered market signals rather than simply mirroring day-ahead prediction quality.</p>
+<h2>Technical implementation</h2>
+<p>Python and PyTorch for the sequence model; a custom genetically trained fuzzy inference system (GenFIS) for the trading head; Yahoo Finance market data; chronological train / validation / test split.</p>
+<h2>Team attribution</h2>
+<p>Coursework project with Tristan Till. My contribution focused on the feature-space redesign that became the shipped backbone input representation.</p></div>
         </section>
 
         <section id="project-media" class="section project-demos" hidden>
@@ -160,10 +193,6 @@
         </section>
 
         <section id="project-results" class="section project-results" hidden></section>
-
-        <section id="project-writeup-section" class="section project-writeup-section" hidden>
-            <div id="project-writeup" class="project-writeup"></div>
-        </section>
 
         <section id="project-writeup-after-section" class="section project-writeup-section" hidden>
             <div id="project-writeup-after" class="project-writeup"></div>
@@ -195,7 +224,7 @@
 
 
         <footer class="section project-footer">
-            <div id="project-footer-links" class="node-links-bar" hidden></div>
+            <div id="project-footer-links" class="node-links-bar"><a href="https://github.com/tristan-till/ai6124-project/tree/main" target="_blank" rel="noopener" class="btn btn-outline btn-tiny"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path></svg>GitHub</a></div>
             <a class="back-button" href="/#projects" aria-label="Back">← Back</a>
         </footer>
     </main>
