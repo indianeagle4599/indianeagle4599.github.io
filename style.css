@@ -587,6 +587,10 @@ p {
         position: absolute;
     }
 
+    body.nav-open #navbar {
+        position: fixed;
+    }
+
     html {
         scroll-padding-top: 0;
     }
